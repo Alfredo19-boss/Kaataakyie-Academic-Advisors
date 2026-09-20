@@ -71,13 +71,19 @@ function tickerItems() {
         if (!r.deadline) return;
         var d = daysUntil(r.deadline);
         if (d === null || d < 0 || d > 45) return;
-        soon.push({ k: d <= 7 ? "Closing" : "Deadline", t: r.name, d: esc(c.name) + " · " + d + "d", url: "", cls: d <= 7 ? "hot" : "" });
+        soon.push({ k: d <= 7 ? "Closing" : "Deadline", t: r.name, d: c.name + " \u00b7 " + d + "d",
+                   url: "", cid: c.id, cls: d <= 7 ? "hot" : "", sort: d });
       });
     });
-    soon.sort(function (a, b) { return a.d.localeCompare(b.d); });
+    soon.sort(function (a, b) { return a.sort - b.sort; });
     out = soon.concat(out);
   }
   return out;
+}
+function tickerSummary(items) {
+  var soon = items.filter(function (i) { return i.cls === "hot" || i.cls === "late"; }).length;
+  if (soon) return soon + " closing";
+  return items.length + " live";
 }
 function renderTicker() {
   var el = $("#ticker");
@@ -85,13 +91,46 @@ function renderTicker() {
   var items = tickerItems();
   if (!items.length) { el.hidden = true; return; }
   el.hidden = false;
+
+  var open = NB.ls("nb.ticker") !== "off";
+  if (!open) {
+    el.innerHTML = '<button class="tag" data-act="tickertoggle" title="Show the cycle board">Cycle board</button>' +
+      '<div class="tickwin"><div class="rest">' + esc(tickerSummary(items)) + " \u2014 tap to show</div></div>";
+    return;
+  }
+
   var run = items.map(function (i) {
-    var inner = '<span class="k">' + esc(i.k) + "</span><b>" + esc(i.t) + "</b><span>" + (i.d || "") + "</span>";
-    return '<span class="it ' + i.cls + '">' + (i.url ? '<a href="' + esc(i.url) + '" target="_blank" rel="noopener">' + inner + "</a>" : inner) + "</span>";
+    var inner = '<span class="k">' + esc(i.k) + "</span><b>" + esc(i.t) + "</b><span>" + esc(i.d || "") + "</span>";
+    if (i.url) return '<a class="it ' + i.cls + '" href="' + esc(i.url) + '" target="_blank" rel="noopener">' + inner + "</a>";
+    if (i.cid) return '<button class="it ' + i.cls + '" data-act="openclient" data-v="' + esc(i.cid) + '">' + inner + "</button>";
+    return '<button class="it ' + i.cls + '" data-act="go" data-v="board">' + inner + "</button>";
   }).join("");
-  el.innerHTML = '<span class="tag">Cycle board</span><div class="tickwin"><div class="track">' + run + run + "</div></div>";
-  el.querySelector(".track").style.animationDuration = Math.max(40, items.length * 9) + "s";
+
+  el.innerHTML = '<button class="tag" data-act="tickertoggle" title="Hide the cycle board">Cycle board</button>' +
+    '<div class="tickwin"><div class="track">' + run + run + "</div></div>";
+  pace(el);
 }
+
+/* A marquee should move at a constant speed, not a constant duration — otherwise every entry
+   added makes the whole thing crawl. Measure one copy of the run and derive the time from it. */
+function pace(el) {
+  var track = el.querySelector(".track");
+  if (!track) return;
+  var PX_PER_SEC = 105;
+  function set() {
+    var half = track.scrollWidth / 2;
+    if (!half) return;
+    if (half < el.clientWidth) { track.style.animation = "none"; return; }
+    track.style.animationDuration = Math.max(12, Math.round(half / PX_PER_SEC)) + "s";
+  }
+  set();
+  requestAnimationFrame(set);
+  setTimeout(set, 700);   // again once the webfont has settled and widths have changed
+}
+document.addEventListener("visibilitychange", function () {
+  var t = document.querySelector("#ticker .track");
+  if (t) t.style.animationPlayState = document.hidden ? "paused" : "running";
+});
 
 /* ------------------------------------------------ login ------------------------------------------------ */
 function renderLogin() {
@@ -1468,6 +1507,7 @@ document.addEventListener("click", function (e) {
   if (a === "calnext") { S.cal.m++; if (S.cal.m > 11) { S.cal.m = 0; S.cal.y++; } render(); return; }
   if (a === "caltoday") { var n = new Date(); S.cal = { y: n.getFullYear(), m: n.getMonth() }; render(); return; }
   if (a === "printrep") { window.print(); return; }
+  if (a === "tickertoggle") { NB.ls("nb.ticker", NB.ls("nb.ticker") === "off" ? "on" : "off"); renderTicker(); return; }
   if (a === "demoreset") {
     modal("Reset the demo?", "<p>Everything you have changed here goes back to the three sample clients. It only affects this browser.</p>",
       "Reset", function () { if (window.NB_DEMO_RESET) window.NB_DEMO_RESET(); return true; });

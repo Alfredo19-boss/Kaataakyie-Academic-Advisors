@@ -36,8 +36,20 @@ if (SITE.portalUrl) {
     return '<span class="it">' + (b.url ? '<a href="' + esc(b.url) + '" target="_blank" rel="noopener">' + inner + "</a>" : inner) + "</span>";
   }).join("");
   el.innerHTML = '<span class="tag">Cycle board</span><div class="tickwin"><div class="track">' + run + run + "</div></div>";
-  el.querySelector(".track").style.animationDuration = Math.max(50, board.length * 11) + "s";
   el.hidden = false;
+  /* Constant speed, not constant duration — adding entries must not slow the whole thing down. */
+  var track = el.querySelector(".track");
+  function pace() {
+    var half = track.scrollWidth / 2;
+    if (!half) return;
+    if (half < el.clientWidth) { track.style.animation = "none"; return; }
+    track.style.animationDuration = Math.max(12, Math.round(half / 105)) + "s";
+  }
+  pace(); requestAnimationFrame(pace); setTimeout(pace, 700);
+  window.addEventListener("resize", pace);
+  document.addEventListener("visibilitychange", function () {
+    track.style.animationPlayState = document.hidden ? "paused" : "running";
+  });
 })();
 
 /* ---------- timeline ruler ---------- */
