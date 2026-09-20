@@ -68,6 +68,7 @@ function doLogin() {
 var NAV_ADVISOR = [
   { v: "clients", n: "Clients", i: "clients" },
   { v: "pipeline", n: "Pipeline", i: "pipeline" },
+  { v: "business", n: "Business", i: "money" },
   { v: "calendar", n: "Calendar", i: "cal" },
   { v: "directory", n: "School directory", i: "school" },
   { v: "resources", n: "Resource library", i: "book" },
@@ -118,6 +119,7 @@ function render() {
 
   if (S.view === "clients") viewClients(v);
   else if (S.view === "pipeline") viewPipeline(v);
+  else if (S.view === "business") viewBusiness(v);
   else if (S.view === "calendar") viewCalendar(v);
   else if (S.view === "directory") viewDirectory(v);
   else if (S.view === "resources") viewResources(v);
@@ -296,8 +298,8 @@ function viewCalendar(v) {
 /* ------------------------------------------------ client detail ------------------------------------------------ */
 function tabsFor() {
   var t = [{ k: "overview", n: "Overview" }, { k: "tasks", n: "Tasks" }, { k: "schools", n: "Schools & cost" },
-           { k: "docs", n: "Documents" }, { k: "messages", n: "Messages" }];
-  if (isAdvisor()) t.push({ k: "notes", n: "Private notes" });
+           { k: "file", n: "Scores & referees" }, { k: "docs", n: "Documents" }, { k: "messages", n: "Messages" }];
+  if (isAdvisor()) t.push({ k: "billing", n: "Fees" }, { k: "notes", n: "Private notes" });
   t.push({ k: "report", n: "Report" });
   return t;
 }
@@ -308,12 +310,14 @@ function viewClient(v) {
     return;
   }
   if (S.msgFor !== c.id) NB.attachMessages(c.id);
+  if (!isAdvisor() && (S.tab === "billing" || S.tab === "notes")) S.tab = "overview";
   var T = tabsFor();
   $("#title").textContent = isAdvisor() ? (c.name || "Client") : (T.filter(function (x) { return x.k === S.tab; })[0] || T[0]).n;
   if (isAdvisor()) {
     $("#crumb").textContent = "Clients / " + (c.name || "");
     $("#topactions").innerHTML =
       '<button class="btn" data-act="go" data-v="clients">← All clients</button>' +
+      '<button class="btn" data-act="outcome" data-v="' + esc(c.id) + '">Record outcome</button>' +
       '<button class="btn" data-act="editclient" data-v="' + esc(c.id) + '">Edit record</button>';
   } else {
     $("#crumb").textContent = (c.targetTerm ? c.targetTerm + " intake" : "") + (c.field ? " · " + c.field : "");
@@ -327,6 +331,8 @@ function viewClient(v) {
   if (S.tab === "overview") html += cOverview(c);
   else if (S.tab === "tasks") html += cTasks(c);
   else if (S.tab === "schools") html += cSchools(c);
+  else if (S.tab === "file") html += cFile(c);
+  else if (S.tab === "billing") html += cBilling(c);
   else if (S.tab === "docs") html += cDocs(c);
   else if (S.tab === "messages") html += cMessages(c);
   else if (S.tab === "notes") html += cNotes(c);
@@ -438,11 +444,15 @@ function cSchools(c) {
   var body = rows.length ? rows.map(function (r, i) {
     var d = r.deadline ? daysUntil(r.deadline) : null;
     var cls = d === null || d < 0 ? "" : d <= 7 ? "crit" : d <= 21 ? "warn" : "";
-    var k = NB.costOf(r);
+    var k = NB.costOf(r), fl = NB.scoreFlags(c, r);
     return '<div class="schoolrow"><div style="min-width:0;flex:1 1 220px">' +
       '<div class="nm">' + esc(r.name) + "</div>" +
       '<div class="loc">' + esc(r.program || "Programme not set") + (r.loc ? " · " + esc(r.loc) : "") + "</div>" +
       (k.has ? '<div class="loc money" style="margin-top:3px">Net year one ' + money(k.net) + (k.award ? " · award " + money(k.award) : "") + "</div>" : "") +
+      (r.appId || r.portalUser ? '<div class="loc mono" style="margin-top:3px;font-size:11.5px">' +
+        (r.portalUser ? esc(r.portalUser) : "") + (r.appId ? (r.portalUser ? " · " : "") + "app " + esc(r.appId) : "") +
+        (num(r.appFee) ? " · fee " + money(num(r.appFee)) + (r.feePaid ? " paid" : " unpaid") : "") + "</div>" : "") +
+      (fl.length ? fl.map(function (m) { return '<div class="loc" style="margin-top:4px;color:var(--crit);font-weight:500">⚠ ' + esc(m) + "</div>"; }).join("") : "") +
       (r.note ? '<div class="loc" style="margin-top:3px">' + esc(r.note) + "</div>" : "") + "</div>" +
       '<div class="rt">' + (r.deadline ? '<span class="pill ' + cls + '">' + fmtDate(r.deadline) + (d !== null && d >= 0 ? " · " + d + "d" : "") + "</span>" : "") +
         '<select class="inp" style="width:auto;padding:5px 28px 5px 9px;font-size:12px" data-act="schstat" data-v="' + i + '">' +
@@ -725,6 +735,162 @@ function viewTemplates(v) {
     '<p class="muted" style="font-size:12px;max-width:70ch">Deleting a step keeps any tick a client already made against it, so restoring the step restores their progress.</p>');
 }
 
+/* ------------------------------------------------ business ------------------------------------------------ */
+function viewBusiness(v) {
+  $("#title").textContent = "Business";
+  $("#topactions").innerHTML = '<button class="btn" data-act="printrep">Print</button>';
+  var cs = S.clients;
+  if (!cs.length) {
+    v.insertAdjacentHTML("beforeend", '<div class="card"><div class="empty"><h3>Nothing to total yet</h3><p>Fees and outcomes appear once you have clients on the books.</p></div></div>');
+    return;
+  }
+  var contracted = 0, collected = 0, recent = 0, cut = Date.now() - 30 * 86400000;
+  cs.forEach(function (c) {
+    var b = NB.billOf(c.id);
+    contracted += b.fee; collected += b.paid;
+    b.payments.forEach(function (p) { if (p.at && new Date(p.at).getTime() >= cut) recent += num(p.amount); });
+  });
+  var placed = cs.filter(function (c) { return c.outcome && c.outcome.school; });
+  var aid = placed.reduce(function (a, c) { return a + num(c.outcome.award); }, 0);
+
+  v.insertAdjacentHTML("beforeend",
+    '<div class="kpis">' + kpi(money(contracted), "Contracted") + kpi(money(collected), "Collected") +
+    kpi(money(Math.max(0, contracted - collected)), "Outstanding", contracted - collected > 0) +
+    kpi(money(recent), "Collected, last 30 days") + kpi(placed.length, "Clients placed") +
+    kpi(money(aid), "Aid won for clients") + "</div>");
+
+  var rows = cs.map(function (c) {
+    var b = NB.billOf(c.id);
+    var cls = !b.has ? "" : b.due > 0 ? "warn" : "ok";
+    return '<tr class="clickable" data-act="openbill" data-v="' + esc(c.id) + '">' +
+      "<td><b>" + esc(c.name) + "</b><div class=\"muted\" style=\"font-size:12px\">" + esc(c.targetTerm || "—") + "</div></td>" +
+      '<td class="money">' + (b.fee ? money(b.fee) : '<span class="muted">not set</span>') + "</td>" +
+      '<td class="money">' + (b.paid ? money(b.paid) : "—") + "</td>" +
+      '<td>' + (b.has ? '<span class="pill ' + cls + '">' + (b.due > 0 ? money(b.due) + " due" : "settled") + "</span>" : '<span class="muted">—</span>') + "</td>" +
+      "<td>" + (b.referral ? esc(b.referral) : '<span class="muted">—</span>') + "</td>" +
+      '<td><span class="pill ' + NB.statusPill(c.status) + '">' + esc(c.status || "Active") + "</span></td></tr>";
+  }).join("");
+
+  var srcs = {};
+  cs.forEach(function (c) { var r = NB.billOf(c.id).referral || "Not recorded"; srcs[r] = (srcs[r] || 0) + 1; });
+  var keys = Object.keys(srcs).sort(function (a, b) { return srcs[b] - srcs[a]; });
+  var maxS = Math.max.apply(null, keys.map(function (k) { return srcs[k]; }).concat([1]));
+
+  var outHtml = placed.length ? placed.map(function (c) {
+    var o = c.outcome;
+    return '<div class="schoolrow"><div style="min-width:0;flex:1 1 240px"><div class="nm">' + esc(c.name) + "</div>" +
+      '<div class="loc">' + esc(o.school) + (o.program ? " · " + esc(o.program) : "") + (o.term ? " · " + esc(o.term) : "") + "</div>" +
+      (o.note ? '<div class="loc" style="margin-top:3px">' + esc(o.note) + "</div>" : "") + "</div>" +
+      '<div class="rt">' + (num(o.award) ? '<span class="pill ok money">' + money(o.award) + " award</span>" : "") +
+      '<button class="btn ghost sm" data-act="outcome" data-v="' + esc(c.id) + '">Edit</button></div></div>';
+  }).join("") : '<div class="empty"><p>No placements recorded yet. Record one the day a client accepts an offer — this list is the only marketing asset that actually converts.</p></div>';
+
+  v.insertAdjacentHTML("beforeend",
+    '<div class="card"><div class="card-h"><div><h3>Fees</h3>' +
+      '<p class="muted" style="font-size:12.5px;margin-top:3px">Stored apart from the client record and restricted to editors — a client signed in to the portal never sees this.</p></div></div>' +
+      '<div class="card-b flush"><div class="scrollx"><table class="tbl">' +
+      "<thead><tr><th>Client</th><th>Fee</th><th>Paid</th><th>Balance</th><th>Came from</th><th>Status</th></tr></thead><tbody>" +
+      rows + "</tbody></table></div></div></div>" +
+    '<div class="grid2">' +
+      '<div class="card"><div class="card-h"><div><h3>Where clients come from</h3>' +
+        '<p class="muted" style="font-size:12.5px;margin-top:3px">Record the source on each client\'s Fees tab.</p></div></div>' +
+        '<div class="card-b"><div class="chart">' + keys.map(function (k) {
+          return '<div class="chartrow"><div class="lb" title="' + esc(k) + '">' + esc(k) + "</div>" +
+            '<div class="tr"><i style="width:' + Math.round((srcs[k] / maxS) * 100) + '%"></i></div>' +
+            '<div class="vl">' + srcs[k] + "</div></div>";
+        }).join("") + "</div></div></div>" +
+      '<div class="card"><div class="card-h"><div><h3>Placements</h3>' +
+        '<p class="muted" style="font-size:12.5px;margin-top:3px">Where past clients landed, and what they were awarded.</p></div></div>' +
+        '<div class="card-b flush">' + outHtml + "</div></div>" +
+    "</div>");
+}
+
+/* ------------------------------------------------ fees (per client) ------------------------------------------------ */
+function cBilling(c) {
+  var b = NB.billOf(c.id);
+  var pays = b.payments.slice().sort(function (x, y) { return String(y.at).localeCompare(String(x.at)); });
+  var payHtml = pays.length ? pays.map(function (p, i) {
+    return '<div class="schoolrow"><div style="min-width:0;flex:1"><div class="nm money">' + money(num(p.amount)) + "</div>" +
+      '<div class="loc">' + fmtDate(p.at) + (p.method ? " · " + esc(p.method) : "") + (p.note ? " · " + esc(p.note) : "") + "</div></div>" +
+      '<div class="rt"><button class="btn ghost sm" data-act="delpay" data-v="' + i + '" aria-label="Remove">✕</button></div></div>';
+  }).join("") : '<div class="empty"><p>No payments recorded.</p></div>';
+
+  return '<div class="card-h"><div><h3>Fees and payments</h3>' +
+    '<p class="muted" style="font-size:12.5px;margin-top:3px">Restricted to editors. This tab does not exist in the client portal.</p></div>' +
+    '<button class="btn pri" data-act="addpay">+ Record payment</button></div>' +
+    '<div class="card-b">' +
+      '<div class="grid3" style="margin-bottom:18px">' + kpi(money(b.fee), "Fee agreed") + kpi(money(b.paid), "Collected") +
+        kpi(money(Math.max(0, b.due)), "Outstanding", b.due > 0) + "</div>" +
+      '<div class="grid2" style="gap:14px">' +
+        '<div class="field"><label for="feeAmt">Fee agreed (USD)</label><input class="inp" id="feeAmt" value="' + esc(b.fee || "") + '" placeholder="1500"></div>' +
+        '<div class="field"><label for="feeSrc">How this client found you</label><input class="inp" id="feeSrc" value="' + esc(b.referral) + '" placeholder="Referral — Ngozi Okafor" list="srcList"></div>' +
+      "</div>" +
+      '<div class="field" style="margin-top:14px"><label for="feeNote">Terms</label>' +
+      '<textarea class="inp" id="feeNote" style="min-height:70px" placeholder="Half on signing, half when the first application goes in.">' + esc(b.note) + "</textarea></div>" +
+      '<div style="margin-top:14px"><button class="btn pri" data-act="savebill">Save</button></div>' +
+    "</div>" +
+    '<div class="card-h" style="border-top:1px solid var(--line)"><div><h3>Payments received</h3></div></div>' +
+    '<div class="card-b flush">' + payHtml + "</div>";
+}
+
+/* ------------------------------------------------ scores & referees ------------------------------------------------ */
+var ENGLISH_TESTS = ["TOEFL iBT", "IELTS Academic", "Duolingo English Test", "PTE Academic", "Not sat yet"];
+function cFile(c) {
+  var sc = c.scores || {}, e = sc.english || {};
+  var flags = [];
+  (c.schools || []).forEach(function (r) {
+    NB.scoreFlags(c, r).forEach(function (f) { flags.push({ school: r.name, msg: f }); });
+  });
+  var gaps = NB.refGaps(c);
+  var refs = c.refs || [], schools = c.schools || [];
+
+  var refHtml = refs.length ? refs.map(function (f, i) {
+    var sent = f.sent || {}, done = schools.filter(function (_, si) { return sent[String(si)]; }).length;
+    return '<div class="tplrow" style="flex-direction:column;align-items:stretch;gap:8px">' +
+      '<div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap">' +
+        '<div style="min-width:0;flex:1"><div style="font-weight:600">' + esc(f.name) + "</div>" +
+        '<div class="muted" style="font-size:12.5px">' + esc(f.role || "Role not set") + (f.email ? " · " + esc(f.email) : "") +
+        (f.askedAt ? " · asked " + fmtDate(f.askedAt) : " · not asked yet") + "</div></div>" +
+        '<span class="pill ' + (schools.length && done === schools.length ? "ok" : done ? "warn" : "") + '">' + done + " / " + schools.length + " submitted</span>" +
+        '<button class="btn ghost sm" data-act="editref" data-v="' + i + '">Edit</button>' +
+        '<button class="btn ghost sm" data-act="delref" data-v="' + i + '" aria-label="Remove">✕</button>' +
+      "</div>" +
+      (schools.length ? '<div style="display:flex;gap:6px;flex-wrap:wrap">' + schools.map(function (r, si) {
+        var on = !!sent[String(si)];
+        return '<button class="pill ' + (on ? "ok" : "") + '" style="border:1px solid ' + (on ? "transparent" : "var(--line2)") +
+          ';cursor:pointer" data-act="refsent" data-v="' + i + "|" + si + '">' + (on ? "✓ " : "") + esc(r.name) + "</button>";
+      }).join("") + "</div>" : '<div class="muted" style="font-size:12.5px">No schools on the shortlist yet.</div>') +
+      "</div>";
+  }).join("") : '<div class="empty"><p>No referees recorded. A missing recommendation letter is the most common way a finished application still misses its deadline — track them by name.</p></div>';
+
+  return '<div class="card-h"><div><h3>Test scores</h3>' +
+    '<p class="muted" style="font-size:12.5px;margin-top:3px">The lowest section matters as much as the total — many programmes set a floor on speaking or writing separately.</p></div>' +
+    '<button class="btn pri" data-act="editscores">Edit scores</button></div>' +
+    '<div class="card-b">' +
+      '<div class="grid3">' +
+        kpi(e.total ? (e.total + "") : "—", (e.test || "English test") + (e.date ? " · " + fmtDate(e.date) : "")) +
+        kpi(e.low ? (e.low + "") : "—", "Lowest section") +
+        kpi(num(sc.greV) || num(sc.greQ) ? (num(sc.greV) + " V / " + num(sc.greQ) + " Q") : (num(sc.gmat) ? num(sc.gmat) + "" : "—"),
+            num(sc.gmat) && !num(sc.greV) ? "GMAT total" : "GRE verbal / quant") +
+      "</div>" +
+      (flags.length
+        ? '<div class="notice" style="margin-top:16px"><div><b>' + flags.length + " score problem" + (flags.length === 1 ? "" : "s") + " on the shortlist.</b>" +
+          "<ul style=\"margin:6px 0 0;padding-left:18px\">" + flags.map(function (f) {
+            return "<li>" + esc(f.school) + " — " + esc(f.msg) + "</li>"; }).join("") + "</ul></div></div>"
+        : ((c.schools || []).some(function (r) { return num(r.minEnglish); })
+            ? '<div class="notice info" style="margin-top:16px">Scores clear every minimum recorded on the shortlist.</div>'
+            : '<p class="muted" style="font-size:12.5px;margin-top:14px">Add each programme\'s minimum score on its shortlist entry and the mismatches get flagged here automatically.</p>')) +
+    "</div>" +
+    '<div class="card-h" style="border-top:1px solid var(--line)"><div><h3>Referees</h3>' +
+    '<p class="muted" style="font-size:12.5px;margin-top:3px">Tick a school once that referee has actually submitted through its portal.</p></div>' +
+    '<button class="btn pri" data-act="addref">+ Add referee</button></div>' +
+    (gaps.length ? '<div class="card-b" style="padding-bottom:0"><div class="notice">' +
+      "<div><b>Letters still missing on applications in flight.</b><ul style=\"margin:6px 0 0;padding-left:18px\">" +
+      gaps.map(function (g) { return "<li>" + esc(g.school) + " — " + g.missing + " of " + g.of + " outstanding</li>"; }).join("") +
+      "</ul></div></div></div>" : "") +
+    '<div class="card-b flush">' + refHtml + "</div>";
+}
+
 /* ------------------------------------------------ modals ------------------------------------------------ */
 function closeModal() { $("#modalHost").innerHTML = ""; }
 function modal(title, bodyHtml, okLabel, onOk) {
@@ -810,6 +976,14 @@ function schoolModal(idx) {
     '<p class="muted" style="font-size:12px;margin:2px 0 -4px">Cost figures come from the school\'s own cost-of-attendance page. Leave blank until you have them.</p>' +
     '<div class="grid2" style="gap:12px">' + fld("sTu", "Tuition per year (USD)", r.tuition || "", "0") + fld("sFe", "Fees per year", r.fees || "", "0") + "</div>" +
     '<div class="grid2" style="gap:12px">' + fld("sLi", "Living cost per year", r.living || "", "0") + fld("sAw", "Award / assistantship per year", r.award || "", "0") + "</div>" +
+    '<p class="muted" style="font-size:12px;margin:2px 0 -4px">Entry requirements, from the programme page. Scores on file get checked against these.</p>' +
+    '<div class="grid2" style="gap:12px">' + fld("sMinE", "Minimum English score", r.minEnglish || "", "90") +
+      fld("sMinS", "Minimum single section", r.minSection || "", "22") + "</div>" +
+    '<div class="grid2" style="gap:12px">' + sel("sGre", "GRE / GMAT", r.greRequired || "Not checked", ["Not checked", "Required", "Optional", "Not required"]) +
+      fld("sAppFee", "Application fee (USD)", r.appFee || "", "90") + "</div>" +
+    '<div class="grid2" style="gap:12px">' + fld("sPortal", "Portal login", r.portalUser, "ama.boateng@example.com") +
+      fld("sAppId", "Application ID", r.appId, "2027-448120") + "</div>" +
+    sel("sFeePaid", "Application fee", r.feePaid ? "Paid" : "Not paid", ["Not paid", "Paid", "Waived"]) +
     fld("sNote", "Note", r.note, "Assistantship form is separate and closes two weeks earlier"),
     idx != null ? "Save" : "Add to list",
     function () {
@@ -817,7 +991,10 @@ function schoolModal(idx) {
       if (!nm) { toast("Name the institution."); return false; }
       var o = { sid: r.sid || null, name: nm, program: $("#sProg").value.trim(), deadline: $("#sDl").value || "",
         status: $("#sSt").value, note: $("#sNote").value.trim(), loc: r.loc || "",
-        tuition: num($("#sTu").value), fees: num($("#sFe").value), living: num($("#sLi").value), award: num($("#sAw").value) };
+        tuition: num($("#sTu").value), fees: num($("#sFe").value), living: num($("#sLi").value), award: num($("#sAw").value),
+        minEnglish: num($("#sMinE").value), minSection: num($("#sMinS").value), greRequired: $("#sGre").value,
+        appFee: num($("#sAppFee").value), portalUser: $("#sPortal").value.trim(), appId: $("#sAppId").value.trim(),
+        feePaid: $("#sFeePaid").value !== "Not paid" };
       c.schools = c.schools || [];
       if (idx != null) c.schools[idx] = o; else c.schools.push(o);
       NB.scheduleSave(c.id, 0); render(); return true;
@@ -840,6 +1017,88 @@ function stepModal(tid, stage, stepId) {
         t: title, h: $("#xH").value.trim(), s: $("#xS").value, o: $("#xO").value };
       if (x) { for (var k in o) x[k] = o[k]; } else { t.tasks.push(o); }
       NB.saveTemplate(tid); render(); return true;
+    });
+}
+
+
+function scoresModal(c) {
+  var sc = c.scores || {}, e = sc.english || {};
+  modal("Test scores",
+    sel("zTest", "English test", e.test || "Not sat yet", ENGLISH_TESTS) +
+    '<div class="grid2" style="gap:12px">' + fld("zTotal", "Overall score", e.total || "", "98") +
+      fld("zLow", "Lowest section", e.low || "", "21") + "</div>" +
+    fld("zDate", "Date sat", e.date || "", "", "date") +
+    '<p class="muted" style="font-size:12px;margin:4px 0 -4px">GRE and GMAT \u2014 leave blank where the programmes do not ask for them.</p>' +
+    '<div class="grid3" style="gap:12px">' + fld("zV", "GRE verbal", sc.greV || "", "155") +
+      fld("zQ", "GRE quant", sc.greQ || "", "162") + fld("zA", "GRE AWA", sc.greAWA || "", "4.0") + "</div>" +
+    fld("zG", "GMAT total", sc.gmat || "", "650"),
+    "Save scores",
+    function () {
+      c.scores = {
+        english: { test: $("#zTest").value, total: num($("#zTotal").value), low: num($("#zLow").value), date: $("#zDate").value || "" },
+        greV: num($("#zV").value), greQ: num($("#zQ").value), greAWA: num($("#zA").value), gmat: num($("#zG").value)
+      };
+      NB.scheduleSave(c.id, 0); render(); toast("Scores saved"); return true;
+    });
+}
+
+function refModal(c, idx) {
+  var f = idx != null ? (c.refs || [])[idx] : {};
+  modal(idx != null ? "Edit referee" : "Add referee",
+    fld("rName", "Name", f.name, "Dr Kwame Asare") +
+    '<div class="grid2" style="gap:12px">' + fld("rRole", "Role", f.role, "Supervisor, KNUST") +
+      fld("rEmail", "Email", f.email, "k.asare@example.edu", "email") + "</div>" +
+    fld("rAsked", "Asked on", f.askedAt || "", "", "date"),
+    idx != null ? "Save" : "Add referee",
+    function () {
+      var nm = $("#rName").value.trim();
+      if (!nm) { toast("Name the referee."); return false; }
+      var o = { name: nm, role: $("#rRole").value.trim(), email: $("#rEmail").value.trim(),
+                askedAt: $("#rAsked").value || "", sent: f.sent || {} };
+      c.refs = c.refs || [];
+      if (idx != null) c.refs[idx] = o; else c.refs.push(o);
+      NB.scheduleSave(c.id, 0); render(); return true;
+    });
+}
+
+function payModal(c) {
+  modal("Record payment",
+    fld("pAmt", "Amount (USD)", "", "750") +
+    fld("pAt", "Received on", NB.today(), "", "date") +
+    sel("pHow", "Method", "Bank transfer", ["Bank transfer", "Mobile money", "Cash", "Card", "Other"]) +
+    fld("pNote", "Note", "", "First instalment"),
+    "Record",
+    function () {
+      var amt = num($("#pAmt").value);
+      if (!amt) { toast("Enter an amount."); return false; }
+      var b = NB.billOf(c.id), cur = S.billing[c.id] || {};
+      var pays = (cur.payments || []).slice();
+      pays.push({ amount: amt, at: $("#pAt").value || NB.today(), method: $("#pHow").value, note: $("#pNote").value.trim() });
+      NB.saveBilling(c.id, { fee: b.fee, referral: b.referral, note: b.note, payments: pays });
+      render(); toast("Payment recorded"); return true;
+    });
+}
+
+function outcomeModal(c) {
+  var o = c.outcome || {};
+  modal("Where did " + (c.name || "this client") + " land?",
+    fld("oSchool", "Institution", o.school, "University of Michigan") +
+    fld("oProg", "Programme", o.program, "MEng Civil Engineering") +
+    '<div class="grid2" style="gap:12px">' + fld("oTerm", "Intake", o.term, "Spring 2028") +
+      fld("oAward", "Total award (USD)", o.award || "", "14000") + "</div>" +
+    fld("oNote", "Note", o.note, "Assistantship plus partial tuition waiver") +
+    '<p class="muted" style="font-size:12px">Recording an outcome also marks the client Placed.</p>',
+    "Save outcome",
+    function () {
+      var sch = $("#oSchool").value.trim();
+      if (!sch) {
+        if (c.outcome) { delete c.outcome; NB.scheduleSave(c.id, 0); render(); toast("Outcome cleared"); return true; }
+        toast("Name the institution."); return false;
+      }
+      c.outcome = { school: sch, program: $("#oProg").value.trim(), term: $("#oTerm").value.trim(),
+                    award: num($("#oAward").value), note: $("#oNote").value.trim() };
+      c.status = "Placed";
+      NB.scheduleSave(c.id, 0); render(); toast("Outcome recorded"); return true;
     });
 }
 
@@ -997,10 +1256,46 @@ document.addEventListener("click", function (e) {
     if (!s) return;
     c5.schools = c5.schools || [];
     c5.schools.push({ sid: s.id, name: s.name, program: "", deadline: "", status: "Researching", note: "",
-      loc: s.city + ", " + s.state, tuition: 0, fees: 0, living: 0, award: 0 });
+      loc: s.city + ", " + s.state, tuition: 0, fees: 0, living: 0, award: 0,
+      minEnglish: 0, minSection: 0, greRequired: "Not checked", appFee: 0, portalUser: "", appId: "", feePaid: false });
     NB.scheduleSave(c5.id, 0); render(); toast("Added to " + (c5.name || "the") + "'s list"); return;
   }
   if (a === "sendmsg") { doSend(); return; }
+
+  if (a === "openbill") { S.open = v; S.view = "client"; S.tab = "billing"; NB.attachMessages(v); render(); return; }
+  if (a === "outcome") { var co = byId(v) || meClient(); if (co) outcomeModal(co); return; }
+  if (a === "savebill") {
+    var cb2 = meClient(); if (!cb2) return;
+    var prev = NB.billOf(cb2.id);
+    NB.saveBilling(cb2.id, { fee: num($("#feeAmt").value), referral: $("#feeSrc").value.trim(),
+                             note: $("#feeNote").value.trim(), payments: prev.payments });
+    render(); toast("Saved"); return;
+  }
+  if (a === "addpay") { var cp = meClient(); if (cp) payModal(cp); return; }
+  if (a === "delpay") {
+    var cd = meClient(); if (!cd) return;
+    var bb = NB.billOf(cd.id);
+    var sorted = bb.payments.slice().sort(function (x, y) { return String(y.at).localeCompare(String(x.at)); });
+    var gone = sorted[Number(v)];
+    var kept = bb.payments.filter(function (p) { return p !== gone; });
+    NB.saveBilling(cd.id, { fee: bb.fee, referral: bb.referral, note: bb.note, payments: kept });
+    render(); toast("Payment removed"); return;
+  }
+
+  if (a === "editscores") { var cs2 = meClient(); if (cs2) scoresModal(cs2); return; }
+  if (a === "addref") { var cr = meClient(); if (cr) refModal(cr, null); return; }
+  if (a === "editref") { var cr2 = meClient(); if (cr2) refModal(cr2, Number(v)); return; }
+  if (a === "delref") {
+    var cr3 = meClient(); if (!cr3) return;
+    (cr3.refs || []).splice(Number(v), 1); NB.scheduleSave(cr3.id, 0); render(); return;
+  }
+  if (a === "refsent") {
+    var cr4 = meClient(); if (!cr4) return;
+    var pr = v.split("|"), f = (cr4.refs || [])[Number(pr[0])]; if (!f) return;
+    f.sent = f.sent || {};
+    if (f.sent[pr[1]]) delete f.sent[pr[1]]; else f.sent[pr[1]] = true;
+    NB.scheduleSave(cr4.id, 0); render(); return;
+  }
 
   if (a === "tplopen") { S.tplOpen = v; render(); return; }
   if (a === "tplnew" || a === "tpldup") {

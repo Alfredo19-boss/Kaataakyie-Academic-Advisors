@@ -52,6 +52,13 @@ One document per client. `id` is generated client-side (`c` + base-36 timestamp 
 
   "files": [{ "aid": "<asset id>", "name": "transcript.pdf", "type": "application/pdf", "size": 240000, "at": "…" }],
 
+  "scores": {
+    "english": { "test": "TOEFL iBT", "total": 98, "low": 21, "date": "2026-09-02" },
+    "greV": 0, "greQ": 0, "greAWA": 0, "gmat": 0
+  },
+  "refs": [{ "name": "Dr Kwame Asare", "role": "Supervisor, KNUST", "email": "…", "askedAt": "2026-09-08", "sent": { "0": true } }],
+  "outcome": { "school": "University of Michigan", "program": "MEng Civil Engineering", "term": "Spring 2028", "award": 14000, "note": "…" },
+
   "lastReadA": "…", "lastReadC": "…",
   "createdAt": "…", "updatedAt": "…"
 }
@@ -63,6 +70,10 @@ Notes on the fields:
 - **`due`** — task id → target date. Set by the advisor. A task with a `due` in the past and no `tasks` entry is *overdue*, which drives the Schedule column, the Pipeline count and the red calendar chips.
 - **`docs`** — document id → `0 Not started · 1 Requested · 2 Received · 3 Verified`.
 - **`schools[].status`** — `Researching · Applying · Submitted · Admitted · Waitlisted · Denied · Enrolling`.
+- **`schools[].minEnglish` / `minSection`** — the programme's stated minimums. `scores.english.total` and `.low` are compared against them and a mismatch is flagged on the school row and on the Scores & referees tab. `minSection` is the reason the flag catches "98 overall but speaking 21" — the total passes and the section does not.
+- **`schools[].portalUser`, `.appId`, `.appFee`, `.feePaid`** — the practical bits of an application in flight.
+- **`refs[].sent`** — a map of *shortlist index* → `true`, so a referee is tracked per school rather than as one global tick. The index is the position in `schools`; reordering the shortlist would shift it, which is why the UI has no reorder control.
+- **`outcome`** — set when a client accepts. Recording one also flips `status` to `Placed`, and the Business view totals `outcome.award` across everyone.
 - **Net year-one cost** = `tuition + fees + living − award`, floored at 0. The funding gap is that figure minus `budget`.
 - **`files[].aid`** is an asset id. The file is served at `/_blob/<aid>` in every view.
 - **`status`** — `Active · Paused · Placed · Archived`.
@@ -84,6 +95,21 @@ Private advisor notes, kept **out of the client document on purpose** so an acce
 ```json
 { "body": "Funding is the constraint — an assistantship is not optional.", "at": "…" }
 ```
+
+### `billing/<clientId>`
+
+Fees and payments, kept out of the client document so an access rule can restrict them. A client never loads this.
+
+```json
+{
+  "fee": 1500,
+  "referral": "Referral",
+  "note": "Half on signing, half when the first application goes in.",
+  "payments": [{ "amount": 750, "at": "2026-08-05", "method": "Bank transfer", "note": "First instalment" }]
+}
+```
+
+Outstanding is `fee` minus the sum of `payments[].amount`; nothing stores it.
 
 ### `templates/<id>`
 
@@ -120,6 +146,7 @@ Declared at publish time, enforced by the store rather than by the page:
 [
   { "path": "",          "read": "interact", "write": "interact" },
   { "path": "notes",     "read": "admin",    "write": "admin" },
+  { "path": "billing",   "read": "admin",    "write": "admin" },
   { "path": "templates", "read": "interact", "write": "admin" },
   { "path": "config",    "read": "interact", "write": "admin" },
   { "path": "codes",     "read": "interact", "write": "admin" }
@@ -128,7 +155,7 @@ Declared at publish time, enforced by the store rather than by the page:
 
 Levels, in the sharing menu's words: **Can interact** → `interact`, **Can edit** → `admin`, and the artifact's owner meets every level.
 
-So a client, who holds `interact`, can tick their own steps and send messages, and cannot touch settings, templates, access codes or private notes. A refused read returns as though the document does not exist — deliberately indistinguishable from absence.
+So a client, who holds `interact`, can tick their own steps and send messages, and cannot touch settings, templates, access codes, private notes or anything about fees. A refused read returns as though the document does not exist — deliberately indistinguishable from absence.
 
 Share the page as **Can interact**. Anyone given **Can edit** becomes a second advisor.
 

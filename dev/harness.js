@@ -70,6 +70,26 @@
   setTimeout(function () {
     store["templates/default"] = { name: "Standard plan", tasks: (window.NB_TASKS || []).map(function (t) { return t; }) };
   }, 0);
+  store["billing/c1"] = { fee: 1500, referral: "Referral", note: "Half on signing, half when the first application goes in.",
+    payments: [{ amount: 750, at: "2026-08-05", method: "Bank transfer", note: "First instalment" }] };
+  store["billing/c2"] = { fee: 1200, referral: "WhatsApp group", note: "", payments: [] };
+  store["billing/c3"] = { fee: 1800, referral: "University alumni", note: "",
+    payments: [{ amount: 900, at: "2026-02-10", method: "Bank transfer", note: "" },
+               { amount: 900, at: "2026-09-02", method: "Mobile money", note: "Balance" }] };
+  store["clients/c1"].scores = { english: { test: "TOEFL iBT", total: 98, low: 21, date: "2026-09-02" }, greV: 0, greQ: 0, greAWA: 0, gmat: 0 };
+  store["clients/c1"].schools[0].minEnglish = 90; store["clients/c1"].schools[0].minSection = 22;
+  store["clients/c1"].schools[0].greRequired = "Optional"; store["clients/c1"].schools[0].appFee = 50;
+  store["clients/c1"].schools[0].portalUser = "ama.boateng@example.com"; store["clients/c1"].schools[0].appId = "2027-448120";
+  store["clients/c1"].schools[0].feePaid = true;
+  store["clients/c1"].schools[1].minEnglish = 80; store["clients/c1"].schools[1].minSection = 0;
+  store["clients/c1"].refs = [
+    { name: "Dr Kwame Asare", role: "Supervisor, KNUST", email: "k.asare@example.edu", askedAt: "2026-09-08", sent: { "0": true } },
+    { name: "Prof. Efua Danso", role: "Head of Department", email: "e.danso@example.edu", askedAt: "2026-09-08", sent: {} },
+    { name: "Mr Yaw Owusu", role: "Engineering manager", email: "y.owusu@example.com", askedAt: "", sent: {} }
+  ];
+  store["clients/c3"].outcome = { school: "University of Michigan", program: "MEng Civil Engineering", term: "Spring 2028",
+    award: 14000, note: "Partial tuition waiver plus a departmental award." };
+  store["clients/c3"].status = "Placed";
   window.claude = {
     use: function (n) {
       if (n === "db") return Promise.resolve({ doc: docRef, collection: collRef });

@@ -99,13 +99,13 @@ window.NB_RESOURCES = [
     name: "The 18-month timeline",
     lede: "Work backwards from the intake, not forwards from today. Almost every failed season is a timeline problem, not a merit problem.",
     items: [
-      { t: "18-15 months out", b: "Intake and goal-setting. Decide the intake term and the field. Start saving for test fees, application fees and the credential evaluation — together these commonly run to several hundred dollars before a single application is submitted." },
-      { t: "15-12 months out", b: "Sit the English test. Order official transcripts from every institution. Start the credential evaluation, which is the slowest moving part of the file." },
-      { t: "12-9 months out", b: "Build the longlist, then cut it to eight to ten programmes. Draft the SOP. Approach recommenders with a clear deadline." },
-      { t: "9-6 months out", b: "Submit. Aim at each school's priority or funding deadline, which is usually weeks ahead of the final one. Submit assistantship applications separately where they exist." },
-      { t: "6-4 months out", b: "Decisions arrive. Compare offers on net cost, accept one, decline the rest, pay the deposit and send financial documents for the I-20." },
-      { t: "4-2 months out", b: "I-20 in hand: pay the SEVIS fee, file the DS-160, book the interview as early as the calendar allows. Interview slots are the usual bottleneck." },
-      { t: "2-0 months out", b: "Visa collected, flight booked, housing secured, insurance and immunisations done, first-60-days money arranged." }
+      { t: "18-15 months out", h: "Decide, and start saving", b: "Intake and goal-setting. Decide the intake term and the field. Start saving for test fees, application fees and the credential evaluation — together these commonly run to several hundred dollars before a single application is submitted." },
+      { t: "15-12 months out", h: "Test sat, transcripts ordered", b: "Sit the English test. Order official transcripts from every institution. Start the credential evaluation, which is the slowest moving part of the file." },
+      { t: "12-9 months out", h: "Shortlist and statements", b: "Build the longlist, then cut it to eight to ten programmes. Draft the SOP. Approach recommenders with a clear deadline." },
+      { t: "9-6 months out", h: "Applications in", b: "Submit. Aim at each school's priority or funding deadline, which is usually weeks ahead of the final one. Submit assistantship applications separately where they exist." },
+      { t: "6-4 months out", h: "Offers, then one yes", b: "Decisions arrive. Compare offers on net cost, accept one, decline the rest, pay the deposit and send financial documents for the I-20." },
+      { t: "4-2 months out", h: "SEVIS, DS-160, interview", b: "I-20 in hand: pay the SEVIS fee, file the DS-160, book the interview as early as the calendar allows. Interview slots are the usual bottleneck." },
+      { t: "2-0 months out", h: "Visa, flight, housing", b: "Visa collected, flight booked, housing secured, insurance and immunisations done, first-60-days money arranged." }
     ]
   },
   {

@@ -33,6 +33,14 @@ const body = [read(SHELL), ...SCRIPTS.map(bundle)].join("\n");
 mkdirSync(join(root, "dist"), { recursive: true });
 writeFileSync(join(root, "dist/index.html"), body + "\n");
 
+/* The public marketing site — same data files, its own shell and script, no runtime capabilities. */
+const publicBody = [
+  read("public/shell.html"),
+  bundle(["src/data/schools.js", "src/data/content.js"]),
+  bundle(["public/app.js"]),
+].join("\n");
+writeFileSync(join(root, "dist/public.html"), publicBody + "\n");
+
 const preview = `<!doctype html>
 <html lang="en">
 <head>
@@ -55,5 +63,6 @@ ${body}
 writeFileSync(join(root, "dev/preview.html"), preview);
 
 const kb = (s) => (Buffer.byteLength(s) / 1024).toFixed(0) + " KB";
-console.log(`dist/index.html    ${kb(body)}   (publish this)`);
+console.log(`dist/index.html    ${kb(body)}   (publish this — the advisor platform)`);
+console.log(`dist/public.html   ${kb(publicBody)}   (publish this — the public planner)`);
 console.log(`dev/preview.html   ${kb(preview)}   (open in a browser, or: npm run dev)`);

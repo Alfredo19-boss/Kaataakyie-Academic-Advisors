@@ -1,0 +1,1063 @@
+<title>The US Master's Planner</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
+<style>
+:root{
+  --bg:#F1F4F6; --panel:#FFFFFF; --panel2:#E6EDEF; --line:#D3DDE1; --line2:#BDCBD1;
+  --text:#0F1D23; --muted:#5B6E76; --faint:#8296A0;
+  --brand:#0F4C5C; --brand-2:#166376; --brand-soft:#E0EDF1; --on-brand:#FFFFFF;
+  --ink:#071A21; --ink-2:#0C2933;
+  --accent:#B4622A; --accent-soft:#F7EAE0;
+  --ok:#1B7A5B; --crit:#A63A2E;
+  --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --r:12px;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#080F13; --panel:#101A20; --panel2:#18252C; --line:#22333B; --line2:#2E434D;
+  --text:#E3EAED; --muted:#93A6AE; --faint:#6F858E;
+  --brand:#5FB4C9; --brand-2:#7CC7D9; --brand-soft:#11303A; --on-brand:#06171D;
+  --ink:#050D11; --ink-2:#0B1C23; --accent:#E09257; --accent-soft:#2C1D12;
+  --ok:#5AC89E; --crit:#E5867A;
+}}
+:root[data-theme="dark"]{
+  --bg:#080F13; --panel:#101A20; --panel2:#18252C; --line:#22333B; --line2:#2E434D;
+  --text:#E3EAED; --muted:#93A6AE; --faint:#6F858E;
+  --brand:#5FB4C9; --brand-2:#7CC7D9; --brand-soft:#11303A; --on-brand:#06171D;
+  --ink:#050D11; --ink-2:#0B1C23; --accent:#E09257; --accent-soft:#2C1D12;
+  --ok:#5AC89E; --crit:#E5867A;
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{margin:0;font-weight:600;text-wrap:balance;letter-spacing:-.012em}
+p{margin:0}
+a{color:var(--brand)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+
+.wrap{width:100%;max-width:1080px;margin:0 auto;padding-inline:20px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.lead{font-size:17px;color:var(--muted);max-width:62ch}
+section{padding-block:72px}
+section+section{border-top:1px solid var(--line)}
+.shead{margin-bottom:36px}
+.shead h2{font-family:var(--serif);font-size:clamp(26px,3.4vw,36px);margin-top:10px}
+.shead p{margin-top:12px}
+
+/* nav */
+.topnav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:color-mix(in srgb,var(--bg) 90%,transparent);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.topnav .wrap{display:flex;align-items:center;gap:22px;height:58px}
+.topnav .brand{display:flex;align-items:center;gap:9px;font-weight:600;font-size:14.5px;margin-right:auto;white-space:nowrap}
+.topnav a{color:var(--muted);text-decoration:none;font-size:13.5px;font-weight:500;white-space:nowrap}
+.topnav a:hover{color:var(--text)}
+.topnav .cta{color:var(--on-brand);background:var(--brand);padding:7px 14px;border-radius:7px}
+.topnav .cta:hover{background:var(--brand-2);color:var(--on-brand)}
+.navlinks{display:flex;gap:20px;align-items:center;overflow-x:auto}
+
+/* hero */
+.hero{background:var(--ink);color:#EAF1F3;padding-block:84px 72px;border-bottom:1px solid var(--line)}
+.hero h1{font-family:var(--serif);font-size:clamp(34px,6vw,60px);line-height:1.04;font-weight:600;max-width:17ch}
+.hero .sub{margin-top:22px;font-size:18px;color:#A9C0C7;max-width:56ch}
+.hero .acts{margin-top:32px;display:flex;gap:12px;flex-wrap:wrap}
+.hero .b1,.hero .b2{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14.5px}
+.hero .b1{background:var(--accent);color:#1A0C04}
+.hero .b2{border:1px solid rgba(233,241,243,.28);color:#EAF1F3}
+.hero .b2:hover{background:rgba(233,241,243,.08)}
+.statrow{display:flex;gap:40px;flex-wrap:wrap;margin-top:52px;padding-top:26px;border-top:1px solid rgba(233,241,243,.16)}
+.statrow div b{display:block;font-family:var(--serif);font-size:30px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums}
+.statrow div span{font-size:12.5px;color:#93AEB6;display:block;margin-top:6px}
+
+/* ruler timeline */
+.ruler{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:0;margin-top:8px}
+.tick{padding:0 10px 0 0;border-top:2px solid var(--line2);position:relative;padding-top:20px}
+.tick:before{content:"";position:absolute;top:-2px;left:0;width:2px;height:13px;background:var(--brand)}
+.tick .m{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--brand);letter-spacing:.02em}
+.tick h4{font-size:13.5px;margin-top:7px}
+.tick p{font-size:12.5px;color:var(--muted);margin-top:5px;line-height:1.5}
+@media (max-width:900px){
+  .ruler{grid-template-columns:1fr;gap:0}
+  .tick{border-top:0;border-left:2px solid var(--line2);padding:0 0 22px 18px}
+  .tick:before{top:0;left:-2px;width:11px;height:2px}
+  .tick:last-child{padding-bottom:0}
+}
+
+/* stage cards */
+.stages{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.stage{background:var(--panel);padding:20px}
+.stage .n{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600}
+.stage h4{font-size:14.5px;margin-top:6px}
+.stage p{font-size:13px;color:var(--muted);margin-top:6px}
+
+/* traps */
+.traps{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px}
+.trap{border-left:3px solid var(--crit);padding-left:16px}
+.trap h4{font-size:15px}
+.trap p{font-size:13.5px;color:var(--muted);margin-top:7px}
+
+/* explorer */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.filters{display:flex;gap:10px;flex-wrap:wrap;padding:16px;border-bottom:1px solid var(--line);align-items:center}
+.inp{padding:9px 12px;border:1px solid var(--line2);border-radius:8px;background:var(--panel);color:var(--text);min-width:0}
+.inp:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.grow{flex:1 1 220px}
+select.inp{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+  background-position:calc(100% - 15px) calc(50% + 1px),calc(100% - 10px) calc(50% + 1px);background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:32px}
+.count{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+.rows{max-height:520px;overflow:auto}
+.row{display:flex;gap:12px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .nm{font-weight:500;font-size:14px}
+.row .loc{font-size:12.5px;color:var(--muted)}
+.row a{margin-left:auto;font-size:12.5px;font-weight:500;text-decoration:none;border:1px solid var(--line2);padding:5px 11px;border-radius:999px;white-space:nowrap}
+.row a:hover{background:var(--brand-soft);border-color:var(--brand)}
+.more{padding:14px;text-align:center;border-top:1px solid var(--line)}
+.btn{padding:9px 16px;border:1px solid var(--line2);border-radius:8px;background:var(--panel);font-weight:500;font-size:13.5px;cursor:pointer}
+.btn:hover{background:var(--panel2)}
+
+/* library */
+.libnav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:24px}
+.libnav button{padding:7px 14px;border-radius:999px;border:1px solid var(--line2);background:var(--panel);color:var(--muted);font-size:13px;font-weight:500;cursor:pointer}
+.libnav button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.libitem{padding:18px 0;border-bottom:1px solid var(--line)}
+.libitem:last-of-type{border-bottom:0}
+.libitem h4{font-size:15px}
+.libitem p{font-size:14px;color:var(--muted);margin-top:6px;max-width:74ch}
+.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.links a{font-size:12.5px;font-weight:500;text-decoration:none;border:1px solid var(--line2);padding:6px 12px;border-radius:999px}
+.links a:hover{background:var(--brand-soft);border-color:var(--brand)}
+
+/* cta */
+.cta-band{background:var(--ink-2);color:#EAF1F3;border-radius:var(--r);padding:40px 34px;display:flex;gap:30px;align-items:center;flex-wrap:wrap}
+.cta-band h3{font-family:var(--serif);font-size:26px;flex:1 1 320px}
+.cta-band p{color:#A9C0C7;margin-top:10px;font-size:14.5px;max-width:52ch}
+.cta-band a{background:var(--accent);color:#1A0C04;padding:12px 22px;border-radius:8px;text-decoration:none;font-weight:600;white-space:nowrap}
+
+footer{padding-block:40px;border-top:1px solid var(--line);color:var(--faint);font-size:12.5px}
+footer p{max-width:78ch;margin-bottom:8px}
+</style>
+
+<nav class="topnav">
+  <div class="wrap">
+    <div class="brand">
+      <svg width="24" height="24" viewBox="0 0 40 40" aria-hidden="true">
+        <rect width="40" height="40" rx="9" fill="var(--brand)"></rect>
+        <path d="M11 28V12l18 16V12" fill="none" stroke="var(--on-brand)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+      <span>The US Master's Planner</span>
+    </div>
+    <div class="navlinks">
+      <a href="#timeline">Timeline</a>
+      <a href="#stages">Stages</a>
+      <a href="#schools">Schools</a>
+      <a href="#traps">Traps</a>
+      <a href="#library">Library</a>
+      <a href="#work" class="cta">Work with an advisor</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">A free planner for international applicants</div>
+    <h1>A US master's is won eighteen months before it starts.</h1>
+    <p class="sub">Almost every application that fails does so on timing, not on merit — a credential evaluation ordered too late, a funding deadline mistaken for the final one, an embassy slot booked after they had all gone. Here is the whole run, in order.</p>
+    <div class="acts">
+      <a class="b1" href="#timeline">See the timeline</a>
+      <a class="b2" href="#schools">Browse the schools</a>
+    </div>
+    <div class="statrow">
+      <div><b id="statSchools">426</b><span>US institutions awarding master's degrees</span></div>
+      <div><b>8</b><span>stages from first enquiry to arrival</span></div>
+      <div><b>49</b><span>steps that have to happen in order</span></div>
+      <div><b>51</b><span>states and territories covered</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="timeline">
+  <div class="wrap">
+    <div class="shead">
+      <div class="eyebrow">Counting backwards</div>
+      <h2>Work back from the intake, not forward from today</h2>
+      <p class="lead">Months before the programme starts. The slowest item is never the application itself — it is the transcript your old registrar has not answered about yet.</p>
+    </div>
+    <div class="ruler" id="ruler"></div>
+  </div>
+</section>
+
+<section id="stages">
+  <div class="wrap">
+    <div class="shead">
+      <div class="eyebrow">The shape of it</div>
+      <h2>Eight stages, forty-nine steps</h2>
+      <p class="lead">Nothing here is optional and very little of it can be done out of order.</p>
+    </div>
+    <div class="stages" id="stageGrid"></div>
+  </div>
+</section>
+
+<section id="schools">
+  <div class="wrap">
+    <div class="shead">
+      <div class="eyebrow">Where to apply</div>
+      <h2>Every US institution that awards a master's</h2>
+      <p class="lead">All fifty states and the District of Columbia. Tuition, deadlines and entry requirements are deliberately <em>not</em> listed — they change every cycle and differ by department, so each row links to the school's own graduate admissions page instead of to a figure that will be wrong by next year.</p>
+    </div>
+    <div class="card">
+      <div class="filters">
+        <input class="inp grow" id="q" placeholder="Search by name or city" autocomplete="off">
+        <select class="inp" id="fState"><option value="">All states</option></select>
+        <select class="inp" id="fCtrl"><option value="">Public &amp; private</option><option>Public</option><option>Private</option></select>
+        <select class="inp" id="fTag"><option value="">Any type</option></select>
+        <span class="count" id="count"></span>
+      </div>
+      <div class="rows" id="rows"></div>
+      <div class="more" id="more" hidden><button class="btn" id="moreBtn">Show more</button></div>
+    </div>
+  </div>
+</section>
+
+<section id="traps">
+  <div class="wrap">
+    <div class="shead">
+      <div class="eyebrow">What actually goes wrong</div>
+      <h2>Five traps that sink finished applications</h2>
+      <p class="lead">None of these is about how good the applicant is.</p>
+    </div>
+    <div class="traps">
+      <div class="trap"><h4>The funding deadline is the real deadline</h4><p>Schools publish a final deadline and, weeks earlier, a priority or funding deadline. Apply to the later one and the assistantships are gone before the file is read. Aim at the earlier date, every time.</p></div>
+      <div class="trap"><h4>Section minimums, not just the total</h4><p>A comfortable overall English score with one weak section is still a rejection. Many programmes set a floor on speaking or writing separately, and it is the most common avoidable failure in the whole process.</p></div>
+      <div class="trap"><h4>The credential evaluation takes months</h4><p>Six to twelve weeks from request to delivered report, longer when the issuing registrar is slow to verify. Started in month two it is invisible; started in month nine it decides the season.</p></div>
+      <div class="trap"><h4>Letters go missing, quietly</h4><p>Recommenders upload through each school's own portal, separately. Nobody tells the applicant one is outstanding. Chase at two weeks out, not two days, and track them by name and by school.</p></div>
+      <div class="trap"><h4>Interview slots, not documents</h4><p>Once the I-20 is in hand the bottleneck is the embassy calendar, which is longest in the months before a Fall intake. Book the moment the DS-160 is filed rather than waiting for everything else to be ready.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="library">
+  <div class="wrap">
+    <div class="shead">
+      <div class="eyebrow">The detail</div>
+      <h2>Everything, by subject</h2>
+      <p class="lead">Tests and English proficiency, credential evaluation, the application file, paying for it, proving funds for the I-20, the F-1 visa, pre-departure and what happens after landing.</p>
+    </div>
+    <div class="libnav" id="libnav"></div>
+    <div id="libbody"></div>
+  </div>
+</section>
+
+<section id="work">
+  <div class="wrap">
+    <div class="cta-band">
+      <div>
+        <h3>Doing this alone is possible. Doing it on time is the hard part.</h3>
+        <p>I take a small number of clients through the whole run — shortlist, statements, applications, funding, the I-20 and the visa — with every deadline tracked so none of the five traps above gets a chance.</p>
+      </div>
+      <a id="ctaLink" href="mailto:hello@example.com?subject=US%20master%27s%20advising">Get in touch</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><b>This is general planning information, not legal or immigration advice.</b> Requirements differ by school, by embassy and by year. Confirm everything against the official sources linked throughout — ETS, IELTS, NACES, Study in the States, the Consular Electronic Application Center and the school's own admissions office — before acting on it.</p>
+    <p id="foot"></p>
+  </div>
+</footer>
+
+<script>
+/* US institutions that award master's degrees — name | city | state | control (P=public, R=private) | tags
+   Tags are factual categories only: ivy, hbcu, tech (institute of technology), art (art & design), med (health-sciences campus).
+   No tuition, ranking or acceptance-rate figures are stored here on purpose — those change yearly and
+   belong on the school's own admissions page, which each row links out to. */
+window.NB_SCHOOLS = `
+University of Alabama|Tuscaloosa|AL|P
+University of Alabama at Birmingham|Birmingham|AL|P
+Auburn University|Auburn|AL|P
+University of Alabama in Huntsville|Huntsville|AL|P
+Alabama A&M University|Normal|AL|P|hbcu
+Troy University|Troy|AL|P
+Samford University|Birmingham|AL|R
+University of South Alabama|Mobile|AL|P
+Jacksonville State University|Jacksonville|AL|P
+University of Alaska Anchorage|Anchorage|AK|P
+University of Alaska Fairbanks|Fairbanks|AK|P
+Arizona State University|Tempe|AZ|P
+University of Arizona|Tucson|AZ|P
+Northern Arizona University|Flagstaff|AZ|P
+Grand Canyon University|Phoenix|AZ|R
+University of Arkansas|Fayetteville|AR|P
+University of Arkansas at Little Rock|Little Rock|AR|P
+Arkansas State University|Jonesboro|AR|P
+University of Central Arkansas|Conway|AR|P
+Harding University|Searcy|AR|R
+Stanford University|Stanford|CA|R
+California Institute of Technology|Pasadena|CA|R|tech
+University of California, Berkeley|Berkeley|CA|P
+University of California, Los Angeles|Los Angeles|CA|P
+University of California, San Diego|La Jolla|CA|P
+University of California, Davis|Davis|CA|P
+University of California, Irvine|Irvine|CA|P
+University of California, Santa Barbara|Santa Barbara|CA|P
+University of California, Santa Cruz|Santa Cruz|CA|P
+University of California, Riverside|Riverside|CA|P
+University of California, Merced|Merced|CA|P
+University of Southern California|Los Angeles|CA|R
+Santa Clara University|Santa Clara|CA|R
+Pepperdine University|Malibu|CA|R
+Loyola Marymount University|Los Angeles|CA|R
+University of San Francisco|San Francisco|CA|R
+San Diego State University|San Diego|CA|P
+San Jose State University|San Jose|CA|P
+California State University, Long Beach|Long Beach|CA|P
+California State University, Fullerton|Fullerton|CA|P
+California State University, Los Angeles|Los Angeles|CA|P
+California Polytechnic State University|San Luis Obispo|CA|P|tech
+California State Polytechnic University, Pomona|Pomona|CA|P|tech
+California State University, Sacramento|Sacramento|CA|P
+California State University, Northridge|Northridge|CA|P
+California State University, East Bay|Hayward|CA|P
+San Francisco State University|San Francisco|CA|P
+California State University, Fresno|Fresno|CA|P
+Chapman University|Orange|CA|R
+University of the Pacific|Stockton|CA|R
+Claremont Graduate University|Claremont|CA|R
+University of San Diego|San Diego|CA|R
+University of Colorado Boulder|Boulder|CO|P
+University of Colorado Denver|Denver|CO|P
+Colorado State University|Fort Collins|CO|P
+Colorado School of Mines|Golden|CO|P|tech
+University of Denver|Denver|CO|R
+University of Northern Colorado|Greeley|CO|P
+Colorado State University Pueblo|Pueblo|CO|P
+Yale University|New Haven|CT|R|ivy
+University of Connecticut|Storrs|CT|P
+Quinnipiac University|Hamden|CT|R
+Fairfield University|Fairfield|CT|R
+University of New Haven|West Haven|CT|R
+Wesleyan University|Middletown|CT|R
+Southern Connecticut State University|New Haven|CT|P
+Sacred Heart University|Fairfield|CT|R
+University of Delaware|Newark|DE|P
+Delaware State University|Dover|DE|P|hbcu
+Wilmington University|New Castle|DE|R
+Georgetown University|Washington|DC|R
+George Washington University|Washington|DC|R
+American University|Washington|DC|R
+Howard University|Washington|DC|R|hbcu
+Catholic University of America|Washington|DC|R
+Gallaudet University|Washington|DC|R
+University of the District of Columbia|Washington|DC|P|hbcu
+University of Florida|Gainesville|FL|P
+Florida State University|Tallahassee|FL|P
+University of Miami|Coral Gables|FL|R
+University of Central Florida|Orlando|FL|P
+University of South Florida|Tampa|FL|P
+Florida International University|Miami|FL|P
+Florida Atlantic University|Boca Raton|FL|P
+Embry-Riddle Aeronautical University|Daytona Beach|FL|R|tech
+Florida Institute of Technology|Melbourne|FL|R|tech
+University of North Florida|Jacksonville|FL|P
+Nova Southeastern University|Fort Lauderdale|FL|R
+Florida A&M University|Tallahassee|FL|P|hbcu
+Stetson University|DeLand|FL|R
+Rollins College|Winter Park|FL|R
+Florida Gulf Coast University|Fort Myers|FL|P
+Georgia Institute of Technology|Atlanta|GA|P|tech
+University of Georgia|Athens|GA|P
+Emory University|Atlanta|GA|R
+Georgia State University|Atlanta|GA|P
+Kennesaw State University|Kennesaw|GA|P
+Mercer University|Macon|GA|R
+Georgia Southern University|Statesboro|GA|P
+Clark Atlanta University|Atlanta|GA|R|hbcu
+Augusta University|Augusta|GA|P|med
+Savannah College of Art and Design|Savannah|GA|R|art
+University of Hawaii at Manoa|Honolulu|HI|P
+Hawaii Pacific University|Honolulu|HI|R
+Chaminade University of Honolulu|Honolulu|HI|R
+University of Idaho|Moscow|ID|P
+Boise State University|Boise|ID|P
+Idaho State University|Pocatello|ID|P
+University of Chicago|Chicago|IL|R
+Northwestern University|Evanston|IL|R
+University of Illinois Urbana-Champaign|Urbana|IL|P
+University of Illinois Chicago|Chicago|IL|P
+Illinois Institute of Technology|Chicago|IL|R|tech
+DePaul University|Chicago|IL|R
+Loyola University Chicago|Chicago|IL|R
+Northern Illinois University|DeKalb|IL|P
+Southern Illinois University Carbondale|Carbondale|IL|P
+Southern Illinois University Edwardsville|Edwardsville|IL|P
+Illinois State University|Normal|IL|P
+Bradley University|Peoria|IL|R
+Western Illinois University|Macomb|IL|P
+Roosevelt University|Chicago|IL|R
+Purdue University|West Lafayette|IN|P
+Indiana University Bloomington|Bloomington|IN|P
+University of Notre Dame|Notre Dame|IN|R
+Indiana University Indianapolis|Indianapolis|IN|P
+Ball State University|Muncie|IN|P
+Butler University|Indianapolis|IN|R
+Rose-Hulman Institute of Technology|Terre Haute|IN|R|tech
+Valparaiso University|Valparaiso|IN|R
+Indiana State University|Terre Haute|IN|P
+Purdue University Northwest|Hammond|IN|P
+University of Iowa|Iowa City|IA|P
+Iowa State University|Ames|IA|P
+University of Northern Iowa|Cedar Falls|IA|P
+Drake University|Des Moines|IA|R
+University of Kansas|Lawrence|KS|P
+Kansas State University|Manhattan|KS|P
+Wichita State University|Wichita|KS|P
+Pittsburg State University|Pittsburg|KS|P
+Emporia State University|Emporia|KS|P
+University of Kentucky|Lexington|KY|P
+University of Louisville|Louisville|KY|P
+Western Kentucky University|Bowling Green|KY|P
+Eastern Kentucky University|Richmond|KY|P
+Northern Kentucky University|Highland Heights|KY|P
+Murray State University|Murray|KY|P
+Bellarmine University|Louisville|KY|R
+Louisiana State University|Baton Rouge|LA|P
+Tulane University|New Orleans|LA|R
+University of Louisiana at Lafayette|Lafayette|LA|P
+Louisiana Tech University|Ruston|LA|P|tech
+University of New Orleans|New Orleans|LA|P
+Southern University and A&M College|Baton Rouge|LA|P|hbcu
+Loyola University New Orleans|New Orleans|LA|R
+Northwestern State University of Louisiana|Natchitoches|LA|P
+University of Maine|Orono|ME|P
+University of Southern Maine|Portland|ME|P
+Husson University|Bangor|ME|R
+Johns Hopkins University|Baltimore|MD|R
+University of Maryland, College Park|College Park|MD|P
+University of Maryland, Baltimore County|Baltimore|MD|P
+University of Maryland, Baltimore|Baltimore|MD|P|med
+Towson University|Towson|MD|P
+Morgan State University|Baltimore|MD|P|hbcu
+Loyola University Maryland|Baltimore|MD|R
+Salisbury University|Salisbury|MD|P
+University of Maryland Global Campus|Adelphi|MD|P
+Harvard University|Cambridge|MA|R|ivy
+Massachusetts Institute of Technology|Cambridge|MA|R|tech
+Boston University|Boston|MA|R
+Boston College|Chestnut Hill|MA|R
+Northeastern University|Boston|MA|R
+Tufts University|Medford|MA|R
+University of Massachusetts Amherst|Amherst|MA|P
+University of Massachusetts Boston|Boston|MA|P
+University of Massachusetts Lowell|Lowell|MA|P
+University of Massachusetts Dartmouth|Dartmouth|MA|P
+Worcester Polytechnic Institute|Worcester|MA|R|tech
+Brandeis University|Waltham|MA|R
+Clark University|Worcester|MA|R
+Suffolk University|Boston|MA|R
+Bentley University|Waltham|MA|R
+Babson College|Wellesley|MA|R
+Simmons University|Boston|MA|R
+Emerson College|Boston|MA|R
+Berklee College of Music|Boston|MA|R|art
+Springfield College|Springfield|MA|R
+University of Michigan|Ann Arbor|MI|P
+Michigan State University|East Lansing|MI|P
+Wayne State University|Detroit|MI|P
+Michigan Technological University|Houghton|MI|P|tech
+Western Michigan University|Kalamazoo|MI|P
+Central Michigan University|Mount Pleasant|MI|P
+Eastern Michigan University|Ypsilanti|MI|P
+Oakland University|Rochester|MI|P
+Grand Valley State University|Allendale|MI|P
+Lawrence Technological University|Southfield|MI|R|tech
+University of Detroit Mercy|Detroit|MI|R
+University of Minnesota Twin Cities|Minneapolis|MN|P
+Minnesota State University, Mankato|Mankato|MN|P
+St. Cloud State University|St. Cloud|MN|P
+University of St. Thomas|St. Paul|MN|R
+Minnesota State University Moorhead|Moorhead|MN|P
+University of Minnesota Duluth|Duluth|MN|P
+University of Mississippi|Oxford|MS|P
+Mississippi State University|Mississippi State|MS|P
+University of Southern Mississippi|Hattiesburg|MS|P
+Jackson State University|Jackson|MS|P|hbcu
+Washington University in St. Louis|St. Louis|MO|R
+University of Missouri|Columbia|MO|P
+Missouri University of Science and Technology|Rolla|MO|P|tech
+University of Missouri-Kansas City|Kansas City|MO|P
+Saint Louis University|St. Louis|MO|R
+University of Missouri-St. Louis|St. Louis|MO|P
+Missouri State University|Springfield|MO|P
+Webster University|St. Louis|MO|R
+Rockhurst University|Kansas City|MO|R
+University of Montana|Missoula|MT|P
+Montana State University|Bozeman|MT|P
+Montana Technological University|Butte|MT|P|tech
+University of Nebraska-Lincoln|Lincoln|NE|P
+University of Nebraska Omaha|Omaha|NE|P
+University of Nebraska Medical Center|Omaha|NE|P|med
+Creighton University|Omaha|NE|R
+University of Nevada, Reno|Reno|NV|P
+University of Nevada, Las Vegas|Las Vegas|NV|P
+Dartmouth College|Hanover|NH|R|ivy
+University of New Hampshire|Durham|NH|P
+Southern New Hampshire University|Manchester|NH|R
+Plymouth State University|Plymouth|NH|P
+Princeton University|Princeton|NJ|R|ivy
+Rutgers University-New Brunswick|New Brunswick|NJ|P
+Rutgers University-Newark|Newark|NJ|P
+New Jersey Institute of Technology|Newark|NJ|P|tech
+Stevens Institute of Technology|Hoboken|NJ|R|tech
+Seton Hall University|South Orange|NJ|R
+Montclair State University|Montclair|NJ|P
+Rowan University|Glassboro|NJ|P
+The College of New Jersey|Ewing|NJ|P
+Fairleigh Dickinson University|Teaneck|NJ|R
+Kean University|Union|NJ|P
+William Paterson University|Wayne|NJ|P
+University of New Mexico|Albuquerque|NM|P
+New Mexico State University|Las Cruces|NM|P
+New Mexico Institute of Mining and Technology|Socorro|NM|P|tech
+Columbia University|New York|NY|R|ivy
+Cornell University|Ithaca|NY|R|ivy
+New York University|New York|NY|R
+University of Rochester|Rochester|NY|R
+Syracuse University|Syracuse|NY|R
+Rensselaer Polytechnic Institute|Troy|NY|R|tech
+Rochester Institute of Technology|Rochester|NY|R|tech
+Fordham University|Bronx|NY|R
+Stony Brook University|Stony Brook|NY|P
+University at Buffalo|Buffalo|NY|P
+University at Albany|Albany|NY|P
+Binghamton University|Binghamton|NY|P
+The City College of New York (CUNY)|New York|NY|P
+Baruch College (CUNY)|New York|NY|P
+Hunter College (CUNY)|New York|NY|P
+Queens College (CUNY)|Queens|NY|P
+Brooklyn College (CUNY)|Brooklyn|NY|P
+The New School|New York|NY|R|art
+Pace University|New York|NY|R
+St. John's University|Queens|NY|R
+Hofstra University|Hempstead|NY|R
+Adelphi University|Garden City|NY|R
+Clarkson University|Potsdam|NY|R|tech
+SUNY Polytechnic Institute|Utica|NY|P|tech
+SUNY College of Environmental Science and Forestry|Syracuse|NY|P
+New York Institute of Technology|Old Westbury|NY|R|tech
+Pratt Institute|Brooklyn|NY|R|art
+Yeshiva University|New York|NY|R
+Long Island University|Brookville|NY|R
+SUNY New Paltz|New Paltz|NY|P
+SUNY Oswego|Oswego|NY|P
+Alfred University|Alfred|NY|R
+Duke University|Durham|NC|R
+University of North Carolina at Chapel Hill|Chapel Hill|NC|P
+North Carolina State University|Raleigh|NC|P
+Wake Forest University|Winston-Salem|NC|R
+University of North Carolina at Charlotte|Charlotte|NC|P
+University of North Carolina at Greensboro|Greensboro|NC|P
+East Carolina University|Greenville|NC|P
+North Carolina A&T State University|Greensboro|NC|P|hbcu
+Appalachian State University|Boone|NC|P
+University of North Carolina Wilmington|Wilmington|NC|P
+Elon University|Elon|NC|R
+Campbell University|Buies Creek|NC|R
+University of North Dakota|Grand Forks|ND|P
+North Dakota State University|Fargo|ND|P
+The Ohio State University|Columbus|OH|P
+Case Western Reserve University|Cleveland|OH|R
+University of Cincinnati|Cincinnati|OH|P
+Ohio University|Athens|OH|P
+Kent State University|Kent|OH|P
+University of Akron|Akron|OH|P
+University of Toledo|Toledo|OH|P
+Wright State University|Dayton|OH|P
+University of Dayton|Dayton|OH|R
+Cleveland State University|Cleveland|OH|P
+Bowling Green State University|Bowling Green|OH|P
+Miami University|Oxford|OH|P
+Youngstown State University|Youngstown|OH|P
+Xavier University|Cincinnati|OH|R
+University of Oklahoma|Norman|OK|P
+Oklahoma State University|Stillwater|OK|P
+University of Tulsa|Tulsa|OK|R
+University of Central Oklahoma|Edmond|OK|P
+Oral Roberts University|Tulsa|OK|R
+University of Oregon|Eugene|OR|P
+Oregon State University|Corvallis|OR|P
+Portland State University|Portland|OR|P
+Oregon Health & Science University|Portland|OR|P|med
+University of Portland|Portland|OR|R
+Willamette University|Salem|OR|R
+University of Pennsylvania|Philadelphia|PA|R|ivy
+Carnegie Mellon University|Pittsburgh|PA|R
+Pennsylvania State University|University Park|PA|P
+University of Pittsburgh|Pittsburgh|PA|P
+Drexel University|Philadelphia|PA|R
+Temple University|Philadelphia|PA|P
+Lehigh University|Bethlehem|PA|R
+Villanova University|Villanova|PA|R
+Duquesne University|Pittsburgh|PA|R
+Saint Joseph's University|Philadelphia|PA|R
+La Salle University|Philadelphia|PA|R
+West Chester University of Pennsylvania|West Chester|PA|P
+Indiana University of Pennsylvania|Indiana|PA|P
+Widener University|Chester|PA|R
+Thomas Jefferson University|Philadelphia|PA|R|med
+Robert Morris University|Moon Township|PA|R
+Bucknell University|Lewisburg|PA|R
+Brown University|Providence|RI|R|ivy
+University of Rhode Island|Kingston|RI|P
+Rhode Island School of Design|Providence|RI|R|art
+Johnson & Wales University|Providence|RI|R
+Bryant University|Smithfield|RI|R
+Clemson University|Clemson|SC|P
+University of South Carolina|Columbia|SC|P
+College of Charleston|Charleston|SC|P
+Coastal Carolina University|Conway|SC|P
+Furman University|Greenville|SC|R
+Medical University of South Carolina|Charleston|SC|P|med
+Winthrop University|Rock Hill|SC|P
+University of South Dakota|Vermillion|SD|P
+South Dakota State University|Brookings|SD|P
+South Dakota School of Mines and Technology|Rapid City|SD|P|tech
+Vanderbilt University|Nashville|TN|R
+University of Tennessee, Knoxville|Knoxville|TN|P
+University of Memphis|Memphis|TN|P
+Middle Tennessee State University|Murfreesboro|TN|P
+Tennessee Technological University|Cookeville|TN|P|tech
+East Tennessee State University|Johnson City|TN|P
+Belmont University|Nashville|TN|R
+Tennessee State University|Nashville|TN|P|hbcu
+Lipscomb University|Nashville|TN|R
+The University of Texas at Austin|Austin|TX|P
+Texas A&M University|College Station|TX|P
+Rice University|Houston|TX|R
+University of Houston|Houston|TX|P
+The University of Texas at Dallas|Richardson|TX|P
+The University of Texas at Arlington|Arlington|TX|P
+The University of Texas at San Antonio|San Antonio|TX|P
+The University of Texas at El Paso|El Paso|TX|P
+Texas Tech University|Lubbock|TX|P
+Baylor University|Waco|TX|R
+Southern Methodist University|Dallas|TX|R
+University of North Texas|Denton|TX|P
+Texas State University|San Marcos|TX|P
+Texas Christian University|Fort Worth|TX|R
+Sam Houston State University|Huntsville|TX|P
+Lamar University|Beaumont|TX|P
+The University of Texas Rio Grande Valley|Edinburg|TX|P
+Prairie View A&M University|Prairie View|TX|P|hbcu
+Texas Woman's University|Denton|TX|P
+St. Mary's University|San Antonio|TX|R
+University of St. Thomas|Houston|TX|R
+Texas A&M University-Corpus Christi|Corpus Christi|TX|P
+Texas A&M University-Kingsville|Kingsville|TX|P
+The University of Texas at Tyler|Tyler|TX|P
+Stephen F. Austin State University|Nacogdoches|TX|P
+West Texas A&M University|Canyon|TX|P
+University of the Incarnate Word|San Antonio|TX|R
+University of Utah|Salt Lake City|UT|P
+Utah State University|Logan|UT|P
+Brigham Young University|Provo|UT|R
+Utah Valley University|Orem|UT|P
+Weber State University|Ogden|UT|P
+University of Vermont|Burlington|VT|P
+Middlebury College|Middlebury|VT|R
+Norwich University|Northfield|VT|R
+University of Virginia|Charlottesville|VA|P
+Virginia Tech|Blacksburg|VA|P|tech
+George Mason University|Fairfax|VA|P
+Virginia Commonwealth University|Richmond|VA|P
+William & Mary|Williamsburg|VA|P
+Old Dominion University|Norfolk|VA|P
+James Madison University|Harrisonburg|VA|P
+Liberty University|Lynchburg|VA|R
+Radford University|Radford|VA|P
+Virginia State University|Petersburg|VA|P|hbcu
+Hampton University|Hampton|VA|R|hbcu
+Marymount University|Arlington|VA|R
+University of Washington|Seattle|WA|P
+Washington State University|Pullman|WA|P
+Seattle University|Seattle|WA|R
+Seattle Pacific University|Seattle|WA|R
+Western Washington University|Bellingham|WA|P
+Eastern Washington University|Cheney|WA|P
+Central Washington University|Ellensburg|WA|P
+Gonzaga University|Spokane|WA|R
+University of Puget Sound|Tacoma|WA|R
+West Virginia University|Morgantown|WV|P
+Marshall University|Huntington|WV|P
+West Virginia State University|Institute|WV|P|hbcu
+University of Wisconsin-Madison|Madison|WI|P
+University of Wisconsin-Milwaukee|Milwaukee|WI|P
+Marquette University|Milwaukee|WI|R
+University of Wisconsin-Whitewater|Whitewater|WI|P
+University of Wisconsin-Eau Claire|Eau Claire|WI|P
+University of Wisconsin-La Crosse|La Crosse|WI|P
+University of Wisconsin-Stout|Menomonie|WI|P
+University of Wisconsin Oshkosh|Oshkosh|WI|P
+University of Wyoming|Laramie|WY|P
+`.trim().split("\n").map(function (line, i) {
+  var p = line.split("|");
+  return { id: "s" + i, name: p[0], city: p[1], state: p[2], control: p[3] === "P" ? "Public" : "Private", tags: p[4] ? p[4].split(",") : [] };
+});
+
+/* Stage model, task templates, document checklist and the advisor resource library. */
+
+window.NB_STAGES = [
+  { id: "intake",    n: 1, name: "Profile & Goals",   blurb: "Who they are, what they want, what they can spend." },
+  { id: "tests",     n: 2, name: "Tests & English",   blurb: "English proficiency and any GRE/GMAT the programmes ask for." },
+  { id: "shortlist", n: 3, name: "School Shortlist",  blurb: "A balanced list: reach, match and safe programmes." },
+  { id: "docs",      n: 4, name: "Application File",  blurb: "Transcripts, evaluation, SOP, CV, recommenders." },
+  { id: "apply",     n: 5, name: "Submissions",       blurb: "Portals filled, fees paid, everything sent before the deadline." },
+  { id: "offers",    n: 6, name: "Offers & I-20",     blurb: "Decisions in, one accepted, I-20 issued." },
+  { id: "visa",      n: 7, name: "Funding & Visa",    blurb: "SEVIS fee, DS-160, interview, stamped visa." },
+  { id: "depart",    n: 8, name: "Pre-Departure",     blurb: "Flights, housing, insurance, arrival check-in." }
+];
+
+/* owner: who does the work — c = client, a = advisor */
+window.NB_TASKS = [
+  { id: "t01", s: "intake", o: "a", t: "Intake call completed", h: "Background, degree, class of award, work history, family situation, timeline." },
+  { id: "t02", s: "intake", o: "c", t: "Academic history collected", h: "Every institution attended, with dates and the grading scale used." },
+  { id: "t03", s: "intake", o: "a", t: "Target intake agreed", h: "Fall is the largest intake and carries the most funding. Spring is smaller and faster." },
+  { id: "t04", s: "intake", o: "a", t: "Field and programme type agreed", h: "Taught MS/MA, thesis MS, MBA or MEng — they fund and hire very differently." },
+  { id: "t05", s: "intake", o: "c", t: "Budget and funding plan set", h: "What the family can commit per year, and what must come from an assistantship or loan." },
+  { id: "t06", s: "intake", o: "a", t: "Engagement agreement signed", h: "Scope, fee, what the client is responsible for, what you are not." },
+
+  { id: "t07", s: "tests",  o: "c", t: "English test chosen and booked", h: "TOEFL iBT, IELTS Academic, Duolingo English Test or PTE Academic — confirm which ones each target school accepts." },
+  { id: "t08", s: "tests",  o: "c", t: "English test sat", h: "Book 6-8 weeks before the first deadline so there is room for a retake." },
+  { id: "t09", s: "tests",  o: "a", t: "English score reviewed against targets", h: "Check the programme minimum and the separate section minimums, which are often the binding constraint." },
+  { id: "t10", s: "tests",  o: "a", t: "GRE/GMAT requirement checked per school", h: "Many programmes are now test-optional or have waivers for work experience. Confirm in writing on the programme page." },
+  { id: "t11", s: "tests",  o: "c", t: "GRE/GMAT sat (if required)", h: "Only where it is genuinely required or where a strong score offsets a weaker transcript." },
+  { id: "t12", s: "tests",  o: "c", t: "Official scores sent to schools", h: "Score reports go direct from the testing body. Order them early — delivery is not instant." },
+
+  { id: "t13", s: "shortlist", o: "a", t: "Longlist built from the directory", h: "Start wide — 20 to 30 programmes — then cut." },
+  { id: "t14", s: "shortlist", o: "a", t: "Shortlist balanced 2 / 4 / 2", h: "Two reach, four match, two safe. A list of only reaches is the most common way a season is lost." },
+  { id: "t15", s: "shortlist", o: "c", t: "Deadlines recorded for every school", h: "Priority/funding deadlines are usually weeks before the final deadline — the funding one is the real one." },
+  { id: "t16", s: "shortlist", o: "c", t: "Faculty and labs identified", h: "For thesis and PhD-track programmes, two or three named faculty per school changes the SOP completely." },
+  { id: "t17", s: "shortlist", o: "a", t: "Cost per school estimated", h: "Tuition plus fees, health insurance, and living cost for the city. Get the figures from the school's own cost-of-attendance page." },
+
+  { id: "t18", s: "docs", o: "c", t: "Official transcripts requested", h: "Sealed, from every institution attended. Allow weeks, not days." },
+  { id: "t19", s: "docs", o: "c", t: "Degree certificate obtained", h: "If it has not been issued yet, an attestation or provisional letter from the registrar usually works." },
+  { id: "t20", s: "docs", o: "c", t: "Credential evaluation ordered", h: "Course-by-course from a NACES member (WES, ECE, SpanTran, Josef Silny) where the school asks for one." },
+  { id: "t21", s: "docs", o: "c", t: "CV rewritten to US format", h: "Two pages maximum, no photo, no date of birth, no marital status. Results with numbers." },
+  { id: "t22", s: "docs", o: "c", t: "Statement of Purpose drafted", h: "What they want to study, why that is the natural next step, why this department, what they will do after." },
+  { id: "t23", s: "docs", o: "a", t: "SOP reviewed and tailored per school", h: "One base statement, then a named paragraph per programme. A generic SOP reads as a generic applicant." },
+  { id: "t24", s: "docs", o: "c", t: "Three recommenders confirmed", h: "Ask by email with a deadline, the CV, the SOP draft and a reminder of specific work they supervised." },
+  { id: "t25", s: "docs", o: "c", t: "Recommendation letters submitted", h: "Recommenders upload through each portal. Chase at two weeks out, not two days." },
+  { id: "t26", s: "docs", o: "c", t: "Portfolio or writing sample ready", h: "Only where the programme asks — design, architecture, creative writing, some research MS." },
+
+  { id: "t27", s: "apply", o: "c", t: "Application portals created", h: "One login per school. Keep every username and password in one place the client controls." },
+  { id: "t28", s: "apply", o: "c", t: "Applications filled and reviewed", h: "Review every form once cold, a day later. Name spelling must match the passport exactly." },
+  { id: "t29", s: "apply", o: "c", t: "Fee waivers requested where available", h: "Some departments waive fees on request for international applicants or for early applications." },
+  { id: "t30", s: "apply", o: "c", t: "All applications submitted", h: "Submit against the funding deadline, not the final deadline." },
+  { id: "t31", s: "apply", o: "a", t: "Submission confirmations filed", h: "Save every confirmation email and application ID to the client's file." },
+  { id: "t32", s: "apply", o: "c", t: "Assistantship applications sent", h: "GA/TA/RA applications are often separate from admission, and separately deadlined." },
+
+  { id: "t33", s: "offers", o: "a", t: "Decisions tracked as they land", h: "Update the shortlist status the day each decision arrives." },
+  { id: "t34", s: "offers", o: "a", t: "Offers compared on net cost", h: "Sticker tuition means little. Compare tuition minus award, plus fees, insurance and living cost." },
+  { id: "t35", s: "offers", o: "c", t: "Offer accepted and deposit paid", h: "Decline the others in writing so the seats and any funding move on." },
+  { id: "t36", s: "offers", o: "c", t: "Financial documents submitted to the school", h: "Bank statement and sponsor affidavit covering at least the first year, in the school's required format." },
+  { id: "t37", s: "offers", o: "c", t: "I-20 received and checked", h: "Check the spelling of the name, date of birth, programme, start date and funding figure against the passport." },
+
+  { id: "t38", s: "visa", o: "c", t: "SEVIS I-901 fee paid", h: "Pay at fmjfee.com using the SEVIS ID on the I-20. Print the receipt." },
+  { id: "t39", s: "visa", o: "c", t: "DS-160 completed", h: "One form per applicant at ceac.state.gov. Keep the confirmation barcode page." },
+  { id: "t40", s: "visa", o: "c", t: "Visa interview booked", h: "Book as early as the embassy calendar allows — slots, not documents, are usually the bottleneck." },
+  { id: "t41", s: "visa", o: "a", t: "Mock interview done", h: "Study plan, choice of school, funding, ties to home. Short, consistent, honest answers." },
+  { id: "t42", s: "visa", o: "c", t: "Interview attended", h: "Carry the I-20, DS-160 confirmation, SEVIS receipt, passport, financials and academic records." },
+  { id: "t43", s: "visa", o: "c", t: "Visa issued and collected", h: "Check the visa page for the correct name, classification and annotation before leaving the counter." },
+
+  { id: "t44", s: "depart", o: "c", t: "Flight booked", h: "Arrive inside the 30 days before the I-20 start date — entry earlier than that is not permitted." },
+  { id: "t45", s: "depart", o: "c", t: "Housing secured", h: "On-campus grad housing if it exists. Otherwise a short first lease or temporary stay, viewed in person before signing long." },
+  { id: "t46", s: "depart", o: "c", t: "Health insurance and immunisations sorted", h: "Most schools enrol students in their own plan automatically and require specific immunisation records." },
+  { id: "t47", s: "depart", o: "c", t: "Funds for the first 60 days arranged", h: "Tuition deposit, first rent, deposit, phone, groceries — before any stipend or loan disbursement lands." },
+  { id: "t48", s: "depart", o: "c", t: "Arrival checklist reviewed", h: "Documents in hand luggage, address of first night, campus contact, airport transfer." },
+  { id: "t49", s: "depart", o: "a", t: "Post-arrival check-in scheduled", h: "A call in week one and week four catches problems while they are still small." }
+];
+
+window.NB_DOCS = [
+  { id: "d01", t: "Passport bio page", h: "Must be valid at least six months beyond the intended entry date." },
+  { id: "d02", t: "Academic transcripts (all institutions)", h: "Official and sealed, with the grading scale explained." },
+  { id: "d03", t: "Degree certificate / provisional letter", h: "Attestation from the registrar is accepted where the certificate is not yet issued." },
+  { id: "d04", t: "Credential evaluation report", h: "Course-by-course, from a NACES member agency." },
+  { id: "d05", t: "English test score report", h: "TOEFL, IELTS, Duolingo or PTE — sent officially from the testing body." },
+  { id: "d06", t: "GRE / GMAT score report", h: "Only where the programme requires it." },
+  { id: "d07", t: "CV / résumé (US format)", h: "Two pages, no photo, no personal details." },
+  { id: "d08", t: "Statement of Purpose", h: "Tailored per programme." },
+  { id: "d09", t: "Personal / diversity statement", h: "Where separately requested." },
+  { id: "d10", t: "Recommendation letters (3)", h: "Submitted by the recommenders through each portal." },
+  { id: "d11", t: "Bank statement / financial proof", h: "Covering at least the first year's cost of attendance." },
+  { id: "d12", t: "Sponsor affidavit of support", h: "Signed, with the sponsor's own bank evidence attached." },
+  { id: "d13", t: "Work experience letters", h: "On letterhead, with dates, title and duties." },
+  { id: "d14", t: "Passport photographs", h: "To the visa specification — 2x2 inches, white background." },
+  { id: "d15", t: "I-20", h: "Issued by the school once admission is accepted and finances are verified." },
+  { id: "d16", t: "SEVIS I-901 receipt", h: "Printed, carried to the interview." },
+  { id: "d17", t: "DS-160 confirmation page", h: "The barcode page, printed." }
+];
+
+window.NB_DOC_STATES = ["Not started", "Requested", "Received", "Verified"];
+
+window.NB_RESOURCES = [
+  {
+    id: "timeline",
+    name: "The 18-month timeline",
+    lede: "Work backwards from the intake, not forwards from today. Almost every failed season is a timeline problem, not a merit problem.",
+    items: [
+      { t: "18-15 months out", h: "Decide, and start saving", b: "Intake and goal-setting. Decide the intake term and the field. Start saving for test fees, application fees and the credential evaluation — together these commonly run to several hundred dollars before a single application is submitted." },
+      { t: "15-12 months out", h: "Test sat, transcripts ordered", b: "Sit the English test. Order official transcripts from every institution. Start the credential evaluation, which is the slowest moving part of the file." },
+      { t: "12-9 months out", h: "Shortlist and statements", b: "Build the longlist, then cut it to eight to ten programmes. Draft the SOP. Approach recommenders with a clear deadline." },
+      { t: "9-6 months out", h: "Applications in", b: "Submit. Aim at each school's priority or funding deadline, which is usually weeks ahead of the final one. Submit assistantship applications separately where they exist." },
+      { t: "6-4 months out", h: "Offers, then one yes", b: "Decisions arrive. Compare offers on net cost, accept one, decline the rest, pay the deposit and send financial documents for the I-20." },
+      { t: "4-2 months out", h: "SEVIS, DS-160, interview", b: "I-20 in hand: pay the SEVIS fee, file the DS-160, book the interview as early as the calendar allows. Interview slots are the usual bottleneck." },
+      { t: "2-0 months out", h: "Visa, flight, housing", b: "Visa collected, flight booked, housing secured, insurance and immunisations done, first-60-days money arranged." }
+    ]
+  },
+  {
+    id: "tests",
+    name: "Tests & English proficiency",
+    lede: "Confirm the exact requirement on each programme's own page. Requirements differ between the graduate school and the department, and the department's rule wins.",
+    items: [
+      { t: "Which English test", b: "TOEFL iBT and IELTS Academic are accepted almost everywhere. The Duolingo English Test and PTE Academic are widely but not universally accepted — check each school before booking, because a cheaper test that one target school rejects is not cheaper." },
+      { t: "Section minimums matter more than the total", b: "Many programmes set a floor on the speaking or writing section as well as the overall score. A comfortable total with one weak section is still a rejection, and it is the most common avoidable one." },
+      { t: "Waivers", b: "Schools frequently waive the English requirement for applicants whose entire degree was taught in English, or who hold a degree from a recognised English-medium institution. Ask the graduate admissions office directly and keep the reply in writing." },
+      { t: "GRE and GMAT", b: "Far fewer programmes require these than applicants assume, and many that do will waive them for relevant work experience. Where a transcript is weaker than the programme's usual intake, a strong quantitative score is one of the few levers that still moves an admissions committee." },
+      { t: "Sending scores", b: "Official scores go from the testing body to the institution code, not from the applicant. Order them with the booking where possible — free reports at registration are cheaper than reports ordered later." },
+      { t: "Retakes", b: "Build one retake window into the plan before the first deadline. A plan with no room for a retake is a plan that depends on a single sitting going well." }
+    ],
+    links: [
+      { t: "TOEFL & GRE (ETS)", u: "https://www.ets.org" },
+      { t: "IELTS", u: "https://ielts.org" },
+      { t: "Duolingo English Test", u: "https://englishtest.duolingo.com" },
+      { t: "Pearson PTE Academic", u: "https://www.pearsonpte.com" },
+      { t: "GMAT (GMAC)", u: "https://www.mba.com" }
+    ]
+  },
+  {
+    id: "credentials",
+    name: "Transcripts & credential evaluation",
+    lede: "The slowest item in the file. Start it first.",
+    items: [
+      { t: "What a course-by-course evaluation is", b: "An agency converts a foreign transcript into US credit hours and a US GPA, subject by subject. Some schools require it, some accept a document-by-document report, and some accept the transcript directly. Check per school before paying for the most expensive report." },
+      { t: "Use a NACES member", b: "US institutions generally recognise evaluations from members of the National Association of Credential Evaluation Services. WES, ECE, SpanTran and Josef Silny are the names that come up most often." },
+      { t: "Sealed documents", b: "Most agencies require transcripts sent directly by the issuing institution in a sealed envelope, or through a verified institutional channel. Anything the applicant has opened themselves is usually rejected." },
+      { t: "Timing", b: "Allow six to twelve weeks from request to delivered report, and longer where the issuing registrar is slow to respond to verification requests. This is the single most common cause of a missed deadline." },
+      { t: "Keep digital copies", b: "Scan every document before it is sealed and sent. The same set will be needed again for the visa interview and again on arrival." }
+    ],
+    links: [
+      { t: "NACES member directory", u: "https://www.naces.org/members" },
+      { t: "World Education Services", u: "https://www.wes.org" },
+      { t: "Educational Credential Evaluators", u: "https://www.ece.org" }
+    ]
+  },
+  {
+    id: "writing",
+    name: "The application file",
+    lede: "Admissions committees read hundreds of these. Specificity is the only thing that separates one from the next.",
+    items: [
+      { t: "Statement of Purpose", b: "Four movements: what they want to study, the experience that made that the obvious next question, why this department in particular — named faculty, named labs, named courses — and what they intend to do afterwards. The third movement is what is usually missing and what usually decides it." },
+      { t: "One base, many tails", b: "Write one strong statement, then replace the department paragraph for each school. Never send a statement that could be addressed to any programme, and never leave another school's name in it — reviewers see this every year." },
+      { t: "Personal statement is a different document", b: "Where a school asks for both, the SOP is academic and the personal statement is biographical: obstacles, context, what the applicant brings that the transcript does not show." },
+      { t: "Recommenders", b: "Three is standard and academic referees outweigh employers for research programmes. Ask at least six weeks out, by email, with the CV, the draft SOP, the deadline and a short reminder of the specific work they supervised. A vague letter is worse than no letter." },
+      { t: "CV in US format", b: "Two pages, reverse chronological, no photograph, no date of birth, no marital status, no nationality. Achievements with figures attached: how many, how much, how much faster." },
+      { t: "Proofreading", b: "Read it aloud once. Then have someone who has never heard the plan read it and say back what the applicant wants to study. If they cannot, the statement is not finished." }
+    ]
+  },
+  {
+    id: "funding",
+    name: "Paying for it",
+    lede: "Federal student aid is not available to international students. Everything below is the realistic set of sources.",
+    items: [
+      { t: "Assistantships", b: "Teaching, research and graduate assistantships are the largest source of funding for international master's students, typically combining a tuition waiver with a stipend for a set number of hours per week. They are usually awarded by the department, often on a separate application, and frequently earlier than the admission decision." },
+      { t: "Departmental scholarships and fellowships", b: "Many are awarded automatically from the admission file, but a meaningful number require a separate form. Ask the graduate coordinator which ones need an application and when they close." },
+      { t: "External scholarships", b: "Fulbright Foreign Student Program, AAUW International Fellowships, Rotary and a long tail of country-specific and field-specific awards. Deadlines for the largest ones fall roughly a year before the intake — earlier than most applicants realise." },
+      { t: "Private loans", b: "Some lenders offer no-cosigner loans to international students at US institutions. Compare the total repayable, the interest rate, the origination fee and whether repayment starts during study — not the monthly figure the marketing leads with. This is information, not a recommendation; the client should compare offers themselves and read the terms." },
+      { t: "Sponsors", b: "A family sponsor needs to provide their own bank evidence plus a signed affidavit of support. The school sets the format; use the school's form where one exists." },
+      { t: "On-campus work", b: "F-1 students are generally permitted to work on campus up to 20 hours per week while classes are in session. Treat it as supplementary income, never as the funding plan in the financial documents." },
+      { t: "Cost realism", b: "Get the total from the school's published cost-of-attendance page, which includes fees, health insurance and living costs, rather than the tuition figure alone. Public in-state, public out-of-state and private programmes sit at very different levels, and the same programme can cost twice as much in one city as another." }
+    ],
+    links: [
+      { t: "Fulbright Foreign Student Program", u: "https://foreign.fulbrightonline.org" },
+      { t: "EducationUSA advising centres", u: "https://educationusa.state.gov" },
+      { t: "International scholarship search (IEFA)", u: "https://www.iefa.org" }
+    ]
+  },
+  {
+    id: "i20",
+    name: "Proving funds for the I-20",
+    lede: "The school will not issue an I-20 until it is satisfied the first year is funded. This is a documentation exercise, and it is where otherwise strong applicants stall.",
+    items: [
+      { t: "What the figure is", b: "Normally one full academic year of the published cost of attendance, less any assistantship or scholarship already awarded. The school states the exact number it wants to see." },
+      { t: "What counts as evidence", b: "Bank statements or bank letters in the name of the student or the sponsor, usually dated within the last three to six months, showing liquid funds. Property, vehicles and unrealised assets generally do not count." },
+      { t: "Sponsor affidavit", b: "A signed statement naming the student, the relationship, the amount committed and the period covered, attached to the sponsor's own bank evidence." },
+      { t: "Consistency", b: "The figures on the I-20, the financial documents and the DS-160 should tell the same story. Inconsistency between them is a visible problem at the interview." },
+      { t: "Check the I-20 on arrival", b: "Name spelling, date of birth, country of birth, programme, start date, and the funding amount. An error here is far cheaper to correct before the interview than after." }
+    ]
+  },
+  {
+    id: "visa",
+    name: "The F-1 visa",
+    lede: "General information for planning, not legal advice. Requirements and procedures differ by embassy and change — confirm everything on the official sites below and with the client's own embassy.",
+    items: [
+      { t: "Order of operations", b: "I-20 issued, then pay the SEVIS I-901 fee, then complete the DS-160, then pay the visa fee and book the interview. Doing these out of order wastes time and occasionally money." },
+      { t: "SEVIS I-901", b: "Paid at fmjfee.com using the SEVIS ID printed on the I-20. Print the receipt and carry it to the interview." },
+      { t: "DS-160", b: "Completed online at the Consular Electronic Application Center. Names must match the passport exactly. Keep the confirmation page with the barcode — the interview cannot proceed without it." },
+      { t: "Booking the interview", b: "Wait times vary enormously by post and by season, and are longest in the months before a Fall intake. Book the moment the DS-160 is filed rather than waiting for other documents." },
+      { t: "What to carry", b: "Passport, I-20, DS-160 confirmation, SEVIS receipt, visa fee receipt, appointment letter, academic transcripts and test scores, financial evidence and the sponsor affidavit, and photographs to specification." },
+      { t: "What the interview is actually about", b: "Three questions under the surface: is this a genuine student, is the programme funded, and will they comply with the terms of the visa. Answers should be short, specific and consistent with the paperwork." },
+      { t: "If the application is refused", b: "A refusal under section 214(b) means the officer was not satisfied on those points. It is not a permanent bar, and reapplying is possible — but only with something materially different to show, such as clearer funding or a clearer study plan." }
+    ],
+    links: [
+      { t: "Study in the States (DHS)", u: "https://studyinthestates.dhs.gov" },
+      { t: "SEVIS I-901 fee payment", u: "https://www.fmjfee.com" },
+      { t: "DS-160 (CEAC)", u: "https://ceac.state.gov/genniv" },
+      { t: "Student visa overview (State Dept)", u: "https://travel.state.gov/content/travel/en/us-visas/study/student-visa.html" },
+      { t: "Visa appointment wait times", u: "https://travel.state.gov/content/travel/en/us-visas/visa-information-resources/wait-times.html" }
+    ]
+  },
+  {
+    id: "predeparture",
+    name: "Pre-departure",
+    lede: "The month where a well-run file turns into a person who actually arrives in good shape.",
+    items: [
+      { t: "Entry window", b: "Entry is permitted no earlier than 30 days before the programme start date shown on the I-20. Book the flight accordingly." },
+      { t: "Hand luggage", b: "Passport, I-20, admission letter, SEVIS receipt, financial documents, transcripts, test scores and immunisation records travel in the cabin bag. Never in the hold." },
+      { t: "Housing", b: "On-campus graduate housing where it exists, otherwise a short first lease or a few weeks of temporary accommodation. Signing a twelve-month lease on a property seen only in photographs is the most common expensive mistake of the first month." },
+      { t: "Health insurance", b: "Most institutions enrol students in their own plan automatically and charge it with tuition. Check whether a waiver is possible and whether it is actually cheaper before assuming it is." },
+      { t: "Money for the first 60 days", b: "Deposit, first rent, furniture, phone, groceries and books all land before any stipend or loan disbursement does. Plan the gap explicitly." },
+      { t: "Phone and banking", b: "A US number and a student bank account are usually set up in the first week. Most banks will open an account with a passport and I-20; some will want a local address first." },
+      { t: "Climate", b: "Winter in Minnesota and winter in Florida are not the same event. Buy the heavy coat there, not at home." }
+    ],
+    links: [
+      { t: "CDC travellers' health", u: "https://wwwnc.cdc.gov/travel" }
+    ]
+  },
+  {
+    id: "arrival",
+    name: "After they land",
+    lede: "Status is maintained by doing a small number of things on time. Most problems here are administrative, not dramatic.",
+    items: [
+      { t: "Check in with the DSO", b: "Report to the international student office in the first days on campus. This registers the student in SEVIS for the term and is not optional." },
+      { t: "Full course load", b: "F-1 students are normally required to enrol full time each term, with limited exceptions that must be authorised in advance by the DSO. Dropping below without authorisation puts status at risk." },
+      { t: "On-campus employment", b: "Generally up to 20 hours per week while classes are in session, and full time during official breaks. Confirm the rules with the DSO before accepting anything." },
+      { t: "CPT and OPT", b: "Curricular Practical Training covers work that is part of the curriculum, usually an internship tied to a course. Optional Practical Training is work authorisation related to the field of study, applied for through the DSO with USCIS and with its own timing rules. Both start with the DSO, months ahead." },
+      { t: "Social Security number", b: "Issued once the student has a qualifying job offer, through the Social Security Administration. It is not needed to open most student bank accounts." },
+      { t: "Keep the DSO informed", b: "Address changes, programme changes, funding changes and any plan to travel out of the country all go through the international student office first." }
+    ],
+    links: [
+      { t: "Maintaining F-1 status (Study in the States)", u: "https://studyinthestates.dhs.gov/students" },
+      { t: "Social Security Administration", u: "https://www.ssa.gov" },
+      { t: "NAFSA international student resources", u: "https://www.nafsa.org" }
+    ]
+  }
+];
+
+</script>
+<script>
+/* The US Master's Planner — public site. No storage, no accounts, nothing to sign into. */
+(function () {
+"use strict";
+var $ = function (s) { return document.querySelector(s); };
+var SCHOOLS = window.NB_SCHOOLS, STAGES = window.NB_STAGES, RES = window.NB_RESOURCES;
+
+/* --- EDIT ME: the address the "Get in touch" buttons open. --- */
+var CONTACT = "hello@example.com";
+
+function esc(v) {
+  return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+
+/* ---------- contact ---------- */
+$("#ctaLink").href = "mailto:" + CONTACT + "?subject=" + encodeURIComponent("US master's advising");
+
+/* ---------- timeline ruler ---------- */
+var TL = RES.filter(function (r) { return r.id === "timeline"; })[0];
+$("#ruler").innerHTML = TL.items.map(function (it) {
+  var m = it.t.replace(/\s*(months?)?\s*out$/i, "");
+  return '<div class="tick"><div class="m">' + esc(m) + ' mo</div>' +
+    "<h4>" + esc(it.h || it.t) + "</h4><p>" + esc(it.b) + "</p></div>";
+}).join("");
+
+/* ---------- stages ---------- */
+$("#stageGrid").innerHTML = STAGES.map(function (s) {
+  return '<div class="stage"><div class="n">' + s.n + '</div><h4>' + esc(s.name) + "</h4><p>" + esc(s.blurb) + "</p></div>";
+}).join("");
+
+/* ---------- school explorer ---------- */
+var TAGN = { ivy: "Ivy League", hbcu: "HBCU", tech: "Institute of technology", art: "Art & design", med: "Health sciences" };
+var LIMIT_STEP = 40, limit = LIMIT_STEP;
+
+var states = SCHOOLS.reduce(function (a, s) { if (a.indexOf(s.state) < 0) a.push(s.state); return a; }, []).sort();
+$("#fState").insertAdjacentHTML("beforeend", states.map(function (s) { return "<option>" + s + "</option>"; }).join(""));
+$("#fTag").insertAdjacentHTML("beforeend", Object.keys(TAGN).map(function (k) {
+  return '<option value="' + k + '">' + TAGN[k] + "</option>";
+}).join(""));
+$("#statSchools").textContent = SCHOOLS.length;
+
+function matches() {
+  var q = $("#q").value.trim().toLowerCase(), st = $("#fState").value, ct = $("#fCtrl").value, tg = $("#fTag").value;
+  return SCHOOLS.filter(function (s) {
+    if (st && s.state !== st) return false;
+    if (ct && s.control !== ct) return false;
+    if (tg && s.tags.indexOf(tg) < 0) return false;
+    if (q && (s.name + " " + s.city + " " + s.state).toLowerCase().indexOf(q) < 0) return false;
+    return true;
+  });
+}
+function drawSchools() {
+  var list = matches(), shown = list.slice(0, limit);
+  $("#count").textContent = list.length + (list.length === 1 ? " school" : " schools");
+  $("#rows").innerHTML = shown.length ? shown.map(function (s) {
+    return '<div class="row"><div style="min-width:0"><div class="nm">' + esc(s.name) + "</div>" +
+      '<div class="loc">' + esc(s.city) + ", " + esc(s.state) + " · " + esc(s.control) +
+      (s.tags.length ? " · " + s.tags.map(function (t) { return esc(TAGN[t] || t); }).join(", ") : "") + "</div></div>" +
+      '<a target="_blank" rel="noopener" href="https://www.google.com/search?q=' +
+      encodeURIComponent(s.name + " graduate admissions") + '">Admissions ↗</a></div>';
+  }).join("") : '<div class="row"><div class="loc">Nothing matches. Widen the filters or clear the search.</div></div>';
+  var rest = list.length - shown.length;
+  $("#more").hidden = rest <= 0;
+  if (rest > 0) $("#moreBtn").textContent = "Show " + Math.min(LIMIT_STEP, rest) + " more (" + rest + " left)";
+}
+["#q", "#fState", "#fCtrl", "#fTag"].forEach(function (sel) {
+  $(sel).addEventListener("input", function () { limit = LIMIT_STEP; drawSchools(); });
+});
+$("#moreBtn").addEventListener("click", function () { limit += LIMIT_STEP; drawSchools(); });
+drawSchools();
+
+/* ---------- library ---------- */
+var LIB = RES.filter(function (r) { return r.id !== "timeline"; });
+var open = LIB[0].id;
+function drawLib() {
+  $("#libnav").innerHTML = LIB.map(function (r) {
+    return '<button data-id="' + r.id + '" aria-pressed="' + (r.id === open) + '">' + esc(r.name) + "</button>";
+  }).join("");
+  var sec = LIB.filter(function (r) { return r.id === open; })[0];
+  $("#libbody").innerHTML =
+    '<p class="lead" style="margin-bottom:8px">' + esc(sec.lede) + "</p>" +
+    sec.items.map(function (it) {
+      return '<div class="libitem"><h4>' + esc(it.t) + "</h4><p>" + esc(it.b) + "</p></div>";
+    }).join("") +
+    (sec.links ? '<div class="links">' + sec.links.map(function (l) {
+      return '<a href="' + esc(l.u) + '" target="_blank" rel="noopener">' + esc(l.t) + " ↗</a>";
+    }).join("") + "</div>" : "");
+}
+$("#libnav").addEventListener("click", function (e) {
+  var b = e.target.closest("button[data-id]");
+  if (!b) return;
+  open = b.getAttribute("data-id"); drawLib();
+});
+drawLib();
+
+/* ---------- footer ---------- */
+$("#foot").textContent = "The US Master's Planner · " + SCHOOLS.length +
+  " institutions across 51 states and territories · last reviewed " +
+  new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" });
+})();
+
+</script>

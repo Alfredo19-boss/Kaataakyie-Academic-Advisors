@@ -83,14 +83,15 @@ var ICONS = {
   doc: '<path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7l-5-5Z"/><path d="M14 2v5h5"/><path d="M9 13h6M9 17h6"/>',
   home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.6V20h14V9.6"/>',
   cal: '<rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
-  chat: '<path d="M21 11.5a8 8 0 0 1-11.6 7.1L3 20.5l1.9-6A8 8 0 1 1 21 11.5Z"/>'
+  chat: '<path d="M21 11.5a8 8 0 0 1-11.6 7.1L3 20.5l1.9-6A8 8 0 1 1 21 11.5Z"/>',
+  money: '<path d="M12 2.5v19"/><path d="M16.8 6.2H9.9a2.9 2.9 0 0 0 0 5.8h4.2a2.9 2.9 0 0 1 0 5.8H6.6"/>'
 };
 
 /* ---------------- state ---------------- */
 var DB = null, USER = null, ASSETS = null, MAY_EDIT = false, DBDOWN = false;
 var S = {
   role: null, meId: null,
-  clients: [], notes: {}, templates: {}, msgs: [], msgFor: null,
+  clients: [], notes: {}, billing: {}, templates: {}, msgs: [], msgFor: null,
   cfg: { orgName: "Northbound Advising", advisorCode: "", welcome: "" },
   view: "clients", open: null, tab: "overview",
   res: RES[0].id,
@@ -163,6 +164,40 @@ function costOf(r) {
   var gross = num(r.tuition) + num(r.fees) + num(r.living);
   return { gross: gross, award: num(r.award), net: Math.max(0, gross - num(r.award)), has: gross > 0 || num(r.award) > 0 };
 }
+/* ---- money ---- */
+function billOf(cid) {
+  var b = S.billing[cid] || {};
+  var fee = num(b.fee), paid = (b.payments || []).reduce(function (a, p) { return a + num(p.amount); }, 0);
+  return { fee: fee, paid: paid, due: Math.round((fee - paid) * 100) / 100, payments: b.payments || [],
+           referral: b.referral || "", note: b.note || "", has: fee > 0 || paid > 0 };
+}
+/* ---- test scores against a school's stated minimums ---- */
+function scoreFlags(c, r) {
+  var out = [], e = (c.scores || {}).english || {};
+  if (num(r.minEnglish) && num(e.total) && num(e.total) < num(r.minEnglish))
+    out.push((e.test || "English") + " " + e.total + " is below the " + r.minEnglish + " this programme asks for");
+  if (num(r.minSection) && num(e.low) && num(e.low) < num(r.minSection))
+    out.push("Lowest section " + e.low + " is below the " + r.minSection + " section floor");
+  if (r.greRequired === "Required" && !num((c.scores || {}).greV) && !num((c.scores || {}).gmat))
+    out.push("GRE/GMAT required and no score on file");
+  return out;
+}
+function anyScoreFlags(c) {
+  var n = 0;
+  (c.schools || []).forEach(function (r) { n += scoreFlags(c, r).length; });
+  return n;
+}
+/* ---- recommender coverage ---- */
+function refGaps(c) {
+  var refs = c.refs || [], out = [];
+  if (!refs.length) return out;
+  (c.schools || []).forEach(function (r, i) {
+    if (["Applying", "Submitted"].indexOf(r.status) < 0) return;
+    var missing = refs.filter(function (f) { return !(f.sent || {})[String(i)]; });
+    if (missing.length) out.push({ school: r.name, missing: missing.length, of: refs.length });
+  });
+  return out;
+}
 var SCH_STATES = ["Researching", "Applying", "Submitted", "Admitted", "Waitlisted", "Denied", "Enrolling"];
 function schPill(st) {
   if (st === "Admitted" || st === "Enrolling") return "ok";
@@ -206,6 +241,10 @@ function saveCfg() { if (DB) queue("config/app", function () { return DB.doc("co
 function saveNote(cid, body) {
   S.notes[cid] = body;
   if (DB) queue("notes/" + cid, function () { return DB.doc("notes/" + cid).set({ body: body, at: new Date().toISOString() }); });
+}
+function saveBilling(cid, obj) {
+  S.billing[cid] = obj;
+  if (DB) queue("billing/" + cid, function () { return DB.doc("billing/" + cid).set(obj); });
 }
 function saveTemplate(tid) {
   var t = S.templates[tid]; if (!t || !DB) return;
@@ -297,6 +336,11 @@ function attachAdvisor() {
       snap.docs.forEach(function (d) { n[d.id] = (d.data() || {}).body || ""; });
       S.notes = n; if (BOOTED) NB.render();
     }, function () {}));
+    addUn(DB.collection("billing").onSnapshot(function (snap) {
+      var b = {};
+      snap.docs.forEach(function (d) { b[d.id] = d.data() || {}; });
+      S.billing = b; if (BOOTED) NB.render();
+    }, function () {}));
   });
 }
 function attachClient(cid) {
@@ -360,7 +404,7 @@ function signOut() {
   unsubs.forEach(function (f) { try { f(); } catch (e) {} });
   unsubs = [];
   if (msgUnsub) { try { msgUnsub(); } catch (e) {} msgUnsub = null; }
-  S.role = null; S.meId = null; S.open = null; S.clients = []; S.notes = {}; S.msgs = []; S.msgFor = null;
+  S.role = null; S.meId = null; S.open = null; S.clients = []; S.notes = {}; S.billing = {}; S.msgs = []; S.msgFor = null;
   S.loginTab = "client";
   // keep config + templates live for the login screen
   if (DB) {
@@ -384,8 +428,9 @@ var NB = {
   tplOf: tplOf, taskDone: taskDone, dueOf: dueOf, progressOf: progressOf, stageStats: stageStats,
   currentStageIdx: currentStageIdx, nextDeadline: nextDeadline, overdue: overdue, dueSoon: dueSoon,
   costOf: costOf, schPill: schPill, statusPill: statusPill, unread: unread,
+  billOf: billOf, scoreFlags: scoreFlags, anyScoreFlags: anyScoreFlags, refGaps: refGaps,
   queue: queue, scheduleSave: scheduleSave, flush: flush, saveCfg: saveCfg, saveNote: saveNote,
-  saveTemplate: saveTemplate, setCode: setCode, dropCode: dropCode, sendMsg: sendMsg, markRead: markRead,
+  saveTemplate: saveTemplate, saveBilling: saveBilling, setCode: setCode, dropCode: dropCode, sendMsg: sendMsg, markRead: markRead,
   attachMessages: attachMessages, signInAdvisor: signInAdvisor, signInClient: signInClient, signOut: signOut,
   boot: boot, render: function () {}
 };
