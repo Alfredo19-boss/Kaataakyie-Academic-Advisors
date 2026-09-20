@@ -1,0 +1,13 @@
+{
+  "org": "Katakyie Advisors",
+  "tagline": "A free planner for international applicants to US master's programmes.",
+
+  "//siteUrl": "Where the published site will live. Needed for social previews and the canonical link. No trailing slash.",
+  "siteUrl": "https://YOURNAME.github.io/katakyie-advisors",
+
+  "//contactEmail": "The address the 'Get in touch' buttons open.",
+  "contactEmail": "hello@example.com",
+
+  "//portalUrl": "Optional. Set it and a 'Client sign in' link appears in the site's top bar. Leave empty to hide it.",
+  "portalUrl": ""
+}

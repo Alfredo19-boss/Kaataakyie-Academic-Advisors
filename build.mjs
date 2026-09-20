@@ -1,46 +1,129 @@
 #!/usr/bin/env node
 /**
- * Concatenates the sources into two artefacts:
+ * One set of sources, three outputs.
  *
- *   dist/index.html    the page to publish as a Claude artifact.
+ *   dist/index.html    the advisor platform, as a Claude artifact.
  *                      No <!doctype>/<html>/<head>/<body> — the artifact host supplies those.
+ *                      It needs the artifact runtime for its database, so it is NOT a static page.
  *
- *   dev/preview.html   a standalone page for local work: a full HTML document with
- *                      dev/harness.js in front of it, faking the window.claude runtime
- *                      so the app has a database, an identity and sample records.
+ *   dist/public.html   the public planner, as a Claude artifact. Same rule about the skeleton.
  *
- * No dependencies. Node 18+.
+ *   site/              the public planner as a real, standalone website — a complete HTML
+ *                      document with its own head, social preview tags and favicon.
+ *                      This is what GitHub Pages (or Netlify, or any static host) serves.
+ *
+ *   dev/preview.html   the platform for local work, in front of dev/harness.js, which fakes
+ *                      the runtime so it has a database and sample records.
+ *
+ * Settings for the standalone site come from site.config.json. No dependencies. Node 18+.
  *   node build.mjs
  */
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = dirname(fileURLToPath(import.meta.url));
 const read = (p) => readFileSync(join(root, p), "utf8");
-
-/* Order matters: data globals first, then core (window.NB), then the views that consume it. */
-const SHELL = "src/shell.html";
-const SCRIPTS = [
-  ["src/data/schools.js", "src/data/content.js"],
-  ["src/app/core.js"],
-  ["src/app/views.js"],
-];
-
 const bundle = (files) => `<script>\n${files.map(read).join("\n")}\n</script>`;
-const body = [read(SHELL), ...SCRIPTS.map(bundle)].join("\n");
+const kb = (s) => (Buffer.byteLength(s) / 1024).toFixed(0) + " KB";
+
+const cfg = JSON.parse(read("site.config.json"));
+const siteUrl = String(cfg.siteUrl || "").replace(/\/+$/, "");
+const esc = (v) => String(v ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+/* ---------------------------------- the advisor platform ---------------------------------- */
+/* Order matters: data globals first, then core (window.NB), then the views that consume it. */
+const body = [
+  read("src/shell.html"),
+  bundle(["src/data/schools.js", "src/data/content.js"]),
+  bundle(["src/app/core.js"]),
+  bundle(["src/app/views.js"]),
+].join("\n");
 
 mkdirSync(join(root, "dist"), { recursive: true });
 writeFileSync(join(root, "dist/index.html"), body + "\n");
 
-/* The public marketing site — same data files, its own shell and script, no runtime capabilities. */
+/* ---------------------------------- the public planner ---------------------------------- */
+const settings = `<script>window.NB_SITE=${JSON.stringify({
+  org: cfg.org || "",
+  contactEmail: cfg.contactEmail || "",
+  portalUrl: cfg.portalUrl || "",
+})};</script>`;
+
 const publicBody = [
+  settings,
   read("public/shell.html"),
   bundle(["src/data/schools.js", "src/data/content.js"]),
   bundle(["public/app.js"]),
 ].join("\n");
 writeFileSync(join(root, "dist/public.html"), publicBody + "\n");
 
+/* ---------------------------------- the standalone website ---------------------------------- */
+/* A gold K on near-black, inline so the page carries its own icon with no extra request. */
+const favicon =
+  "data:image/svg+xml," +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">' +
+      '<rect width="40" height="40" rx="9" fill="#15120B"/>' +
+      '<path d="M14 10v20M14 20.2 24.5 10M14 19.8 24.5 30" fill="none" stroke="#D9B441" ' +
+      'stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+  );
+
+const title = `${cfg.org || "Katakyie Advisors"} — The US Master's Planner`;
+const desc =
+  cfg.tagline ||
+  "A free planner for international applicants to US master's programmes: the eighteen-month timeline, every US institution that awards a master's, and the traps that sink finished applications.";
+
+const site = `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>${esc(title)}</title>
+<meta name="description" content="${esc(desc)}">
+<meta name="theme-color" content="#0A0908">
+<link rel="icon" href="${favicon}">
+${siteUrl ? `<link rel="canonical" href="${esc(siteUrl)}/">` : ""}
+<meta property="og:type" content="website">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(desc)}">
+${siteUrl ? `<meta property="og:url" content="${esc(siteUrl)}/">` : ""}
+${siteUrl ? `<meta property="og:image" content="${esc(siteUrl)}/social.png">` : ""}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(title)}">
+<meta name="twitter:description" content="${esc(desc)}">
+${siteUrl ? `<meta name="twitter:image" content="${esc(siteUrl)}/social.png">` : ""}
+<style>
+  /* The artifact host injects a small reset; a standalone page has to carry its own. */
+  :root { color-scheme: dark; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  body { margin: 0; background: #0A0908; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+${publicBody}
+</body>
+</html>
+`;
+
+mkdirSync(join(root, "site"), { recursive: true });
+writeFileSync(join(root, "site/index.html"), site);
+writeFileSync(join(root, "site/.nojekyll"), "");
+writeFileSync(
+  join(root, "site/robots.txt"),
+  "User-agent: *\nAllow: /\n" + (siteUrl ? `Sitemap: ${siteUrl}/sitemap.xml\n` : "")
+);
+if (siteUrl) {
+  writeFileSync(
+    join(root, "site/sitemap.xml"),
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>${siteUrl}/</loc></url>\n</urlset>\n`
+  );
+}
+if (cfg.customDomain) writeFileSync(join(root, "site/CNAME"), cfg.customDomain + "\n");
+if (existsSync(join(root, "docs/planner.png"))) copyFileSync(join(root, "docs/planner.png"), join(root, "site/social.png"));
+
+/* ---------------------------------- local preview ---------------------------------- */
 const preview = `<!doctype html>
 <html lang="en">
 <head>
@@ -49,7 +132,7 @@ const preview = `<!doctype html>
 <style>
   /* Mirrors the small reset the artifact host injects, so the preview matches production. */
   :root { color-scheme: light dark; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
-  body { margin: 0; font: 14px system-ui, sans-serif; background: #fafafa; }
+  body { margin: 0; font: 14px system-ui, sans-serif; background: #0A0908; }
   img { max-width: 100%; }
   [hidden] { display: none !important; }
 </style>
@@ -62,7 +145,9 @@ ${body}
 `;
 writeFileSync(join(root, "dev/preview.html"), preview);
 
-const kb = (s) => (Buffer.byteLength(s) / 1024).toFixed(0) + " KB";
-console.log(`dist/index.html    ${kb(body)}   (publish this — the advisor platform)`);
-console.log(`dist/public.html   ${kb(publicBody)}   (publish this — the public planner)`);
-console.log(`dev/preview.html   ${kb(preview)}   (open in a browser, or: npm run dev)`);
+console.log(`dist/index.html    ${kb(body)}   Claude artifact — the advisor platform`);
+console.log(`dist/public.html   ${kb(publicBody)}   Claude artifact — the public planner`);
+console.log(`site/index.html    ${kb(site)}   static website — what GitHub Pages serves`);
+console.log(`dev/preview.html   ${kb(preview)}   local preview (npm run dev)`);
+if (!siteUrl || siteUrl.includes("YOURNAME")) console.log("\n  note: set siteUrl in site.config.json so social previews and the canonical link work.");
+if ((cfg.contactEmail || "").includes("example.com")) console.log("  note: set contactEmail in site.config.json — the 'Get in touch' button points at it.");

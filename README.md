@@ -15,12 +15,13 @@ One advisor console over every client, and a portal each client signs into to se
 
 It builds **two** pages from one set of sources:
 
-| Built file | What it is | Who can open it |
+| Built output | What it is | Where it runs |
 |---|---|---|
-| `dist/index.html` | The advisor platform — console plus client portals | You, and clients you share it with |
-| `dist/public.html` | **Katakyie Master's Planner** — a public marketing site: the 18-month timeline, all 846 schools, the five traps, the full library, the cycle ticker | Anyone with the link |
+| `dist/index.html` | The advisor platform — console plus client portals | A Claude artifact. **Needs the artifact runtime for its database**, so it is not a static page |
+| `dist/public.html` | The planner, as a Claude artifact | A Claude artifact |
+| `site/` | The planner, as a real website — full HTML document, social preview tags, favicon, robots and sitemap | **GitHub Pages, Netlify, Vercel, any static host** |
 
-The public site declares no runtime capabilities at all, which is what lets it be shared with the world. It is the front door; the platform is the back office.
+The planner declares no runtime capabilities at all. That is what lets it be shared with the world, and it is also why it works as a plain static site. It is the front door; the platform is the back office.
 
 Vanilla JavaScript. No framework, no build dependencies, no `node_modules`. The whole thing is one HTML file when built.
 
@@ -48,16 +49,10 @@ npm run dev            # builds, then serves http://localhost:5173
 The dev server runs the app against `dev/harness.js`, a fake of the Claude artifact runtime that gives it an in-memory database, an identity and three sample clients. Nothing persists — reload and you are back to the seed.
 
 ```bash
-npm run build          # writes dist/index.html and dist/public.html
+npm run build          # writes dist/ and site/
 npm run check          # syntax check every source file
+npm run site           # build, then serve site/ at http://localhost:5174
 node dev/screenshot.mjs --shots   # headless render: JS errors + overflow (needs playwright)
-```
-
-**Before publishing the public site, change one line.** `public/app.js` opens with:
-
-```js
-/* --- EDIT ME: the address the "Get in touch" buttons open. --- */
-var CONTACT = "hello@example.com";
 ```
 
 ---
@@ -84,7 +79,35 @@ Artifact → publish
 
 The access rules the live copy uses are in [`docs/DATA-MODEL.md`](docs/DATA-MODEL.md).
 
-> **Hosting it anywhere else** — GitHub Pages, Netlify, Vercel — serves the page fine, but there is no `window.claude`, so every `use()` resolves `null`, the app shows *"Shared storage is unavailable"* and nothing saves. See [Where this goes next](#where-this-goes-next).
+> **Do not host the platform statically.** GitHub Pages will serve `dist/index.html` happily, but there is no `window.claude` there, so every `use()` resolves `null`, the app shows *"Shared storage is unavailable"* and nothing saves. Only `site/` is meant for a static host. See [Where this goes next](#where-this-goes-next).
+
+---
+
+## Publishing the planner on GitHub Pages
+
+The repository ships with a workflow that builds `site/` and deploys it. Two things to do once.
+
+**1. Fill in `site.config.json`.**
+
+```json
+{
+  "org": "Katakyie Advisors",
+  "siteUrl": "https://YOURNAME.github.io/katakyie-advisors",
+  "contactEmail": "hello@example.com",
+  "portalUrl": ""
+}
+```
+
+- `siteUrl` — where the site will live, no trailing slash. It drives the canonical link and the social preview; get it wrong and a link shared on WhatsApp shows no card.
+- `contactEmail` — the address every "Get in touch" button opens. **Change this before you publish**, or the site's only call to action goes nowhere.
+- `portalUrl` — optional. Put the platform's URL here and a *Client sign in* link appears in the top bar. Leave it empty and the link stays hidden. Note that only people you have shared the platform with can open it.
+- `customDomain` — add this key with a domain and the build writes a `CNAME` file for you.
+
+**2. Turn Pages on.** In the repository: **Settings → Pages → Build and deployment → Source: GitHub Actions**. Push to `main` and the workflow runs — it checks every source file parses, builds, and publishes `site/`. A minute or so later the site is live at `siteUrl`.
+
+The build is checked into the workflow, not the repository: `site/` is in `.gitignore`, so nothing built is ever committed. If you would rather not use Actions, delete `.github/workflows/pages.yml`, remove `site/` from `.gitignore`, commit the folder, and point Pages at a branch instead.
+
+Netlify and Vercel need no workflow at all — build command `node build.mjs`, publish directory `site`.
 
 ---
 
@@ -100,13 +123,16 @@ src/
 public/
   shell.html            the public site's own markup and CSS
   app.js                its script — school explorer, library, timeline ruler
-build.mjs               builds dist/index.html, dist/public.html and dev/preview.html
+site.config.json        org name, site URL, contact address, optional portal link
+build.mjs               builds dist/, site/ and dev/preview.html
+.github/workflows/      the GitHub Pages deployment
 dev/harness.js          fake window.claude for local work
 dev/serve.mjs           dependency-free static server
 dev/screenshot.mjs      headless render check
 seed/                   the documents that populate a fresh database
 docs/DATA-MODEL.md      collections, document shapes, access rules
-dist/                   built output (committed, ready to publish)
+dist/                   built artifacts (committed, ready to publish)
+site/                   the static website (built, not committed)
 ```
 
 Load order is fixed and matters: data globals → `core.js` (defines `window.NB`) → `views.js` (consumes it, then calls `NB.boot()`). Both pages read the same `src/data/` files, so a school added once shows up in both.

@@ -1,15 +1,24 @@
 {
-  "name": "northbound-advising",
-  "version": "2.0.0",
+  "name": "katakyie-advisors",
+  "version": "4.0.0",
   "private": true,
   "type": "module",
-  "description": "Client-progress platform for US master's admissions advising — advisor console, isolated client portals, 426-school directory and a resource library.",
+  "description": "Client-progress platform and public planner for US master's admissions advising \u2014 advisor console, isolated client portals, 846-school directory, cycle ticker and a resource library.",
   "license": "MIT",
-  "engines": { "node": ">=18" },
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "node build.mjs",
     "dev": "node build.mjs && node dev/serve.mjs",
-    "check": "node --check src/data/schools.js && node --check src/data/content.js && node --check src/app/core.js && node --check src/app/views.js && node --check dev/harness.js && echo \"syntax OK\""
+    "check": "node --check src/data/schools.js && node --check src/data/content.js && node --check src/app/core.js && node --check src/app/views.js && node --check dev/harness.js && echo \"syntax OK\"",
+    "site": "node build.mjs && node dev/serve.mjs --site"
   },
-  "keywords": ["education", "admissions", "advising", "dashboard", "student-portal"]
+  "keywords": [
+    "education",
+    "admissions",
+    "advising",
+    "dashboard",
+    "student-portal"
+  ]
 }

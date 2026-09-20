@@ -4,8 +4,9 @@
 var $ = function (s) { return document.querySelector(s); };
 var SCHOOLS = window.NB_SCHOOLS, STAGES = window.NB_STAGES, RES = window.NB_RESOURCES;
 
-/* --- EDIT ME: the address the "Get in touch" buttons open. --- */
-var CONTACT = "hello@example.com";
+/* Site settings come from site.config.json at build time; these are the fallbacks. */
+var SITE = window.NB_SITE || {};
+var CONTACT = SITE.contactEmail || "hello@example.com";
 
 function esc(v) {
   return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) {
@@ -15,6 +16,10 @@ function esc(v) {
 
 /* ---------- contact ---------- */
 $("#ctaLink").href = "mailto:" + CONTACT + "?subject=" + encodeURIComponent("US master's advising");
+if (SITE.portalUrl) {
+  var pl = document.getElementById("portalLink");
+  if (pl) { pl.href = SITE.portalUrl; pl.hidden = false; }
+}
 
 /* ---------- ticker ---------- */
 (function () {

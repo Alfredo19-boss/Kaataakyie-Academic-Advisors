@@ -1,0 +1,50 @@
+# Builds the public planner and publishes it to GitHub Pages.
+#
+# One-time setup in the repository: Settings → Pages → Build and deployment → Source: GitHub Actions.
+# After that every push to main republishes the site.
+#
+# Only site/ is published. The advisor platform (dist/index.html) is deliberately left out:
+# it needs the Claude artifact runtime for its database and would not work as a static page.
+
+name: Publish the planner
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Check every source file parses
+        run: npm run check
+      - name: Build
+        run: node build.mjs
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

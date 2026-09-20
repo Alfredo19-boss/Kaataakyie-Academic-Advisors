@@ -1,3 +1,4 @@
+<script>window.NB_SITE={"org":"Katakyie Advisors","contactEmail":"hello@example.com","portalUrl":""};</script>
 <title>Katakyie Master's Planner</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
@@ -159,6 +160,7 @@ footer p{max-width:78ch;margin-bottom:8px}
       <a href="#schools">Schools</a>
       <a href="#traps">Traps</a>
       <a href="#library">Library</a>
+      <a href="#" id="portalLink" hidden>Client sign in</a>
       <a href="#work" class="cta">Work with us</a>
     </div>
   </div>
@@ -1414,8 +1416,9 @@ window.NB_BOARD = [
 var $ = function (s) { return document.querySelector(s); };
 var SCHOOLS = window.NB_SCHOOLS, STAGES = window.NB_STAGES, RES = window.NB_RESOURCES;
 
-/* --- EDIT ME: the address the "Get in touch" buttons open. --- */
-var CONTACT = "hello@example.com";
+/* Site settings come from site.config.json at build time; these are the fallbacks. */
+var SITE = window.NB_SITE || {};
+var CONTACT = SITE.contactEmail || "hello@example.com";
 
 function esc(v) {
   return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) {
@@ -1425,6 +1428,10 @@ function esc(v) {
 
 /* ---------- contact ---------- */
 $("#ctaLink").href = "mailto:" + CONTACT + "?subject=" + encodeURIComponent("US master's advising");
+if (SITE.portalUrl) {
+  var pl = document.getElementById("portalLink");
+  if (pl) { pl.href = SITE.portalUrl; pl.hidden = false; }
+}
 
 /* ---------- ticker ---------- */
 (function () {
