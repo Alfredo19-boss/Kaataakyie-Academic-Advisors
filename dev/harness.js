@@ -1,7 +1,7 @@
 // Local preview harness only — not published. Fakes window.claude with an in-memory store.
 (function () {
   var store = {
-    "config/app": { orgName: "Katakyie Advisors", advisorCode: "KATAKYIE", welcome: "" },
+    "config/app": { orgName: "Katakyie Academic Advisor", advisorCode: "KATAKYIE", welcome: "" },
     "clients/c1": { name: "Ama Serwaa Boateng", email: "a@example.com", country: "Ghana", field: "MS Computer Science",
       targetTerm: "Fall 2027", status: "Active", code: "KA-4821", notes: "",
       tasks: { t01: "2026-08-01", t02: "2026-08-04", t03: "2026-08-04", t04: "2026-08-06", t05: "2026-08-10", t06: "2026-08-12",

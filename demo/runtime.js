@@ -33,7 +33,7 @@
   function seed() {
     var s = {};
     s["config/app"] = {
-      orgName: "Katakyie Advisors",
+      orgName: "Katakyie Academic Advisor",
       advisorCode: "KATAKYIE",
       welcome: "This dashboard is the single place we track your application. Tick anything off as you finish it — I keep the rest current, and anything marked Advisor is mine to do."
     };

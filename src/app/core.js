@@ -1,4 +1,4 @@
-/* Katakyie Advisors — core: helpers, state, storage, auth, boot. Views live in the next script. */
+/* Katakyie Academic Advisor — core: helpers, state, storage, auth, boot. Views live in the next script. */
 window.NB = (function () {
 "use strict";
 
@@ -93,7 +93,7 @@ var DB = null, USER = null, ASSETS = null, MAY_EDIT = false, DBDOWN = false;
 var S = {
   role: null, meId: null,
   clients: [], notes: {}, billing: {}, templates: {}, board: [], extra: {}, msgs: [], msgFor: null,
-  cfg: { orgName: "Katakyie Advisors", advisorCode: "", welcome: "" },
+  cfg: { orgName: "Katakyie Academic Advisor", advisorCode: "", welcome: "", siteUrl: "", advisorEmail: "" },
   view: "clients", open: null, tab: "overview",
   res: RES[0].id,
   dir: { q: "", st: "", ctrl: "", tag: "", limit: 60 },
@@ -327,7 +327,8 @@ function boot() {
     addUn(DB.doc("config/app").onSnapshot(function (snap) {
       if (snap.exists) {
         var d = snap.data();
-        S.cfg = { orgName: d.orgName || "Katakyie Advisors", advisorCode: d.advisorCode || "", welcome: d.welcome || "" };
+        S.cfg = { orgName: d.orgName || "Katakyie Academic Advisor", advisorCode: d.advisorCode || "",
+                  welcome: d.welcome || "", siteUrl: d.siteUrl || "", advisorEmail: d.advisorEmail || "" };
       }
       tick(); if (BOOTED) NB.render();
     }, tick));
@@ -449,7 +450,8 @@ function signOut() {
     addUn(DB.doc("config/app").onSnapshot(function (snap) {
       if (snap.exists) {
         var d = snap.data();
-        S.cfg = { orgName: d.orgName || "Katakyie Advisors", advisorCode: d.advisorCode || "", welcome: d.welcome || "" };
+        S.cfg = { orgName: d.orgName || "Katakyie Academic Advisor", advisorCode: d.advisorCode || "",
+                  welcome: d.welcome || "", siteUrl: d.siteUrl || "", advisorEmail: d.advisorEmail || "" };
       }
       NB.render();
     }, function () {}));

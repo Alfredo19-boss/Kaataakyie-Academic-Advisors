@@ -1,8 +1,8 @@
-<title>Katakyie Advisors</title>
+<title>Katakyie Academic Advisor</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
 <style>
-/* Katakyie Advisors — a single committed dark identity: warm black grounds, gold used sparingly. */
+/* Katakyie Academic Advisor — a single committed dark identity: warm black grounds, gold used sparingly. */
 :root{
   color-scheme:dark;
   --bg:#0A0908; --panel:#121110; --panel2:#1B1917; --panel3:#232019;
@@ -342,10 +342,8 @@ table.tbl tbody tr.clickable:hover{background:var(--panel2)}
 <div id="shell">
   <aside class="side">
     <div class="side-h">
-      <svg class="logomark" viewBox="0 0 40 40" aria-hidden="true">
-        <rect x="0.9" y="0.9" width="38.2" height="38.2" rx="9" fill="#15120B" stroke="var(--brand)" stroke-width="1.5"></rect>
-        <path d="M14 10v20M14 20.2 24.5 10M14 19.8 24.5 30" fill="none" stroke="var(--brand)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
-      </svg>
+      <svg class="logomark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="15" fill="#0C0A06"></rect><path d="M32 13 51 32" fill="none" stroke="var(--brand)" stroke-width="6" stroke-linecap="round"/><path d="M32 13 13 32" fill="none" stroke="var(--brand)" stroke-width="6" stroke-linecap="round"/><path d="M32 31 51 50" fill="none" stroke="#9A7C2E" stroke-width="6" stroke-linecap="round"/><path d="M32 31 13 50" fill="none" stroke="#9A7C2E" stroke-width="6" stroke-linecap="round"/></svg>
       <div>
         <div class="nm" id="brandName">Katakyie</div>
         <div class="sub" id="brandRole">Advisor console</div>
@@ -1507,7 +1505,7 @@ window.NB_BOARD = [
 
 </script>
 <script>
-/* Katakyie Advisors — core: helpers, state, storage, auth, boot. Views live in the next script. */
+/* Katakyie Academic Advisor — core: helpers, state, storage, auth, boot. Views live in the next script. */
 window.NB = (function () {
 "use strict";
 
@@ -1602,7 +1600,7 @@ var DB = null, USER = null, ASSETS = null, MAY_EDIT = false, DBDOWN = false;
 var S = {
   role: null, meId: null,
   clients: [], notes: {}, billing: {}, templates: {}, board: [], extra: {}, msgs: [], msgFor: null,
-  cfg: { orgName: "Katakyie Advisors", advisorCode: "", welcome: "" },
+  cfg: { orgName: "Katakyie Academic Advisor", advisorCode: "", welcome: "", siteUrl: "", advisorEmail: "" },
   view: "clients", open: null, tab: "overview",
   res: RES[0].id,
   dir: { q: "", st: "", ctrl: "", tag: "", limit: 60 },
@@ -1836,7 +1834,8 @@ function boot() {
     addUn(DB.doc("config/app").onSnapshot(function (snap) {
       if (snap.exists) {
         var d = snap.data();
-        S.cfg = { orgName: d.orgName || "Katakyie Advisors", advisorCode: d.advisorCode || "", welcome: d.welcome || "" };
+        S.cfg = { orgName: d.orgName || "Katakyie Academic Advisor", advisorCode: d.advisorCode || "",
+                  welcome: d.welcome || "", siteUrl: d.siteUrl || "", advisorEmail: d.advisorEmail || "" };
       }
       tick(); if (BOOTED) NB.render();
     }, tick));
@@ -1958,7 +1957,8 @@ function signOut() {
     addUn(DB.doc("config/app").onSnapshot(function (snap) {
       if (snap.exists) {
         var d = snap.data();
-        S.cfg = { orgName: d.orgName || "Katakyie Advisors", advisorCode: d.advisorCode || "", welcome: d.welcome || "" };
+        S.cfg = { orgName: d.orgName || "Katakyie Academic Advisor", advisorCode: d.advisorCode || "",
+                  welcome: d.welcome || "", siteUrl: d.siteUrl || "", advisorEmail: d.advisorEmail || "" };
       }
       NB.render();
     }, function () {}));
@@ -1992,7 +1992,7 @@ return NB;
 
 </script>
 <script>
-/* Katakyie Advisors — views and interaction. */
+/* Katakyie Academic Advisor — views and interaction. */
 (function (NB) {
 "use strict";
 var $ = NB.$, esc = NB.esc, S = NB.S, ico = NB.ico, ICONS = NB.ICONS, CHECK = NB.CHECK;
@@ -2091,12 +2091,12 @@ function renderTicker() {
 function renderLogin() {
   var host = $("#login"); host.hidden = false;
   $("#shell").classList.remove("on");
-  var org = esc(S.cfg.orgName || "Katakyie Advisors");
+  var org = esc(S.cfg.orgName || "Katakyie Academic Advisor");
   host.innerHTML =
     '<div class="brandside">' +
       '<div style="display:flex;align-items:center;gap:11px">' +
-        '<svg class="logomark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="rgba(255,255,255,.14)"></rect>' +
-        '<path d="M11 28V12l18 16V12" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>' +
+        '<svg class="logomark" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="15" fill="#0C0A06"></rect>' +
+        '<path d="M32 13 51 32" fill="none" stroke="var(--brand)" stroke-width="6" stroke-linecap="round"/><path d="M32 13 13 32" fill="none" stroke="var(--brand)" stroke-width="6" stroke-linecap="round"/><path d="M32 31 51 50" fill="none" stroke="#9A7C2E" stroke-width="6" stroke-linecap="round"/><path d="M32 31 13 50" fill="none" stroke="#9A7C2E" stroke-width="6" stroke-linecap="round"/>' + "</svg>" +
         '<div style="font-weight:600;font-size:15px">' + org + "</div></div>" +
       "<div><h1>From the first enquiry to the airport, tracked to the day.</h1>" +
       "<p>Sign in with the access code your advisor gave you. You see your own file and nothing else — " +
@@ -2188,7 +2188,7 @@ function render() {
     return '<a data-act="go" data-v="' + it.v + '" class="' + (cur === it.v ? "on" : "") + '">' + ico(ICONS[it.i]) + "<span>" + esc(it.n) + "</span>" + badge + "</a>";
   }).join("");
 
-  $("#brandName").textContent = S.cfg.orgName || "Katakyie Advisors";
+  $("#brandName").textContent = S.cfg.orgName || "Katakyie Academic Advisor";
   $("#brandRole").textContent = isAdvisor() ? "Advisor console" : "Client portal";
   var who = isAdvisor() ? "Advisor" : ((meClient() && meClient().name) || "Client");
   $("#meInitials").textContent = NB.initials(who);
@@ -2268,6 +2268,7 @@ function viewClients(v) {
       "<td>" + (od.length ? '<span class="pill crit"><span class="dot"></span>' + od.length + " overdue</span>" : '<span class="pill ok">On track</span>') + "</td>" +
       '<td><span class="pill ' + NB.statusPill(c.status) + '">' + esc(c.status || "Active") + "</span></td>" +
       '<td class="muted" style="font-size:12px;white-space:nowrap">' + esc(NB.relAge(c.updatedAt)) + "</td>" +
+      '<td style="text-align:right"><button class="btn sm" data-act="sharelink" data-v="' + esc(c.id) + '">Send link</button></td>' +
       "</tr>";
   }).join("");
 
@@ -2279,8 +2280,8 @@ function viewClients(v) {
       "</select></div>" +
       '<span class="pill">' + list.length + " of " + S.clients.length + "</span></div>" +
     '<div class="card-b flush"><div class="scrollx"><table class="tbl">' +
-    "<thead><tr><th>Client</th><th>Intake</th><th>Stage</th><th>Completion</th><th>Next deadline</th><th>Schedule</th><th>Status</th><th>Updated</th></tr></thead>" +
-    "<tbody>" + (rows || '<tr><td colspan="8"><div class="empty"><p>No client matches that search.</p></div></td></tr>') + "</tbody></table></div></div></div>");
+    "<thead><tr><th>Client</th><th>Intake</th><th>Stage</th><th>Completion</th><th>Next deadline</th><th>Schedule</th><th>Status</th><th>Updated</th><th></th></tr></thead>" +
+    "<tbody>" + (rows || '<tr><td colspan="9"><div class="empty"><p>No client matches that search.</p></div></td></tr>') + "</tbody></table></div></div></div>");
 }
 
 /* ------------------------------------------------ pipeline ------------------------------------------------ */
@@ -2418,6 +2419,7 @@ function viewClient(v) {
     $("#crumb").textContent = "Clients / " + (c.name || "");
     $("#topactions").innerHTML =
       '<button class="btn" data-act="go" data-v="clients">← All clients</button>' +
+      '<button class="btn pri" data-act="sharelink" data-v="' + esc(c.id) + '">Send client link</button>' +
       '<button class="btn" data-act="outcome" data-v="' + esc(c.id) + '">Record outcome</button>' +
       '<button class="btn" data-act="editclient" data-v="' + esc(c.id) + '">Edit record</button>';
   } else {
@@ -2667,7 +2669,7 @@ function cReport(c) {
     '<button class="btn pri" data-act="printrep">Print / save as PDF</button></div>' +
     '<div class="card-b rep">' +
       '<div class="printonly" style="margin-bottom:18px;border-bottom:2px solid var(--brand);padding-bottom:10px">' +
-        '<div style="font-family:var(--serif);font-size:22px;font-weight:600">' + esc(S.cfg.orgName || "Katakyie Advisors") + "</div>" +
+        '<div style="font-family:var(--serif);font-size:22px;font-weight:600">' + esc(S.cfg.orgName || "Katakyie Academic Advisor") + "</div>" +
         '<div class="muted" style="font-size:12px">Application status report · ' + fmtDate(NB.today()) + "</div></div>" +
       '<h3 class="serif" style="font-size:24px">' + esc(c.name || "") + "</h3>" +
       '<p class="muted" style="margin-bottom:18px">' + esc([c.field, c.targetTerm ? c.targetTerm + " intake" : "", c.country].filter(Boolean).join(" · ")) + "</p>" +
@@ -2697,7 +2699,7 @@ function cReport(c) {
         }).join("") + "</ul>" : '<p class="muted">Nothing outstanding.</p>') +
       (od.length ? '<p style="margin-top:16px;color:var(--crit);font-weight:600">' + od.length + " step" + (od.length === 1 ? " is" : "s are") + " past its target date.</p>" : "") +
       '<p class="muted" style="font-size:11.5px;margin-top:26px;border-top:1px solid var(--line);padding-top:10px">' +
-      "Prepared by " + esc(S.cfg.orgName || "Katakyie Advisors") + " on " + fmtDate(NB.today()) +
+      "Prepared by " + esc(S.cfg.orgName || "Katakyie Academic Advisor") + " on " + fmtDate(NB.today()) +
       ". General planning information, not legal or immigration advice.</p>" +
     "</div>";
 }
@@ -2785,6 +2787,8 @@ function viewSettings(v) {
       '<div class="card-b" style="display:flex;flex-direction:column;gap:14px">' +
       '<div class="field"><label for="setName">Practice name</label><input class="inp" id="setName" value="' + esc(S.cfg.orgName) + '"></div>' +
       '<div class="field"><label for="setCode">Advisor passcode</label><input class="inp mono" id="setCode" value="' + esc(S.cfg.advisorCode) + '" placeholder="set a passcode"></div>' +
+      '<div class="field"><label for="setSite">Public site address</label><input class="inp mono" id="setSite" value="' + esc(S.cfg.siteUrl || "") + '" placeholder="https://yourname.github.io/your-repo"></div>' +
+      '<div class="field"><label for="setMail">Your email, for the button on client links</label><input class="inp" id="setMail" value="' + esc(S.cfg.advisorEmail || "") + '" placeholder="you@example.com"></div>' +
       '<div class="field"><label for="setWelcome">Welcome note on every client dashboard</label><textarea class="inp" id="setWelcome" style="min-height:80px">' + esc(S.cfg.welcome) + "</textarea></div>" +
       '<div><button class="btn pri" data-act="savecfg">Save</button></div></div></div>' +
     '<div class="card"><div class="card-h"><div><h3>What each person can see</h3></div></div>' +
@@ -3303,6 +3307,82 @@ function schoolDirModal(docId) {
     });
 }
 
+
+/* ---------------------------------- share a client link ---------------------------------- */
+/* Packs one client's file into a URL fragment for the read-only portal on the public site.
+   Private notes, fees and referee contact details are deliberately left out. */
+function bytesToB64url(bytes) {
+  var bin = "";
+  for (var i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+function deflate(bytes) {
+  if (typeof CompressionStream === "undefined") return Promise.reject(new Error("no CompressionStream"));
+  var cs = new CompressionStream("deflate-raw");
+  var w = cs.writable.getWriter();
+  w.write(bytes); w.close();
+  return new Response(cs.readable).arrayBuffer().then(function (b) { return new Uint8Array(b); });
+}
+function snapshotOf(c, note) {
+  var tpl = NB.tplOf(c);
+  var custom = (c.template && c.template !== "default") ? tpl.map(function (t) {
+    return { id: t.id, s: t.s, o: t.o, t: t.t, h: t.h };
+  }) : null;
+  return {
+    v: 1, at: NB.today(), org: S.cfg.orgName || "", adv: S.cfg.advisorEmail || "",
+    n: c.name || "", f: c.field || "", t: c.targetTerm || "", st: c.status || "",
+    msg: note || "",
+    ts: c.tasks || {}, du: c.due || {}, dc: c.docs || {},
+    tpl: custom,
+    sc: (c.schools || []).map(function (r) {
+      return { n: r.name, p: r.program || "", lo: r.loc || "", dl: r.deadline || "", s: r.status || "",
+               tu: num(r.tuition), fe: num(r.fees), li: num(r.living), aw: num(r.award) };
+    })
+  };
+}
+function buildShareLink(c, note) {
+  var base = String(S.cfg.siteUrl || "").replace(/\/+$/, "");
+  if (!base) return Promise.reject({ nobase: true });
+  var json = JSON.stringify(snapshotOf(c, note));
+  var bytes = new TextEncoder().encode(json);
+  return deflate(bytes)
+    .then(function (z) { return "z" + bytesToB64url(z); })
+    .catch(function () { return "u" + bytesToB64url(bytes); })
+    .then(function (frag) { return base + "/portal/#" + frag; });
+}
+function shareModal(c) {
+  if (!String(S.cfg.siteUrl || "").trim()) {
+    modal("Set your site address first",
+      "<p>A client link points at the portal page on your public site, so the platform needs to know where that site lives.</p>" +
+      '<p class="muted" style="font-size:13px">Open Settings and put your site address in \u2014 something like <span class="mono">https://yourname.github.io/your-repo</span> \u2014 then come back.</p>',
+      "Open Settings", function () { S.view = "settings"; render(); return true; });
+    return;
+  }
+  modal("Send " + (c.name || "this client") + " their link",
+    '<div class="field"><label for="shNote">A line at the top of their page (optional)</label>' +
+    '<textarea class="inp" id="shNote" style="min-height:66px" placeholder="Speaking retake is booked for 6 October \u2014 everything else is on track."></textarea></div>' +
+    '<div class="field"><label for="shUrl">Their link</label>' +
+    '<textarea class="inp mono" id="shUrl" style="min-height:96px;font-size:11.5px" readonly>Building\u2026</textarea></div>' +
+    '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-act="shcopy">Copy link</button>' +
+    '<a class="btn" id="shOpen" target="_blank" rel="noopener" href="#">Open it yourself</a></div>' +
+    '<p class="muted" style="font-size:12.5px;line-height:1.5">The whole file travels inside the link, so there is nothing for them to sign into. ' +
+    "It shows their progress, schools, documents and dates \u2014 never your private notes or anything about fees. " +
+    "It is a snapshot: send a fresh link when you want them to see the current picture, and treat the link as private, " +
+    "because anyone holding it can read that page.</p>",
+    "Done", function () { return true; });
+
+  var out = $("#shUrl"), open = $("#shOpen"), note = $("#shNote");
+  function refresh() {
+    buildShareLink(c, note ? note.value.trim() : "").then(function (url) {
+      if (!$("#shUrl")) return;
+      $("#shUrl").value = url;
+      if ($("#shOpen")) $("#shOpen").href = url;
+    }).catch(function () { if ($("#shUrl")) $("#shUrl").value = "Could not build the link."; });
+  }
+  refresh();
+  if (note) note.addEventListener("input", function () { clearTimeout(note._t); note._t = setTimeout(refresh, 250); });
+}
+
 /* ------------------------------------------------ wiring ------------------------------------------------ */
 function wire() {
   var notes = $("#notesBox");
@@ -3410,9 +3490,11 @@ document.addEventListener("click", function (e) {
     NB.scheduleSave(c1.id, 0); render(); toast("New code: " + c1.code); return;
   }
   if (a === "savecfg") {
-    S.cfg.orgName = $("#setName").value.trim() || "Katakyie Advisors";
+    S.cfg.orgName = $("#setName").value.trim() || "Katakyie Academic Advisor";
     S.cfg.advisorCode = $("#setCode").value.trim();
     S.cfg.welcome = $("#setWelcome").value.trim();
+    S.cfg.siteUrl = $("#setSite").value.trim().replace(/\/+$/, "");
+    S.cfg.advisorEmail = $("#setMail").value.trim();
     NB.saveCfg(); render(); toast("Settings saved"); return;
   }
   if (a === "setbudget") {
@@ -3468,6 +3550,19 @@ document.addEventListener("click", function (e) {
   }
   if (a === "sendmsg") { doSend(); return; }
 
+  if (a === "sharelink") { var cs3 = byId(v) || meClient(); if (cs3) shareModal(cs3); return; }
+  if (a === "shcopy") {
+    var box = $("#shUrl"); if (!box) return;
+    box.focus(); box.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) {}
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(box.value).then(function () { toast("Link copied"); }, function () {
+        toast(ok ? "Link copied" : "Select the link and copy it manually.");
+      });
+    } else { toast(ok ? "Link copied" : "Select the link and copy it manually."); }
+    return;
+  }
   if (a === "addboard") { boardModal(null); return; }
   if (a === "editboard") { boardModal(v); return; }
   if (a === "delboard") {

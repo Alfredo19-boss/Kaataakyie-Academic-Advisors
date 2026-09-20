@@ -64,13 +64,13 @@ writeFileSync(join(root, "dist/public.html"), publicBody + "\n");
 const favicon =
   "data:image/svg+xml," +
   encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">' +
-      '<rect width="40" height="40" rx="9" fill="#15120B"/>' +
-      '<path d="M14 10v20M14 20.2 24.5 10M14 19.8 24.5 30" fill="none" stroke="#D9B441" ' +
-      'stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">' +
+      '<rect width="64" height="64" rx="15" fill="#0C0A06"/>' +
+      '<path d="M32 13 51 32M32 13 13 32" fill="none" stroke="#D9B441" stroke-width="6" stroke-linecap="round"/>' +
+      '<path d="M32 31 51 50M32 31 13 50" fill="none" stroke="#9A7C2E" stroke-width="6" stroke-linecap="round"/></svg>'
   );
 
-const title = `${cfg.org || "Katakyie Advisors"} — The US Master's Planner`;
+const title = `${cfg.org || "Katakyie Academic Advisor"} — The US Master's Planner`;
 const desc =
   cfg.tagline ||
   "A free planner for international applicants to US master's programmes: the eighteen-month timeline, every US institution that awards a master's, and the traps that sink finished applications.";
@@ -131,6 +131,40 @@ if (siteUrl) {
 if (cfg.customDomain) writeFileSync(join(root, "site/CNAME"), cfg.customDomain + "\n");
 if (existsSync(join(root, "docs/planner.png"))) copyFileSync(join(root, "docs/planner.png"), join(root, "site/social.png"));
 
+/* ---------------------------------- the client portal ---------------------------------- */
+/* Read-only, and fed entirely by the link's fragment — no server, no account. */
+const portalBody = [
+  siteSettings("demo/"),
+  read("public/portal.html"),
+  bundle(["src/data/schools.js", "src/data/content.js"]),
+  bundle(["public/portal.js"]),
+].join("\n");
+
+const portalPage = `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Your Application</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0A0908">
+<link rel="icon" href="${favicon}">
+<style>
+  :root { color-scheme: dark; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  body { margin: 0; background: #0A0908; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+${portalBody}
+</body>
+</html>
+`;
+mkdirSync(join(root, "site/portal"), { recursive: true });
+writeFileSync(join(root, "site/portal/index.html"), portalPage);
+
 /* ---------------------------------- the demo dashboard ---------------------------------- */
 /* The same platform, in front of a localStorage runtime, so it genuinely works on a static host. */
 const demoBody = [
@@ -146,8 +180,8 @@ const demoPage = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>${esc(cfg.org || "Katakyie Advisors")} — dashboard demo</title>
-<meta name="description" content="A working demo of the ${esc(cfg.org || "Katakyie Advisors")} advisor console and client portals. Sample data, saved in your own browser.">
+<title>${esc(cfg.org || "Katakyie Academic Advisor")} — dashboard demo</title>
+<meta name="description" content="A working demo of the ${esc(cfg.org || "Katakyie Academic Advisor")} advisor console and client portals. Sample data, saved in your own browser.">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#0A0908">
 <link rel="icon" href="${favicon}">
@@ -192,6 +226,7 @@ writeFileSync(join(root, "dev/preview.html"), preview);
 console.log(`dist/index.html    ${kb(body)}   Claude artifact — the advisor platform`);
 console.log(`dist/public.html   ${kb(publicBody)}   Claude artifact — the public planner`);
 console.log(`site/index.html    ${kb(site)}   static website — what GitHub Pages serves`);
+console.log(`site/portal/       ${kb(portalPage)}   the read-only client portal`);
 console.log(`site/demo/         ${kb(demoPage)}   the dashboard as a self-contained demo`);
 console.log(`dev/preview.html   ${kb(preview)}   local preview (npm run dev)`);
 if (!siteUrl || siteUrl.includes("YOURNAME")) console.log("\n  note: set siteUrl in site.config.json so social previews and the canonical link work.");

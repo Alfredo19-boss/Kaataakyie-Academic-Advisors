@@ -1,4 +1,4 @@
-# Katakyie Advisors
+# Katakyie Academic Advisor
 
 A client-progress platform for advisors who take students through a **US master's application**, end to end — from the first intake call to the airport.
 
@@ -21,6 +21,7 @@ It builds **two** pages from one set of sources:
 | `dist/public.html` | The planner, as a Claude artifact | A Claude artifact |
 | `site/` | The planner, as a real website — full HTML document, social preview tags, favicon, robots and sitemap | **GitHub Pages, Netlify, Vercel, any static host** |
 | `site/demo/` | The dashboard as a **working demo** — real database, backed by the visitor's own browser | The same static host |
+| `site/portal/` | The **client portal** — a read-only snapshot of one applicant's file, carried in the link | The same static host |
 
 The planner declares no runtime capabilities at all. That is what lets it be shared with the world, and it is also why it works as a plain static site. It is the front door; the platform is the back office.
 
@@ -92,7 +93,7 @@ The repository ships with a workflow that builds `site/` and deploys it. Two thi
 
 ```json
 {
-  "org": "Katakyie Advisors",
+  "org": "Katakyie Academic Advisor",
   "siteUrl": "https://YOURNAME.github.io/katakyie-advisors",
   "contactEmail": "hello@example.com",
   "portalUrl": ""
@@ -142,6 +143,18 @@ site/                   the static website (built, not committed)
 Load order is fixed and matters: data globals → `core.js` (defines `window.NB`) → `views.js` (consumes it, then calls `NB.boot()`). Both pages read the same `src/data/` files, so a school added once shows up in both.
 
 ---
+
+## Sending a client their link
+
+A static site cannot hold shared state, so the platform does not try. Instead, **Send client link** in the console packs that one client's file into the URL fragment and points it at `/portal/` on your public site. The client opens it and sees their progress, their schools, their documents and every date we are working to, with a button to put those dates in their own calendar and another to email you. Nothing to sign into, no account, no server.
+
+Three things follow from the design, and all three are stated on the page itself:
+
+- **It is a snapshot.** It does not update. Send a fresh link when you want them to see the current picture.
+- **The link is the key.** Anyone holding it can read that page, so it is shared like a private document.
+- **It carries only what they already know.** Private notes, fees and referee contact details are left out of the payload entirely — not hidden in the page, absent from it.
+
+A fragment (`#…`) is never sent to the web server, so the file never leaves the two browsers involved. Links run around 600–900 characters, short enough for WhatsApp. Set your site address and your email in **Settings** before the first one.
 
 ## Two ways in
 

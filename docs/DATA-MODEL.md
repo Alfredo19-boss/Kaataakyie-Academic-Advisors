@@ -12,7 +12,7 @@ One document. Practice-wide settings.
 
 ```json
 {
-  "orgName": "Katakyie Advisors",
+  "orgName": "Katakyie Academic Advisor",
   "advisorCode": "KATAKYIE",
   "welcome": "Shown at the top of every client dashboard."
 }

@@ -119,7 +119,7 @@ $("#libnav").addEventListener("click", function (e) {
 drawLib();
 
 /* ---------- footer ---------- */
-$("#foot").textContent = "Katakyie Advisors · " + SCHOOLS.length +
+$("#foot").textContent = "Katakyie Academic Advisor · " + SCHOOLS.length +
   " institutions across 51 states and territories · directory last reviewed " +
   new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" });
 })();
