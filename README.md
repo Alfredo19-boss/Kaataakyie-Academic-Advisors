@@ -25,6 +25,8 @@ Vanilla JavaScript. No framework, no build dependencies, no `node_modules`. The 
 
 ![Advisor console](docs/console.png)
 
+<p align="center"><img src="docs/planner.png" width="100%" alt="The US Master's Planner — the public front door"></p>
+
 <p align="center">
   <img src="docs/cost.png" width="49%" alt="Cost comparison across a client's shortlist">
   <img src="docs/calendar.png" width="49%" alt="Deadlines and target dates across every client">
