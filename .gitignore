@@ -1,0 +1,9 @@
+node_modules/
+dev/preview.html
+*.log
+.DS_Store
+.env
+.env.*
+/tmp/
+*.png
+!docs/*.png

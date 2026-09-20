@@ -1,0 +1,29 @@
+{
+  "budget": 0,
+  "code": "NB-7310",
+  "country": "Ghana",
+  "createdAt": "2026-09-15T09:00:00.000Z",
+  "docs": {
+    "d01": 1
+  },
+  "due": {
+    "t05": "2026-10-03",
+    "t07": "2026-09-30",
+    "t08": "2026-11-02"
+  },
+  "email": "k.mensah@example.com",
+  "field": "MPH Epidemiology",
+  "files": [],
+  "name": "Kwabena Mensah",
+  "phone": "",
+  "schools": [],
+  "status": "Active",
+  "targetTerm": "Fall 2027",
+  "tasks": {
+    "t01": "2026-09-16",
+    "t02": "2026-09-16",
+    "t03": "2026-09-16"
+  },
+  "template": "default",
+  "updatedAt": "2026-09-18T09:00:00.000Z"
+}

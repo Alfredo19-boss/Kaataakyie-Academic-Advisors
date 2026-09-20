@@ -1,0 +1,2530 @@
+<title>Northbound Advising</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
+<style>
+:root{
+  --bg:#F1F4F6; --panel:#FFFFFF; --panel2:#E8EEF0; --line:#D3DDE1; --line2:#BDCBD1;
+  --text:#0F1D23; --muted:#5B6E76; --faint:#8296A0;
+  --brand:#0F4C5C; --brand-2:#166376; --brand-soft:#E0EDF1; --on-brand:#FFFFFF;
+  --accent:#B4622A; --accent-soft:#F7EAE0;
+  --ok:#1B7A5B; --ok-soft:#DFF1EA; --warn:#96660F; --warn-soft:#F8EEDA; --crit:#A63A2E; --crit-soft:#F9E7E4;
+  --shadow:0 1px 2px rgba(15,29,35,.06), 0 8px 24px -16px rgba(15,29,35,.28);
+  --shadow-lift:0 2px 6px rgba(15,29,35,.08), 0 20px 40px -24px rgba(15,29,35,.4);
+  --r:10px; --r-sm:7px;
+  --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#080F13; --panel:#101A20; --panel2:#18252C; --line:#22333B; --line2:#2E434D;
+  --text:#E3EAED; --muted:#93A6AE; --faint:#6F858E;
+  --brand:#5FB4C9; --brand-2:#7CC7D9; --brand-soft:#11303A; --on-brand:#06171D;
+  --accent:#E09257; --accent-soft:#2C1D12;
+  --ok:#5AC89E; --ok-soft:#0F2F28; --warn:#DDB160; --warn-soft:#2F2614; --crit:#E5867A; --crit-soft:#33201D;
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -16px rgba(0,0,0,.8);
+  --shadow-lift:0 2px 6px rgba(0,0,0,.55), 0 20px 40px -24px rgba(0,0,0,.9);
+}}
+:root[data-theme="dark"]{
+  --bg:#080F13; --panel:#101A20; --panel2:#18252C; --line:#22333B; --line2:#2E434D;
+  --text:#E3EAED; --muted:#93A6AE; --faint:#6F858E;
+  --brand:#5FB4C9; --brand-2:#7CC7D9; --brand-soft:#11303A; --on-brand:#06171D;
+  --accent:#E09257; --accent-soft:#2C1D12;
+  --ok:#5AC89E; --ok-soft:#0F2F28; --warn:#DDB160; --warn-soft:#2F2614; --crit:#E5867A; --crit-soft:#33201D;
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -16px rgba(0,0,0,.8);
+  --shadow-lift:0 2px 6px rgba(0,0,0,.55), 0 20px 40px -24px rgba(0,0,0,.9);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{margin:0;font-weight:600;text-wrap:balance}
+p{margin:0}
+a{color:var(--brand);text-decoration:none}
+a:hover{text-decoration:underline}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* ---------- primitives ---------- */
+.eyebrow{font-size:10.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--faint)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.serif{font-family:var(--serif)}
+
+.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:var(--r-sm);border:1px solid var(--line2);
+  background:var(--panel);color:var(--text);font-weight:500;font-size:13px;cursor:pointer;transition:background .12s,border-color .12s}
+.btn:hover{background:var(--panel2);border-color:var(--muted)}
+.btn.pri{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.btn.pri:hover{background:var(--brand-2);border-color:var(--brand-2)}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--muted);padding:6px 9px}
+.btn.ghost:hover{background:var(--panel2);color:var(--text)}
+.btn.danger{color:var(--crit);border-color:var(--line2)}
+.btn.danger:hover{background:var(--crit-soft);border-color:var(--crit)}
+.btn.sm{padding:5px 10px;font-size:12px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+.field{display:flex;flex-direction:column;gap:5px}
+.field>label{font-size:12px;font-weight:600;color:var(--muted)}
+.inp{width:100%;padding:9px 11px;border:1px solid var(--line2);border-radius:var(--r-sm);background:var(--panel);color:var(--text)}
+.inp::placeholder{color:var(--faint)}
+.inp:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+textarea.inp{min-height:110px;resize:vertical;line-height:1.55}
+select.inp{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+  background-position:calc(100% - 15px) calc(50% + 1px),calc(100% - 10px) calc(50% + 1px);background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:32px}
+
+.pill{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:600;
+  background:var(--panel2);color:var(--muted);white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.crit{background:var(--crit-soft);color:var(--crit)}
+.pill.brand{background:var(--brand-soft);color:var(--brand)}
+.pill.accent{background:var(--accent-soft);color:var(--accent)}
+.pill .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.card-h{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:16px 18px;border-bottom:1px solid var(--line)}
+.card-h h3{font-size:14.5px}
+.card-b{padding:18px}
+.card-b.flush{padding:0}
+
+/* ---------- login ---------- */
+#login{min-height:100%;display:grid;grid-template-columns:1.05fr .95fr}
+#login .brandside{background:var(--brand);color:var(--on-brand);padding:56px 48px;display:flex;flex-direction:column;justify-content:space-between;gap:40px}
+:root[data-theme="dark"] #login .brandside,
+:root:not([data-theme="light"]) #login .brandside{background:linear-gradient(160deg,#11303A,#0A1B22)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) #login .brandside{background:linear-gradient(160deg,#0F4C5C,#0A3542)}}
+#login .brandside h1{font-family:var(--serif);font-size:clamp(28px,3.6vw,42px);line-height:1.1;font-weight:600;letter-spacing:-.01em}
+#login .brandside p{opacity:.82;max-width:44ch;margin-top:14px;font-size:15px}
+#login .marks{display:flex;flex-wrap:wrap;gap:10px}
+#login .marks span{border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:4px 12px;font-size:12px;opacity:.9}
+#login .formside{display:flex;align-items:center;justify-content:center;padding:40px 24px}
+#login .formwrap{width:100%;max-width:360px}
+.seg{display:flex;background:var(--panel2);border-radius:var(--r-sm);padding:3px;gap:3px;margin-bottom:20px}
+.seg button{flex:1;padding:7px 10px;border:0;border-radius:5px;background:transparent;color:var(--muted);font-weight:600;font-size:12.5px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--panel);color:var(--text);box-shadow:var(--shadow)}
+.logomark{width:34px;height:34px;flex:none}
+
+/* ---------- shell ---------- */
+#shell{display:none;min-height:100%}
+#shell.on{display:grid;grid-template-columns:244px minmax(0,1fr)}
+.side{background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;
+  position:sticky;top:env(safe-area-inset-top,0px);height:100vh;height:100dvh}
+.side-h{padding:18px 16px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.side-h .nm{font-family:var(--serif);font-size:16px;font-weight:600;line-height:1.15;letter-spacing:-.005em}
+.side-h .sub{font-size:10.5px;color:var(--faint);letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.nav{flex:1;overflow:auto;padding:12px 10px;display:flex;flex-direction:column;gap:2px}
+.nav .grp{margin:14px 8px 6px}
+.nav a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--r-sm);color:var(--muted);font-weight:500;font-size:13.5px;cursor:pointer}
+.nav a:hover{background:var(--panel2);color:var(--text);text-decoration:none}
+.nav a.on{background:var(--brand-soft);color:var(--brand);font-weight:600}
+.nav a svg{flex:none;opacity:.85}
+.side-f{border-top:1px solid var(--line);padding:12px 14px;display:flex;align-items:center;gap:10px}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;font-weight:700;font-size:12px;flex:none}
+
+.main{min-width:0;max-width:100%;display:flex;flex-direction:column;overflow:hidden}
+.wrap>*{min-width:0;max-width:100%}
+.card,.kpi{min-width:0}
+.grid2>*,.grid3>*,.kpis>*{min-width:0}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:14px 26px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.topbar h2{font-family:var(--serif);font-size:20px;letter-spacing:-.01em}
+.topbar .crumb{font-size:12px;color:var(--faint);margin-bottom:2px}
+.wrap{padding:22px 26px 64px;display:flex;flex-direction:column;gap:20px;max-width:1240px;width:100%}
+
+/* ---------- pieces ---------- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.kpi .v{font-family:var(--serif);font-size:30px;font-weight:600;line-height:1.05;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.kpi .l{font-size:11.5px;color:var(--muted);margin-top:4px}
+.kpi.flag .v{color:var(--crit)}
+
+.bar{height:6px;border-radius:999px;background:var(--panel2);overflow:hidden}
+.bar>i{display:block;height:100%;border-radius:999px;background:var(--brand);transition:width .3s ease}
+.bar.thin{height:4px}
+
+table.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+table.tbl th{text-align:left;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);font-weight:600;
+  padding:10px 14px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel)}
+table.tbl td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.tbl tr:last-child td{border-bottom:0}
+table.tbl tbody tr.clickable{cursor:pointer}
+table.tbl tbody tr.clickable:hover{background:var(--panel2)}
+.scrollx{overflow-x:auto}
+
+.stepper{display:flex;gap:0;overflow-x:auto;padding-bottom:4px}
+.step{flex:1;min-width:104px;padding:0 4px}
+.step .rail{height:4px;border-radius:999px;background:var(--panel2);margin-bottom:9px;overflow:hidden}
+.step .rail i{display:block;height:100%;background:var(--brand)}
+.step.done .rail i{background:var(--ok)}
+.step .no{font-family:var(--mono);font-size:10.5px;color:var(--faint)}
+.step .nm{font-size:12px;font-weight:600;margin-top:1px;line-height:1.25}
+.step.cur .nm{color:var(--brand)}
+.step .ct{font-size:11px;color:var(--faint);margin-top:2px;font-variant-numeric:tabular-nums}
+
+.task{display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);align-items:flex-start}
+.task:last-child{border-bottom:0}
+.task .cb{margin-top:1px;width:18px;height:18px;flex:none;border:1.5px solid var(--line2);border-radius:5px;background:var(--panel);
+  display:grid;place-items:center;cursor:pointer;padding:0;color:transparent}
+.task .cb[aria-checked="true"]{background:var(--ok);border-color:var(--ok);color:#fff}
+.task .cb svg{width:11px;height:11px}
+.task .tt{font-weight:500;line-height:1.35}
+.task.done .tt{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line2)}
+.task .hh{font-size:12.5px;color:var(--muted);margin-top:3px;max-width:78ch}
+.task .meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:6px}
+
+.stagehead{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--panel2);border-bottom:1px solid var(--line)}
+.stagehead .n{font-family:var(--mono);font-size:11px;color:var(--faint)}
+.stagehead h4{font-size:13px}
+.stagehead .r{margin-left:auto;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+.ring{--p:0;width:96px;height:96px;flex:none;position:relative}
+.ring svg{transform:rotate(-90deg);display:block}
+.ring .ctr{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ring .ctr b{font-family:var(--serif);font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1}
+.ring .ctr span{font-size:10px;color:var(--faint);letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+
+.chart{display:flex;flex-direction:column;gap:9px}
+.chartrow{display:grid;grid-template-columns:132px minmax(0,1fr) 34px;gap:10px;align-items:center;font-size:12.5px}
+.chartrow .lb{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chartrow .tr{height:16px;background:var(--panel2);border-radius:4px;overflow:hidden}
+.chartrow .tr i{display:block;height:100%;background:var(--brand);border-radius:4px}
+.chartrow .vl{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;font-size:12.5px}
+
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.rowsplit{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
+
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.filters .inp{width:auto;min-width:0}
+.filters .grow{flex:1 1 200px}
+
+.schoolrow{display:flex;gap:12px;align-items:center;padding:11px 16px;border-bottom:1px solid var(--line)}
+.schoolrow:last-child{border-bottom:0}
+.schoolrow .nm{font-weight:500}
+.schoolrow .loc{font-size:12.5px;color:var(--muted)}
+.schoolrow .rt{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+
+.res-nav{display:flex;gap:6px;flex-wrap:wrap}
+.res-nav button{padding:6px 12px;border-radius:999px;border:1px solid var(--line2);background:var(--panel);color:var(--muted);font-size:12.5px;font-weight:500;cursor:pointer}
+.res-nav button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.res-item{padding:16px 18px;border-bottom:1px solid var(--line)}
+.res-item:last-child{border-bottom:0}
+.res-item h4{font-size:13.5px;margin-bottom:5px}
+.res-item p{color:var(--muted);max-width:72ch;font-size:13.5px}
+.linklist{display:flex;flex-wrap:wrap;gap:8px;padding:16px 18px}
+.linklist a{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border:1px solid var(--line2);border-radius:999px;font-size:12.5px;font-weight:500}
+.linklist a:hover{background:var(--brand-soft);border-color:var(--brand);text-decoration:none}
+
+.empty{padding:44px 20px;text-align:center;color:var(--muted)}
+.empty h3{font-family:var(--serif);font-size:18px;margin-bottom:6px;color:var(--text)}
+.empty p{max-width:46ch;margin:0 auto;font-size:13.5px}
+
+.notice{display:flex;gap:10px;align-items:flex-start;padding:11px 14px;border-radius:var(--r-sm);background:var(--warn-soft);color:var(--warn);font-size:12.5px;line-height:1.45}
+.notice.info{background:var(--brand-soft);color:var(--brand)}
+.notice b{font-weight:600}
+
+/* modal */
+.scrim{position:fixed;inset:0;background:rgba(6,16,20,.55);backdrop-filter:blur(2px);z-index:60;display:grid;place-items:center;padding:20px}
+.modal{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-lift);width:100%;max-width:520px;max-height:86vh;overflow:auto}
+.modal h3{font-family:var(--serif);font-size:19px}
+.modal .mb{padding:20px;display:flex;flex-direction:column;gap:14px}
+.modal .mf{padding:14px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:var(--panel)}
+
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:90;
+  background:var(--text);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:12.5px;font-weight:500;box-shadow:var(--shadow-lift);opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.on{opacity:1}
+
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tabs button{padding:9px 14px;border:0;background:transparent;color:var(--muted);font-weight:500;font-size:13px;cursor:pointer;
+  border-bottom:2px solid transparent;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+/* due dates */
+.dateinp{padding:3px 7px;font-size:11.5px;border:1px solid var(--line2);border-radius:5px;background:var(--panel);color:var(--text);font-family:var(--mono)}
+.dateinp:focus{outline:none;border-color:var(--brand)}
+
+/* cost table */
+.costwrap{padding:18px;border-top:1px solid var(--line)}
+.money{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* messages */
+.thread{display:flex;flex-direction:column;gap:10px;padding:18px;max-height:440px;overflow:auto}
+.bub{max-width:78%;padding:9px 13px;border-radius:12px;background:var(--panel2);font-size:13.5px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.bub.mine{align-self:flex-end;background:var(--brand);color:var(--on-brand)}
+.bub .wh{font-size:10.5px;opacity:.72;margin-top:5px}
+.composer{display:flex;gap:10px;padding:14px 18px;border-top:1px solid var(--line);align-items:flex-end}
+.composer textarea{min-height:44px;max-height:140px}
+
+/* files */
+.filechip{display:flex;align-items:center;gap:11px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--panel)}
+.filechip img{width:38px;height:38px;object-fit:cover;border-radius:5px;flex:none;background:var(--panel2)}
+.filechip .fi{width:38px;height:38px;border-radius:5px;flex:none;background:var(--panel2);display:grid;place-items:center;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.04em}
+.filegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;padding:18px}
+
+/* calendar */
+.calbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.calhead{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-bottom:6px}
+.calhead span{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);font-weight:600;text-align:center}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.cal .d{min-height:92px;border:1px solid var(--line);border-radius:7px;padding:6px;background:var(--panel);overflow:hidden}
+.cal .d.out{opacity:.38}
+.cal .d.now{border-color:var(--brand);box-shadow:inset 0 0 0 1px var(--brand)}
+.cal .dn{font-size:11px;color:var(--faint);font-variant-numeric:tabular-nums;font-weight:600}
+.cal .ev{font-size:10.5px;padding:2px 5px;border-radius:4px;background:var(--brand-soft);color:var(--brand);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+.cal .ev.due{background:var(--accent-soft);color:var(--accent)}
+.cal .ev.late{background:var(--crit-soft);color:var(--crit)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);align-items:center}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+
+/* templates */
+.tplrow{display:flex;gap:10px;align-items:flex-start;padding:11px 16px;border-bottom:1px solid var(--line)}
+.tplrow:last-child{border-bottom:0}
+
+/* report */
+.rep h3{font-family:var(--serif)}
+.rep table.tbl td,.rep table.tbl th{padding:8px 10px}
+.printonly{display:none}
+
+@media print{
+  :root{--bg:#fff;--panel:#fff;--panel2:#f2f4f5;--line:#ccd4d7;--line2:#bcc6ca;--text:#101a1e;--muted:#46565c;--faint:#6d7c82;
+    --brand:#0F4C5C;--brand-soft:#e6eff2;--on-brand:#fff;--accent:#8d4d1f;--accent-soft:#f6ece4;
+    --ok:#186349;--ok-soft:#e5f1ec;--warn:#7d560c;--warn-soft:#f6efdd;--crit:#8c2f25;--crit-soft:#f7e7e5;--shadow:none;--shadow-lift:none}
+  .side,.topbar,.tabs,.no-print,#toast,#modalHost{display:none!important}
+  .printonly{display:block}
+  #shell.on{grid-template-columns:minmax(0,1fr)}
+  .main{overflow:visible}
+  .wrap{padding:0;max-width:none}
+  .card{border:0;box-shadow:none}
+  .card-h{padding:0 0 10px}
+  .card-b{padding:0}
+  .res-item,.schoolrow,.task{break-inside:avoid}
+  body{background:#fff}
+}
+
+/* mobile */
+@media (max-width:860px){
+  #login{grid-template-columns:1fr}
+  #login .brandside{padding:32px 20px;gap:22px}
+  #login .formside{padding:28px 20px 56px}
+  #shell.on{grid-template-columns:minmax(0,1fr)}
+  .side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}
+  .side-h{padding:14px 16px 10px}
+  .nav{flex-direction:row;overflow-x:auto;padding:8px 12px;gap:6px}
+  .nav .grp{display:none}
+  .nav a{white-space:nowrap;padding:7px 12px;background:var(--panel2)}
+  .nav a.on{background:var(--brand);color:var(--on-brand)}
+  .side-f{display:none}
+  .topbar{padding:12px 16px}
+  .wrap{padding:16px 16px 72px;gap:16px}
+  .chartrow{grid-template-columns:104px minmax(0,1fr) 30px}
+  .ring{width:78px;height:78px}
+  .schoolrow{flex-wrap:wrap}
+  .schoolrow .rt{margin-left:0;width:100%}
+}
+</style>
+
+<div id="login" hidden></div>
+
+<div id="shell">
+  <aside class="side">
+    <div class="side-h">
+      <svg class="logomark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect width="40" height="40" rx="9" fill="var(--brand)"></rect>
+        <path d="M11 28V12l18 16V12" fill="none" stroke="var(--on-brand)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+      <div>
+        <div class="nm" id="brandName">Northbound</div>
+        <div class="sub" id="brandRole">Advisor console</div>
+      </div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-f">
+      <div class="avatar" id="meInitials">—</div>
+      <div style="min-width:0;flex:1">
+        <div style="font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="meName">—</div>
+        <div style="font-size:11px;color:var(--faint)" id="meRole">—</div>
+      </div>
+      <button class="btn ghost sm" data-act="signout" title="Sign out">Exit</button>
+    </div>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <div class="crumb" id="crumb"></div>
+        <h2 id="title">Clients</h2>
+      </div>
+      <div id="topactions" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"></div>
+    </header>
+    <div class="wrap" id="view"></div>
+  </div>
+</div>
+
+<div id="modalHost"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* US institutions that award master's degrees — name | city | state | control (P=public, R=private) | tags
+   Tags are factual categories only: ivy, hbcu, tech (institute of technology), art (art & design), med (health-sciences campus).
+   No tuition, ranking or acceptance-rate figures are stored here on purpose — those change yearly and
+   belong on the school's own admissions page, which each row links out to. */
+window.NB_SCHOOLS = `
+University of Alabama|Tuscaloosa|AL|P
+University of Alabama at Birmingham|Birmingham|AL|P
+Auburn University|Auburn|AL|P
+University of Alabama in Huntsville|Huntsville|AL|P
+Alabama A&M University|Normal|AL|P|hbcu
+Troy University|Troy|AL|P
+Samford University|Birmingham|AL|R
+University of South Alabama|Mobile|AL|P
+Jacksonville State University|Jacksonville|AL|P
+University of Alaska Anchorage|Anchorage|AK|P
+University of Alaska Fairbanks|Fairbanks|AK|P
+Arizona State University|Tempe|AZ|P
+University of Arizona|Tucson|AZ|P
+Northern Arizona University|Flagstaff|AZ|P
+Grand Canyon University|Phoenix|AZ|R
+University of Arkansas|Fayetteville|AR|P
+University of Arkansas at Little Rock|Little Rock|AR|P
+Arkansas State University|Jonesboro|AR|P
+University of Central Arkansas|Conway|AR|P
+Harding University|Searcy|AR|R
+Stanford University|Stanford|CA|R
+California Institute of Technology|Pasadena|CA|R|tech
+University of California, Berkeley|Berkeley|CA|P
+University of California, Los Angeles|Los Angeles|CA|P
+University of California, San Diego|La Jolla|CA|P
+University of California, Davis|Davis|CA|P
+University of California, Irvine|Irvine|CA|P
+University of California, Santa Barbara|Santa Barbara|CA|P
+University of California, Santa Cruz|Santa Cruz|CA|P
+University of California, Riverside|Riverside|CA|P
+University of California, Merced|Merced|CA|P
+University of Southern California|Los Angeles|CA|R
+Santa Clara University|Santa Clara|CA|R
+Pepperdine University|Malibu|CA|R
+Loyola Marymount University|Los Angeles|CA|R
+University of San Francisco|San Francisco|CA|R
+San Diego State University|San Diego|CA|P
+San Jose State University|San Jose|CA|P
+California State University, Long Beach|Long Beach|CA|P
+California State University, Fullerton|Fullerton|CA|P
+California State University, Los Angeles|Los Angeles|CA|P
+California Polytechnic State University|San Luis Obispo|CA|P|tech
+California State Polytechnic University, Pomona|Pomona|CA|P|tech
+California State University, Sacramento|Sacramento|CA|P
+California State University, Northridge|Northridge|CA|P
+California State University, East Bay|Hayward|CA|P
+San Francisco State University|San Francisco|CA|P
+California State University, Fresno|Fresno|CA|P
+Chapman University|Orange|CA|R
+University of the Pacific|Stockton|CA|R
+Claremont Graduate University|Claremont|CA|R
+University of San Diego|San Diego|CA|R
+University of Colorado Boulder|Boulder|CO|P
+University of Colorado Denver|Denver|CO|P
+Colorado State University|Fort Collins|CO|P
+Colorado School of Mines|Golden|CO|P|tech
+University of Denver|Denver|CO|R
+University of Northern Colorado|Greeley|CO|P
+Colorado State University Pueblo|Pueblo|CO|P
+Yale University|New Haven|CT|R|ivy
+University of Connecticut|Storrs|CT|P
+Quinnipiac University|Hamden|CT|R
+Fairfield University|Fairfield|CT|R
+University of New Haven|West Haven|CT|R
+Wesleyan University|Middletown|CT|R
+Southern Connecticut State University|New Haven|CT|P
+Sacred Heart University|Fairfield|CT|R
+University of Delaware|Newark|DE|P
+Delaware State University|Dover|DE|P|hbcu
+Wilmington University|New Castle|DE|R
+Georgetown University|Washington|DC|R
+George Washington University|Washington|DC|R
+American University|Washington|DC|R
+Howard University|Washington|DC|R|hbcu
+Catholic University of America|Washington|DC|R
+Gallaudet University|Washington|DC|R
+University of the District of Columbia|Washington|DC|P|hbcu
+University of Florida|Gainesville|FL|P
+Florida State University|Tallahassee|FL|P
+University of Miami|Coral Gables|FL|R
+University of Central Florida|Orlando|FL|P
+University of South Florida|Tampa|FL|P
+Florida International University|Miami|FL|P
+Florida Atlantic University|Boca Raton|FL|P
+Embry-Riddle Aeronautical University|Daytona Beach|FL|R|tech
+Florida Institute of Technology|Melbourne|FL|R|tech
+University of North Florida|Jacksonville|FL|P
+Nova Southeastern University|Fort Lauderdale|FL|R
+Florida A&M University|Tallahassee|FL|P|hbcu
+Stetson University|DeLand|FL|R
+Rollins College|Winter Park|FL|R
+Florida Gulf Coast University|Fort Myers|FL|P
+Georgia Institute of Technology|Atlanta|GA|P|tech
+University of Georgia|Athens|GA|P
+Emory University|Atlanta|GA|R
+Georgia State University|Atlanta|GA|P
+Kennesaw State University|Kennesaw|GA|P
+Mercer University|Macon|GA|R
+Georgia Southern University|Statesboro|GA|P
+Clark Atlanta University|Atlanta|GA|R|hbcu
+Augusta University|Augusta|GA|P|med
+Savannah College of Art and Design|Savannah|GA|R|art
+University of Hawaii at Manoa|Honolulu|HI|P
+Hawaii Pacific University|Honolulu|HI|R
+Chaminade University of Honolulu|Honolulu|HI|R
+University of Idaho|Moscow|ID|P
+Boise State University|Boise|ID|P
+Idaho State University|Pocatello|ID|P
+University of Chicago|Chicago|IL|R
+Northwestern University|Evanston|IL|R
+University of Illinois Urbana-Champaign|Urbana|IL|P
+University of Illinois Chicago|Chicago|IL|P
+Illinois Institute of Technology|Chicago|IL|R|tech
+DePaul University|Chicago|IL|R
+Loyola University Chicago|Chicago|IL|R
+Northern Illinois University|DeKalb|IL|P
+Southern Illinois University Carbondale|Carbondale|IL|P
+Southern Illinois University Edwardsville|Edwardsville|IL|P
+Illinois State University|Normal|IL|P
+Bradley University|Peoria|IL|R
+Western Illinois University|Macomb|IL|P
+Roosevelt University|Chicago|IL|R
+Purdue University|West Lafayette|IN|P
+Indiana University Bloomington|Bloomington|IN|P
+University of Notre Dame|Notre Dame|IN|R
+Indiana University Indianapolis|Indianapolis|IN|P
+Ball State University|Muncie|IN|P
+Butler University|Indianapolis|IN|R
+Rose-Hulman Institute of Technology|Terre Haute|IN|R|tech
+Valparaiso University|Valparaiso|IN|R
+Indiana State University|Terre Haute|IN|P
+Purdue University Northwest|Hammond|IN|P
+University of Iowa|Iowa City|IA|P
+Iowa State University|Ames|IA|P
+University of Northern Iowa|Cedar Falls|IA|P
+Drake University|Des Moines|IA|R
+University of Kansas|Lawrence|KS|P
+Kansas State University|Manhattan|KS|P
+Wichita State University|Wichita|KS|P
+Pittsburg State University|Pittsburg|KS|P
+Emporia State University|Emporia|KS|P
+University of Kentucky|Lexington|KY|P
+University of Louisville|Louisville|KY|P
+Western Kentucky University|Bowling Green|KY|P
+Eastern Kentucky University|Richmond|KY|P
+Northern Kentucky University|Highland Heights|KY|P
+Murray State University|Murray|KY|P
+Bellarmine University|Louisville|KY|R
+Louisiana State University|Baton Rouge|LA|P
+Tulane University|New Orleans|LA|R
+University of Louisiana at Lafayette|Lafayette|LA|P
+Louisiana Tech University|Ruston|LA|P|tech
+University of New Orleans|New Orleans|LA|P
+Southern University and A&M College|Baton Rouge|LA|P|hbcu
+Loyola University New Orleans|New Orleans|LA|R
+Northwestern State University of Louisiana|Natchitoches|LA|P
+University of Maine|Orono|ME|P
+University of Southern Maine|Portland|ME|P
+Husson University|Bangor|ME|R
+Johns Hopkins University|Baltimore|MD|R
+University of Maryland, College Park|College Park|MD|P
+University of Maryland, Baltimore County|Baltimore|MD|P
+University of Maryland, Baltimore|Baltimore|MD|P|med
+Towson University|Towson|MD|P
+Morgan State University|Baltimore|MD|P|hbcu
+Loyola University Maryland|Baltimore|MD|R
+Salisbury University|Salisbury|MD|P
+University of Maryland Global Campus|Adelphi|MD|P
+Harvard University|Cambridge|MA|R|ivy
+Massachusetts Institute of Technology|Cambridge|MA|R|tech
+Boston University|Boston|MA|R
+Boston College|Chestnut Hill|MA|R
+Northeastern University|Boston|MA|R
+Tufts University|Medford|MA|R
+University of Massachusetts Amherst|Amherst|MA|P
+University of Massachusetts Boston|Boston|MA|P
+University of Massachusetts Lowell|Lowell|MA|P
+University of Massachusetts Dartmouth|Dartmouth|MA|P
+Worcester Polytechnic Institute|Worcester|MA|R|tech
+Brandeis University|Waltham|MA|R
+Clark University|Worcester|MA|R
+Suffolk University|Boston|MA|R
+Bentley University|Waltham|MA|R
+Babson College|Wellesley|MA|R
+Simmons University|Boston|MA|R
+Emerson College|Boston|MA|R
+Berklee College of Music|Boston|MA|R|art
+Springfield College|Springfield|MA|R
+University of Michigan|Ann Arbor|MI|P
+Michigan State University|East Lansing|MI|P
+Wayne State University|Detroit|MI|P
+Michigan Technological University|Houghton|MI|P|tech
+Western Michigan University|Kalamazoo|MI|P
+Central Michigan University|Mount Pleasant|MI|P
+Eastern Michigan University|Ypsilanti|MI|P
+Oakland University|Rochester|MI|P
+Grand Valley State University|Allendale|MI|P
+Lawrence Technological University|Southfield|MI|R|tech
+University of Detroit Mercy|Detroit|MI|R
+University of Minnesota Twin Cities|Minneapolis|MN|P
+Minnesota State University, Mankato|Mankato|MN|P
+St. Cloud State University|St. Cloud|MN|P
+University of St. Thomas|St. Paul|MN|R
+Minnesota State University Moorhead|Moorhead|MN|P
+University of Minnesota Duluth|Duluth|MN|P
+University of Mississippi|Oxford|MS|P
+Mississippi State University|Mississippi State|MS|P
+University of Southern Mississippi|Hattiesburg|MS|P
+Jackson State University|Jackson|MS|P|hbcu
+Washington University in St. Louis|St. Louis|MO|R
+University of Missouri|Columbia|MO|P
+Missouri University of Science and Technology|Rolla|MO|P|tech
+University of Missouri-Kansas City|Kansas City|MO|P
+Saint Louis University|St. Louis|MO|R
+University of Missouri-St. Louis|St. Louis|MO|P
+Missouri State University|Springfield|MO|P
+Webster University|St. Louis|MO|R
+Rockhurst University|Kansas City|MO|R
+University of Montana|Missoula|MT|P
+Montana State University|Bozeman|MT|P
+Montana Technological University|Butte|MT|P|tech
+University of Nebraska-Lincoln|Lincoln|NE|P
+University of Nebraska Omaha|Omaha|NE|P
+University of Nebraska Medical Center|Omaha|NE|P|med
+Creighton University|Omaha|NE|R
+University of Nevada, Reno|Reno|NV|P
+University of Nevada, Las Vegas|Las Vegas|NV|P
+Dartmouth College|Hanover|NH|R|ivy
+University of New Hampshire|Durham|NH|P
+Southern New Hampshire University|Manchester|NH|R
+Plymouth State University|Plymouth|NH|P
+Princeton University|Princeton|NJ|R|ivy
+Rutgers University-New Brunswick|New Brunswick|NJ|P
+Rutgers University-Newark|Newark|NJ|P
+New Jersey Institute of Technology|Newark|NJ|P|tech
+Stevens Institute of Technology|Hoboken|NJ|R|tech
+Seton Hall University|South Orange|NJ|R
+Montclair State University|Montclair|NJ|P
+Rowan University|Glassboro|NJ|P
+The College of New Jersey|Ewing|NJ|P
+Fairleigh Dickinson University|Teaneck|NJ|R
+Kean University|Union|NJ|P
+William Paterson University|Wayne|NJ|P
+University of New Mexico|Albuquerque|NM|P
+New Mexico State University|Las Cruces|NM|P
+New Mexico Institute of Mining and Technology|Socorro|NM|P|tech
+Columbia University|New York|NY|R|ivy
+Cornell University|Ithaca|NY|R|ivy
+New York University|New York|NY|R
+University of Rochester|Rochester|NY|R
+Syracuse University|Syracuse|NY|R
+Rensselaer Polytechnic Institute|Troy|NY|R|tech
+Rochester Institute of Technology|Rochester|NY|R|tech
+Fordham University|Bronx|NY|R
+Stony Brook University|Stony Brook|NY|P
+University at Buffalo|Buffalo|NY|P
+University at Albany|Albany|NY|P
+Binghamton University|Binghamton|NY|P
+The City College of New York (CUNY)|New York|NY|P
+Baruch College (CUNY)|New York|NY|P
+Hunter College (CUNY)|New York|NY|P
+Queens College (CUNY)|Queens|NY|P
+Brooklyn College (CUNY)|Brooklyn|NY|P
+The New School|New York|NY|R|art
+Pace University|New York|NY|R
+St. John's University|Queens|NY|R
+Hofstra University|Hempstead|NY|R
+Adelphi University|Garden City|NY|R
+Clarkson University|Potsdam|NY|R|tech
+SUNY Polytechnic Institute|Utica|NY|P|tech
+SUNY College of Environmental Science and Forestry|Syracuse|NY|P
+New York Institute of Technology|Old Westbury|NY|R|tech
+Pratt Institute|Brooklyn|NY|R|art
+Yeshiva University|New York|NY|R
+Long Island University|Brookville|NY|R
+SUNY New Paltz|New Paltz|NY|P
+SUNY Oswego|Oswego|NY|P
+Alfred University|Alfred|NY|R
+Duke University|Durham|NC|R
+University of North Carolina at Chapel Hill|Chapel Hill|NC|P
+North Carolina State University|Raleigh|NC|P
+Wake Forest University|Winston-Salem|NC|R
+University of North Carolina at Charlotte|Charlotte|NC|P
+University of North Carolina at Greensboro|Greensboro|NC|P
+East Carolina University|Greenville|NC|P
+North Carolina A&T State University|Greensboro|NC|P|hbcu
+Appalachian State University|Boone|NC|P
+University of North Carolina Wilmington|Wilmington|NC|P
+Elon University|Elon|NC|R
+Campbell University|Buies Creek|NC|R
+University of North Dakota|Grand Forks|ND|P
+North Dakota State University|Fargo|ND|P
+The Ohio State University|Columbus|OH|P
+Case Western Reserve University|Cleveland|OH|R
+University of Cincinnati|Cincinnati|OH|P
+Ohio University|Athens|OH|P
+Kent State University|Kent|OH|P
+University of Akron|Akron|OH|P
+University of Toledo|Toledo|OH|P
+Wright State University|Dayton|OH|P
+University of Dayton|Dayton|OH|R
+Cleveland State University|Cleveland|OH|P
+Bowling Green State University|Bowling Green|OH|P
+Miami University|Oxford|OH|P
+Youngstown State University|Youngstown|OH|P
+Xavier University|Cincinnati|OH|R
+University of Oklahoma|Norman|OK|P
+Oklahoma State University|Stillwater|OK|P
+University of Tulsa|Tulsa|OK|R
+University of Central Oklahoma|Edmond|OK|P
+Oral Roberts University|Tulsa|OK|R
+University of Oregon|Eugene|OR|P
+Oregon State University|Corvallis|OR|P
+Portland State University|Portland|OR|P
+Oregon Health & Science University|Portland|OR|P|med
+University of Portland|Portland|OR|R
+Willamette University|Salem|OR|R
+University of Pennsylvania|Philadelphia|PA|R|ivy
+Carnegie Mellon University|Pittsburgh|PA|R
+Pennsylvania State University|University Park|PA|P
+University of Pittsburgh|Pittsburgh|PA|P
+Drexel University|Philadelphia|PA|R
+Temple University|Philadelphia|PA|P
+Lehigh University|Bethlehem|PA|R
+Villanova University|Villanova|PA|R
+Duquesne University|Pittsburgh|PA|R
+Saint Joseph's University|Philadelphia|PA|R
+La Salle University|Philadelphia|PA|R
+West Chester University of Pennsylvania|West Chester|PA|P
+Indiana University of Pennsylvania|Indiana|PA|P
+Widener University|Chester|PA|R
+Thomas Jefferson University|Philadelphia|PA|R|med
+Robert Morris University|Moon Township|PA|R
+Bucknell University|Lewisburg|PA|R
+Brown University|Providence|RI|R|ivy
+University of Rhode Island|Kingston|RI|P
+Rhode Island School of Design|Providence|RI|R|art
+Johnson & Wales University|Providence|RI|R
+Bryant University|Smithfield|RI|R
+Clemson University|Clemson|SC|P
+University of South Carolina|Columbia|SC|P
+College of Charleston|Charleston|SC|P
+Coastal Carolina University|Conway|SC|P
+Furman University|Greenville|SC|R
+Medical University of South Carolina|Charleston|SC|P|med
+Winthrop University|Rock Hill|SC|P
+University of South Dakota|Vermillion|SD|P
+South Dakota State University|Brookings|SD|P
+South Dakota School of Mines and Technology|Rapid City|SD|P|tech
+Vanderbilt University|Nashville|TN|R
+University of Tennessee, Knoxville|Knoxville|TN|P
+University of Memphis|Memphis|TN|P
+Middle Tennessee State University|Murfreesboro|TN|P
+Tennessee Technological University|Cookeville|TN|P|tech
+East Tennessee State University|Johnson City|TN|P
+Belmont University|Nashville|TN|R
+Tennessee State University|Nashville|TN|P|hbcu
+Lipscomb University|Nashville|TN|R
+The University of Texas at Austin|Austin|TX|P
+Texas A&M University|College Station|TX|P
+Rice University|Houston|TX|R
+University of Houston|Houston|TX|P
+The University of Texas at Dallas|Richardson|TX|P
+The University of Texas at Arlington|Arlington|TX|P
+The University of Texas at San Antonio|San Antonio|TX|P
+The University of Texas at El Paso|El Paso|TX|P
+Texas Tech University|Lubbock|TX|P
+Baylor University|Waco|TX|R
+Southern Methodist University|Dallas|TX|R
+University of North Texas|Denton|TX|P
+Texas State University|San Marcos|TX|P
+Texas Christian University|Fort Worth|TX|R
+Sam Houston State University|Huntsville|TX|P
+Lamar University|Beaumont|TX|P
+The University of Texas Rio Grande Valley|Edinburg|TX|P
+Prairie View A&M University|Prairie View|TX|P|hbcu
+Texas Woman's University|Denton|TX|P
+St. Mary's University|San Antonio|TX|R
+University of St. Thomas|Houston|TX|R
+Texas A&M University-Corpus Christi|Corpus Christi|TX|P
+Texas A&M University-Kingsville|Kingsville|TX|P
+The University of Texas at Tyler|Tyler|TX|P
+Stephen F. Austin State University|Nacogdoches|TX|P
+West Texas A&M University|Canyon|TX|P
+University of the Incarnate Word|San Antonio|TX|R
+University of Utah|Salt Lake City|UT|P
+Utah State University|Logan|UT|P
+Brigham Young University|Provo|UT|R
+Utah Valley University|Orem|UT|P
+Weber State University|Ogden|UT|P
+University of Vermont|Burlington|VT|P
+Middlebury College|Middlebury|VT|R
+Norwich University|Northfield|VT|R
+University of Virginia|Charlottesville|VA|P
+Virginia Tech|Blacksburg|VA|P|tech
+George Mason University|Fairfax|VA|P
+Virginia Commonwealth University|Richmond|VA|P
+William & Mary|Williamsburg|VA|P
+Old Dominion University|Norfolk|VA|P
+James Madison University|Harrisonburg|VA|P
+Liberty University|Lynchburg|VA|R
+Radford University|Radford|VA|P
+Virginia State University|Petersburg|VA|P|hbcu
+Hampton University|Hampton|VA|R|hbcu
+Marymount University|Arlington|VA|R
+University of Washington|Seattle|WA|P
+Washington State University|Pullman|WA|P
+Seattle University|Seattle|WA|R
+Seattle Pacific University|Seattle|WA|R
+Western Washington University|Bellingham|WA|P
+Eastern Washington University|Cheney|WA|P
+Central Washington University|Ellensburg|WA|P
+Gonzaga University|Spokane|WA|R
+University of Puget Sound|Tacoma|WA|R
+West Virginia University|Morgantown|WV|P
+Marshall University|Huntington|WV|P
+West Virginia State University|Institute|WV|P|hbcu
+University of Wisconsin-Madison|Madison|WI|P
+University of Wisconsin-Milwaukee|Milwaukee|WI|P
+Marquette University|Milwaukee|WI|R
+University of Wisconsin-Whitewater|Whitewater|WI|P
+University of Wisconsin-Eau Claire|Eau Claire|WI|P
+University of Wisconsin-La Crosse|La Crosse|WI|P
+University of Wisconsin-Stout|Menomonie|WI|P
+University of Wisconsin Oshkosh|Oshkosh|WI|P
+University of Wyoming|Laramie|WY|P
+`.trim().split("\n").map(function (line, i) {
+  var p = line.split("|");
+  return { id: "s" + i, name: p[0], city: p[1], state: p[2], control: p[3] === "P" ? "Public" : "Private", tags: p[4] ? p[4].split(",") : [] };
+});
+
+/* Stage model, task templates, document checklist and the advisor resource library. */
+
+window.NB_STAGES = [
+  { id: "intake",    n: 1, name: "Profile & Goals",   blurb: "Who they are, what they want, what they can spend." },
+  { id: "tests",     n: 2, name: "Tests & English",   blurb: "English proficiency and any GRE/GMAT the programmes ask for." },
+  { id: "shortlist", n: 3, name: "School Shortlist",  blurb: "A balanced list: reach, match and safe programmes." },
+  { id: "docs",      n: 4, name: "Application File",  blurb: "Transcripts, evaluation, SOP, CV, recommenders." },
+  { id: "apply",     n: 5, name: "Submissions",       blurb: "Portals filled, fees paid, everything sent before the deadline." },
+  { id: "offers",    n: 6, name: "Offers & I-20",     blurb: "Decisions in, one accepted, I-20 issued." },
+  { id: "visa",      n: 7, name: "Funding & Visa",    blurb: "SEVIS fee, DS-160, interview, stamped visa." },
+  { id: "depart",    n: 8, name: "Pre-Departure",     blurb: "Flights, housing, insurance, arrival check-in." }
+];
+
+/* owner: who does the work — c = client, a = advisor */
+window.NB_TASKS = [
+  { id: "t01", s: "intake", o: "a", t: "Intake call completed", h: "Background, degree, class of award, work history, family situation, timeline." },
+  { id: "t02", s: "intake", o: "c", t: "Academic history collected", h: "Every institution attended, with dates and the grading scale used." },
+  { id: "t03", s: "intake", o: "a", t: "Target intake agreed", h: "Fall is the largest intake and carries the most funding. Spring is smaller and faster." },
+  { id: "t04", s: "intake", o: "a", t: "Field and programme type agreed", h: "Taught MS/MA, thesis MS, MBA or MEng — they fund and hire very differently." },
+  { id: "t05", s: "intake", o: "c", t: "Budget and funding plan set", h: "What the family can commit per year, and what must come from an assistantship or loan." },
+  { id: "t06", s: "intake", o: "a", t: "Engagement agreement signed", h: "Scope, fee, what the client is responsible for, what you are not." },
+
+  { id: "t07", s: "tests",  o: "c", t: "English test chosen and booked", h: "TOEFL iBT, IELTS Academic, Duolingo English Test or PTE Academic — confirm which ones each target school accepts." },
+  { id: "t08", s: "tests",  o: "c", t: "English test sat", h: "Book 6-8 weeks before the first deadline so there is room for a retake." },
+  { id: "t09", s: "tests",  o: "a", t: "English score reviewed against targets", h: "Check the programme minimum and the separate section minimums, which are often the binding constraint." },
+  { id: "t10", s: "tests",  o: "a", t: "GRE/GMAT requirement checked per school", h: "Many programmes are now test-optional or have waivers for work experience. Confirm in writing on the programme page." },
+  { id: "t11", s: "tests",  o: "c", t: "GRE/GMAT sat (if required)", h: "Only where it is genuinely required or where a strong score offsets a weaker transcript." },
+  { id: "t12", s: "tests",  o: "c", t: "Official scores sent to schools", h: "Score reports go direct from the testing body. Order them early — delivery is not instant." },
+
+  { id: "t13", s: "shortlist", o: "a", t: "Longlist built from the directory", h: "Start wide — 20 to 30 programmes — then cut." },
+  { id: "t14", s: "shortlist", o: "a", t: "Shortlist balanced 2 / 4 / 2", h: "Two reach, four match, two safe. A list of only reaches is the most common way a season is lost." },
+  { id: "t15", s: "shortlist", o: "c", t: "Deadlines recorded for every school", h: "Priority/funding deadlines are usually weeks before the final deadline — the funding one is the real one." },
+  { id: "t16", s: "shortlist", o: "c", t: "Faculty and labs identified", h: "For thesis and PhD-track programmes, two or three named faculty per school changes the SOP completely." },
+  { id: "t17", s: "shortlist", o: "a", t: "Cost per school estimated", h: "Tuition plus fees, health insurance, and living cost for the city. Get the figures from the school's own cost-of-attendance page." },
+
+  { id: "t18", s: "docs", o: "c", t: "Official transcripts requested", h: "Sealed, from every institution attended. Allow weeks, not days." },
+  { id: "t19", s: "docs", o: "c", t: "Degree certificate obtained", h: "If it has not been issued yet, an attestation or provisional letter from the registrar usually works." },
+  { id: "t20", s: "docs", o: "c", t: "Credential evaluation ordered", h: "Course-by-course from a NACES member (WES, ECE, SpanTran, Josef Silny) where the school asks for one." },
+  { id: "t21", s: "docs", o: "c", t: "CV rewritten to US format", h: "Two pages maximum, no photo, no date of birth, no marital status. Results with numbers." },
+  { id: "t22", s: "docs", o: "c", t: "Statement of Purpose drafted", h: "What they want to study, why that is the natural next step, why this department, what they will do after." },
+  { id: "t23", s: "docs", o: "a", t: "SOP reviewed and tailored per school", h: "One base statement, then a named paragraph per programme. A generic SOP reads as a generic applicant." },
+  { id: "t24", s: "docs", o: "c", t: "Three recommenders confirmed", h: "Ask by email with a deadline, the CV, the SOP draft and a reminder of specific work they supervised." },
+  { id: "t25", s: "docs", o: "c", t: "Recommendation letters submitted", h: "Recommenders upload through each portal. Chase at two weeks out, not two days." },
+  { id: "t26", s: "docs", o: "c", t: "Portfolio or writing sample ready", h: "Only where the programme asks — design, architecture, creative writing, some research MS." },
+
+  { id: "t27", s: "apply", o: "c", t: "Application portals created", h: "One login per school. Keep every username and password in one place the client controls." },
+  { id: "t28", s: "apply", o: "c", t: "Applications filled and reviewed", h: "Review every form once cold, a day later. Name spelling must match the passport exactly." },
+  { id: "t29", s: "apply", o: "c", t: "Fee waivers requested where available", h: "Some departments waive fees on request for international applicants or for early applications." },
+  { id: "t30", s: "apply", o: "c", t: "All applications submitted", h: "Submit against the funding deadline, not the final deadline." },
+  { id: "t31", s: "apply", o: "a", t: "Submission confirmations filed", h: "Save every confirmation email and application ID to the client's file." },
+  { id: "t32", s: "apply", o: "c", t: "Assistantship applications sent", h: "GA/TA/RA applications are often separate from admission, and separately deadlined." },
+
+  { id: "t33", s: "offers", o: "a", t: "Decisions tracked as they land", h: "Update the shortlist status the day each decision arrives." },
+  { id: "t34", s: "offers", o: "a", t: "Offers compared on net cost", h: "Sticker tuition means little. Compare tuition minus award, plus fees, insurance and living cost." },
+  { id: "t35", s: "offers", o: "c", t: "Offer accepted and deposit paid", h: "Decline the others in writing so the seats and any funding move on." },
+  { id: "t36", s: "offers", o: "c", t: "Financial documents submitted to the school", h: "Bank statement and sponsor affidavit covering at least the first year, in the school's required format." },
+  { id: "t37", s: "offers", o: "c", t: "I-20 received and checked", h: "Check the spelling of the name, date of birth, programme, start date and funding figure against the passport." },
+
+  { id: "t38", s: "visa", o: "c", t: "SEVIS I-901 fee paid", h: "Pay at fmjfee.com using the SEVIS ID on the I-20. Print the receipt." },
+  { id: "t39", s: "visa", o: "c", t: "DS-160 completed", h: "One form per applicant at ceac.state.gov. Keep the confirmation barcode page." },
+  { id: "t40", s: "visa", o: "c", t: "Visa interview booked", h: "Book as early as the embassy calendar allows — slots, not documents, are usually the bottleneck." },
+  { id: "t41", s: "visa", o: "a", t: "Mock interview done", h: "Study plan, choice of school, funding, ties to home. Short, consistent, honest answers." },
+  { id: "t42", s: "visa", o: "c", t: "Interview attended", h: "Carry the I-20, DS-160 confirmation, SEVIS receipt, passport, financials and academic records." },
+  { id: "t43", s: "visa", o: "c", t: "Visa issued and collected", h: "Check the visa page for the correct name, classification and annotation before leaving the counter." },
+
+  { id: "t44", s: "depart", o: "c", t: "Flight booked", h: "Arrive inside the 30 days before the I-20 start date — entry earlier than that is not permitted." },
+  { id: "t45", s: "depart", o: "c", t: "Housing secured", h: "On-campus grad housing if it exists. Otherwise a short first lease or temporary stay, viewed in person before signing long." },
+  { id: "t46", s: "depart", o: "c", t: "Health insurance and immunisations sorted", h: "Most schools enrol students in their own plan automatically and require specific immunisation records." },
+  { id: "t47", s: "depart", o: "c", t: "Funds for the first 60 days arranged", h: "Tuition deposit, first rent, deposit, phone, groceries — before any stipend or loan disbursement lands." },
+  { id: "t48", s: "depart", o: "c", t: "Arrival checklist reviewed", h: "Documents in hand luggage, address of first night, campus contact, airport transfer." },
+  { id: "t49", s: "depart", o: "a", t: "Post-arrival check-in scheduled", h: "A call in week one and week four catches problems while they are still small." }
+];
+
+window.NB_DOCS = [
+  { id: "d01", t: "Passport bio page", h: "Must be valid at least six months beyond the intended entry date." },
+  { id: "d02", t: "Academic transcripts (all institutions)", h: "Official and sealed, with the grading scale explained." },
+  { id: "d03", t: "Degree certificate / provisional letter", h: "Attestation from the registrar is accepted where the certificate is not yet issued." },
+  { id: "d04", t: "Credential evaluation report", h: "Course-by-course, from a NACES member agency." },
+  { id: "d05", t: "English test score report", h: "TOEFL, IELTS, Duolingo or PTE — sent officially from the testing body." },
+  { id: "d06", t: "GRE / GMAT score report", h: "Only where the programme requires it." },
+  { id: "d07", t: "CV / résumé (US format)", h: "Two pages, no photo, no personal details." },
+  { id: "d08", t: "Statement of Purpose", h: "Tailored per programme." },
+  { id: "d09", t: "Personal / diversity statement", h: "Where separately requested." },
+  { id: "d10", t: "Recommendation letters (3)", h: "Submitted by the recommenders through each portal." },
+  { id: "d11", t: "Bank statement / financial proof", h: "Covering at least the first year's cost of attendance." },
+  { id: "d12", t: "Sponsor affidavit of support", h: "Signed, with the sponsor's own bank evidence attached." },
+  { id: "d13", t: "Work experience letters", h: "On letterhead, with dates, title and duties." },
+  { id: "d14", t: "Passport photographs", h: "To the visa specification — 2x2 inches, white background." },
+  { id: "d15", t: "I-20", h: "Issued by the school once admission is accepted and finances are verified." },
+  { id: "d16", t: "SEVIS I-901 receipt", h: "Printed, carried to the interview." },
+  { id: "d17", t: "DS-160 confirmation page", h: "The barcode page, printed." }
+];
+
+window.NB_DOC_STATES = ["Not started", "Requested", "Received", "Verified"];
+
+window.NB_RESOURCES = [
+  {
+    id: "timeline",
+    name: "The 18-month timeline",
+    lede: "Work backwards from the intake, not forwards from today. Almost every failed season is a timeline problem, not a merit problem.",
+    items: [
+      { t: "18-15 months out", b: "Intake and goal-setting. Decide the intake term and the field. Start saving for test fees, application fees and the credential evaluation — together these commonly run to several hundred dollars before a single application is submitted." },
+      { t: "15-12 months out", b: "Sit the English test. Order official transcripts from every institution. Start the credential evaluation, which is the slowest moving part of the file." },
+      { t: "12-9 months out", b: "Build the longlist, then cut it to eight to ten programmes. Draft the SOP. Approach recommenders with a clear deadline." },
+      { t: "9-6 months out", b: "Submit. Aim at each school's priority or funding deadline, which is usually weeks ahead of the final one. Submit assistantship applications separately where they exist." },
+      { t: "6-4 months out", b: "Decisions arrive. Compare offers on net cost, accept one, decline the rest, pay the deposit and send financial documents for the I-20." },
+      { t: "4-2 months out", b: "I-20 in hand: pay the SEVIS fee, file the DS-160, book the interview as early as the calendar allows. Interview slots are the usual bottleneck." },
+      { t: "2-0 months out", b: "Visa collected, flight booked, housing secured, insurance and immunisations done, first-60-days money arranged." }
+    ]
+  },
+  {
+    id: "tests",
+    name: "Tests & English proficiency",
+    lede: "Confirm the exact requirement on each programme's own page. Requirements differ between the graduate school and the department, and the department's rule wins.",
+    items: [
+      { t: "Which English test", b: "TOEFL iBT and IELTS Academic are accepted almost everywhere. The Duolingo English Test and PTE Academic are widely but not universally accepted — check each school before booking, because a cheaper test that one target school rejects is not cheaper." },
+      { t: "Section minimums matter more than the total", b: "Many programmes set a floor on the speaking or writing section as well as the overall score. A comfortable total with one weak section is still a rejection, and it is the most common avoidable one." },
+      { t: "Waivers", b: "Schools frequently waive the English requirement for applicants whose entire degree was taught in English, or who hold a degree from a recognised English-medium institution. Ask the graduate admissions office directly and keep the reply in writing." },
+      { t: "GRE and GMAT", b: "Far fewer programmes require these than applicants assume, and many that do will waive them for relevant work experience. Where a transcript is weaker than the programme's usual intake, a strong quantitative score is one of the few levers that still moves an admissions committee." },
+      { t: "Sending scores", b: "Official scores go from the testing body to the institution code, not from the applicant. Order them with the booking where possible — free reports at registration are cheaper than reports ordered later." },
+      { t: "Retakes", b: "Build one retake window into the plan before the first deadline. A plan with no room for a retake is a plan that depends on a single sitting going well." }
+    ],
+    links: [
+      { t: "TOEFL & GRE (ETS)", u: "https://www.ets.org" },
+      { t: "IELTS", u: "https://ielts.org" },
+      { t: "Duolingo English Test", u: "https://englishtest.duolingo.com" },
+      { t: "Pearson PTE Academic", u: "https://www.pearsonpte.com" },
+      { t: "GMAT (GMAC)", u: "https://www.mba.com" }
+    ]
+  },
+  {
+    id: "credentials",
+    name: "Transcripts & credential evaluation",
+    lede: "The slowest item in the file. Start it first.",
+    items: [
+      { t: "What a course-by-course evaluation is", b: "An agency converts a foreign transcript into US credit hours and a US GPA, subject by subject. Some schools require it, some accept a document-by-document report, and some accept the transcript directly. Check per school before paying for the most expensive report." },
+      { t: "Use a NACES member", b: "US institutions generally recognise evaluations from members of the National Association of Credential Evaluation Services. WES, ECE, SpanTran and Josef Silny are the names that come up most often." },
+      { t: "Sealed documents", b: "Most agencies require transcripts sent directly by the issuing institution in a sealed envelope, or through a verified institutional channel. Anything the applicant has opened themselves is usually rejected." },
+      { t: "Timing", b: "Allow six to twelve weeks from request to delivered report, and longer where the issuing registrar is slow to respond to verification requests. This is the single most common cause of a missed deadline." },
+      { t: "Keep digital copies", b: "Scan every document before it is sealed and sent. The same set will be needed again for the visa interview and again on arrival." }
+    ],
+    links: [
+      { t: "NACES member directory", u: "https://www.naces.org/members" },
+      { t: "World Education Services", u: "https://www.wes.org" },
+      { t: "Educational Credential Evaluators", u: "https://www.ece.org" }
+    ]
+  },
+  {
+    id: "writing",
+    name: "The application file",
+    lede: "Admissions committees read hundreds of these. Specificity is the only thing that separates one from the next.",
+    items: [
+      { t: "Statement of Purpose", b: "Four movements: what they want to study, the experience that made that the obvious next question, why this department in particular — named faculty, named labs, named courses — and what they intend to do afterwards. The third movement is what is usually missing and what usually decides it." },
+      { t: "One base, many tails", b: "Write one strong statement, then replace the department paragraph for each school. Never send a statement that could be addressed to any programme, and never leave another school's name in it — reviewers see this every year." },
+      { t: "Personal statement is a different document", b: "Where a school asks for both, the SOP is academic and the personal statement is biographical: obstacles, context, what the applicant brings that the transcript does not show." },
+      { t: "Recommenders", b: "Three is standard and academic referees outweigh employers for research programmes. Ask at least six weeks out, by email, with the CV, the draft SOP, the deadline and a short reminder of the specific work they supervised. A vague letter is worse than no letter." },
+      { t: "CV in US format", b: "Two pages, reverse chronological, no photograph, no date of birth, no marital status, no nationality. Achievements with figures attached: how many, how much, how much faster." },
+      { t: "Proofreading", b: "Read it aloud once. Then have someone who has never heard the plan read it and say back what the applicant wants to study. If they cannot, the statement is not finished." }
+    ]
+  },
+  {
+    id: "funding",
+    name: "Paying for it",
+    lede: "Federal student aid is not available to international students. Everything below is the realistic set of sources.",
+    items: [
+      { t: "Assistantships", b: "Teaching, research and graduate assistantships are the largest source of funding for international master's students, typically combining a tuition waiver with a stipend for a set number of hours per week. They are usually awarded by the department, often on a separate application, and frequently earlier than the admission decision." },
+      { t: "Departmental scholarships and fellowships", b: "Many are awarded automatically from the admission file, but a meaningful number require a separate form. Ask the graduate coordinator which ones need an application and when they close." },
+      { t: "External scholarships", b: "Fulbright Foreign Student Program, AAUW International Fellowships, Rotary and a long tail of country-specific and field-specific awards. Deadlines for the largest ones fall roughly a year before the intake — earlier than most applicants realise." },
+      { t: "Private loans", b: "Some lenders offer no-cosigner loans to international students at US institutions. Compare the total repayable, the interest rate, the origination fee and whether repayment starts during study — not the monthly figure the marketing leads with. This is information, not a recommendation; the client should compare offers themselves and read the terms." },
+      { t: "Sponsors", b: "A family sponsor needs to provide their own bank evidence plus a signed affidavit of support. The school sets the format; use the school's form where one exists." },
+      { t: "On-campus work", b: "F-1 students are generally permitted to work on campus up to 20 hours per week while classes are in session. Treat it as supplementary income, never as the funding plan in the financial documents." },
+      { t: "Cost realism", b: "Get the total from the school's published cost-of-attendance page, which includes fees, health insurance and living costs, rather than the tuition figure alone. Public in-state, public out-of-state and private programmes sit at very different levels, and the same programme can cost twice as much in one city as another." }
+    ],
+    links: [
+      { t: "Fulbright Foreign Student Program", u: "https://foreign.fulbrightonline.org" },
+      { t: "EducationUSA advising centres", u: "https://educationusa.state.gov" },
+      { t: "International scholarship search (IEFA)", u: "https://www.iefa.org" }
+    ]
+  },
+  {
+    id: "i20",
+    name: "Proving funds for the I-20",
+    lede: "The school will not issue an I-20 until it is satisfied the first year is funded. This is a documentation exercise, and it is where otherwise strong applicants stall.",
+    items: [
+      { t: "What the figure is", b: "Normally one full academic year of the published cost of attendance, less any assistantship or scholarship already awarded. The school states the exact number it wants to see." },
+      { t: "What counts as evidence", b: "Bank statements or bank letters in the name of the student or the sponsor, usually dated within the last three to six months, showing liquid funds. Property, vehicles and unrealised assets generally do not count." },
+      { t: "Sponsor affidavit", b: "A signed statement naming the student, the relationship, the amount committed and the period covered, attached to the sponsor's own bank evidence." },
+      { t: "Consistency", b: "The figures on the I-20, the financial documents and the DS-160 should tell the same story. Inconsistency between them is a visible problem at the interview." },
+      { t: "Check the I-20 on arrival", b: "Name spelling, date of birth, country of birth, programme, start date, and the funding amount. An error here is far cheaper to correct before the interview than after." }
+    ]
+  },
+  {
+    id: "visa",
+    name: "The F-1 visa",
+    lede: "General information for planning, not legal advice. Requirements and procedures differ by embassy and change — confirm everything on the official sites below and with the client's own embassy.",
+    items: [
+      { t: "Order of operations", b: "I-20 issued, then pay the SEVIS I-901 fee, then complete the DS-160, then pay the visa fee and book the interview. Doing these out of order wastes time and occasionally money." },
+      { t: "SEVIS I-901", b: "Paid at fmjfee.com using the SEVIS ID printed on the I-20. Print the receipt and carry it to the interview." },
+      { t: "DS-160", b: "Completed online at the Consular Electronic Application Center. Names must match the passport exactly. Keep the confirmation page with the barcode — the interview cannot proceed without it." },
+      { t: "Booking the interview", b: "Wait times vary enormously by post and by season, and are longest in the months before a Fall intake. Book the moment the DS-160 is filed rather than waiting for other documents." },
+      { t: "What to carry", b: "Passport, I-20, DS-160 confirmation, SEVIS receipt, visa fee receipt, appointment letter, academic transcripts and test scores, financial evidence and the sponsor affidavit, and photographs to specification." },
+      { t: "What the interview is actually about", b: "Three questions under the surface: is this a genuine student, is the programme funded, and will they comply with the terms of the visa. Answers should be short, specific and consistent with the paperwork." },
+      { t: "If the application is refused", b: "A refusal under section 214(b) means the officer was not satisfied on those points. It is not a permanent bar, and reapplying is possible — but only with something materially different to show, such as clearer funding or a clearer study plan." }
+    ],
+    links: [
+      { t: "Study in the States (DHS)", u: "https://studyinthestates.dhs.gov" },
+      { t: "SEVIS I-901 fee payment", u: "https://www.fmjfee.com" },
+      { t: "DS-160 (CEAC)", u: "https://ceac.state.gov/genniv" },
+      { t: "Student visa overview (State Dept)", u: "https://travel.state.gov/content/travel/en/us-visas/study/student-visa.html" },
+      { t: "Visa appointment wait times", u: "https://travel.state.gov/content/travel/en/us-visas/visa-information-resources/wait-times.html" }
+    ]
+  },
+  {
+    id: "predeparture",
+    name: "Pre-departure",
+    lede: "The month where a well-run file turns into a person who actually arrives in good shape.",
+    items: [
+      { t: "Entry window", b: "Entry is permitted no earlier than 30 days before the programme start date shown on the I-20. Book the flight accordingly." },
+      { t: "Hand luggage", b: "Passport, I-20, admission letter, SEVIS receipt, financial documents, transcripts, test scores and immunisation records travel in the cabin bag. Never in the hold." },
+      { t: "Housing", b: "On-campus graduate housing where it exists, otherwise a short first lease or a few weeks of temporary accommodation. Signing a twelve-month lease on a property seen only in photographs is the most common expensive mistake of the first month." },
+      { t: "Health insurance", b: "Most institutions enrol students in their own plan automatically and charge it with tuition. Check whether a waiver is possible and whether it is actually cheaper before assuming it is." },
+      { t: "Money for the first 60 days", b: "Deposit, first rent, furniture, phone, groceries and books all land before any stipend or loan disbursement does. Plan the gap explicitly." },
+      { t: "Phone and banking", b: "A US number and a student bank account are usually set up in the first week. Most banks will open an account with a passport and I-20; some will want a local address first." },
+      { t: "Climate", b: "Winter in Minnesota and winter in Florida are not the same event. Buy the heavy coat there, not at home." }
+    ],
+    links: [
+      { t: "CDC travellers' health", u: "https://wwwnc.cdc.gov/travel" }
+    ]
+  },
+  {
+    id: "arrival",
+    name: "After they land",
+    lede: "Status is maintained by doing a small number of things on time. Most problems here are administrative, not dramatic.",
+    items: [
+      { t: "Check in with the DSO", b: "Report to the international student office in the first days on campus. This registers the student in SEVIS for the term and is not optional." },
+      { t: "Full course load", b: "F-1 students are normally required to enrol full time each term, with limited exceptions that must be authorised in advance by the DSO. Dropping below without authorisation puts status at risk." },
+      { t: "On-campus employment", b: "Generally up to 20 hours per week while classes are in session, and full time during official breaks. Confirm the rules with the DSO before accepting anything." },
+      { t: "CPT and OPT", b: "Curricular Practical Training covers work that is part of the curriculum, usually an internship tied to a course. Optional Practical Training is work authorisation related to the field of study, applied for through the DSO with USCIS and with its own timing rules. Both start with the DSO, months ahead." },
+      { t: "Social Security number", b: "Issued once the student has a qualifying job offer, through the Social Security Administration. It is not needed to open most student bank accounts." },
+      { t: "Keep the DSO informed", b: "Address changes, programme changes, funding changes and any plan to travel out of the country all go through the international student office first." }
+    ],
+    links: [
+      { t: "Maintaining F-1 status (Study in the States)", u: "https://studyinthestates.dhs.gov/students" },
+      { t: "Social Security Administration", u: "https://www.ssa.gov" },
+      { t: "NAFSA international student resources", u: "https://www.nafsa.org" }
+    ]
+  }
+];
+
+</script>
+<script>
+/* Northbound — core: helpers, state, storage, auth, boot. Views live in the next script. */
+window.NB = (function () {
+"use strict";
+
+var STAGES = window.NB_STAGES, TASKS = window.NB_TASKS, DOCS = window.NB_DOCS,
+    DOCST = window.NB_DOC_STATES, RES = window.NB_RESOURCES, SCHOOLS = window.NB_SCHOOLS;
+
+function $(s, r) { return (r || document).querySelector(s); }
+function esc(v) {
+  return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+var MONFULL = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+function fmtDate(iso) {
+  if (!iso) return "";
+  var p = String(iso).slice(0, 10).split("-");
+  if (p.length !== 3) return esc(iso);
+  return Number(p[2]) + " " + (MON[Number(p[1]) - 1] || "?") + " " + p[0];
+}
+function today() { var d = new Date(); return isoOf(d); }
+function isoOf(d) {
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+function daysUntil(iso) {
+  if (!iso) return null;
+  var a = new Date(iso + "T00:00:00"), b = new Date(today() + "T00:00:00");
+  if (isNaN(a)) return null;
+  return Math.round((a - b) / 86400000);
+}
+function relAge(iso) {
+  if (!iso) return "—";
+  var d = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
+  if (d <= 0) return "today";
+  if (d === 1) return "yesterday";
+  if (d < 30) return d + "d ago";
+  if (d < 365) return Math.floor(d / 30) + "mo ago";
+  return Math.floor(d / 365) + "y ago";
+}
+function relTime(iso) {
+  if (!iso) return "";
+  var m = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+  if (m < 1) return "just now";
+  if (m < 60) return m + "m ago";
+  if (m < 1440) return Math.floor(m / 60) + "h ago";
+  return fmtDate(String(iso).slice(0, 10));
+}
+function initials(n) {
+  var p = String(n || "").trim().split(/\s+/).filter(Boolean);
+  if (!p.length) return "—";
+  return (p[0][0] + (p.length > 1 ? p[p.length - 1][0] : "")).toUpperCase();
+}
+function money(n) {
+  n = Number(n) || 0;
+  return "$" + Math.round(n).toLocaleString("en-US");
+}
+function num(v) { var n = parseFloat(String(v).replace(/[^0-9.\-]/g, "")); return isNaN(n) ? 0 : n; }
+var TOAST_T;
+function toast(msg) {
+  var t = $("#toast"); if (!t) return;
+  t.textContent = msg; t.classList.add("on");
+  clearTimeout(TOAST_T); TOAST_T = setTimeout(function () { t.classList.remove("on"); }, 2800);
+}
+function ls(k, v) {
+  try {
+    if (v === undefined) return localStorage.getItem(k);
+    if (v === null) { localStorage.removeItem(k); return null; }
+    localStorage.setItem(k, v); return v;
+  } catch (e) { return null; }
+}
+var CHECK = '<svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6.3 4.6 9 10 3.2" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function ico(d) {
+  return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>";
+}
+var ICONS = {
+  clients: '<path d="M16 19v-1a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v1"/><circle cx="9" cy="7" r="3.2"/><path d="M22 19v-1a4 4 0 0 0-3-3.8"/><path d="M16.5 4.2a4 4 0 0 1 0 5.6"/>',
+  pipeline: '<path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/>',
+  school: '<path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="M6 10.5V16c0 1.4 2.7 3 6 3s6-1.6 6-3v-5.5"/>',
+  book: '<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v18H6.5A2.5 2.5 0 0 0 4 22V4.5Z"/><path d="M20 16H6.5"/>',
+  gear: '<circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>',
+  check: '<path d="M9 11.2 11.6 14 17 7.8"/><circle cx="12" cy="12" r="9.2"/>',
+  doc: '<path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7l-5-5Z"/><path d="M14 2v5h5"/><path d="M9 13h6M9 17h6"/>',
+  home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.6V20h14V9.6"/>',
+  cal: '<rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
+  chat: '<path d="M21 11.5a8 8 0 0 1-11.6 7.1L3 20.5l1.9-6A8 8 0 1 1 21 11.5Z"/>'
+};
+
+/* ---------------- state ---------------- */
+var DB = null, USER = null, ASSETS = null, MAY_EDIT = false, DBDOWN = false;
+var S = {
+  role: null, meId: null,
+  clients: [], notes: {}, templates: {}, msgs: [], msgFor: null,
+  cfg: { orgName: "Northbound Advising", advisorCode: "", welcome: "" },
+  view: "clients", open: null, tab: "overview",
+  res: RES[0].id,
+  dir: { q: "", st: "", ctrl: "", tag: "", limit: 60 },
+  cq: "", cstatus: "",
+  cal: null,
+  tplOpen: null,
+  loginTab: "client", loading: true
+};
+function byId(id) { for (var i = 0; i < S.clients.length; i++) if (S.clients[i].id === id) return S.clients[i]; return null; }
+function isAdvisor() { return S.role === "advisor"; }
+function meClient() { return S.role === "client" ? byId(S.meId) : (S.open ? byId(S.open) : null); }
+
+/* ---------------- derived ---------------- */
+function tplOf(c) {
+  var t = S.templates[(c && c.template) || "default"];
+  return (t && t.tasks && t.tasks.length) ? t.tasks : TASKS;
+}
+function taskDone(c, id) { return !!(c && c.tasks && c.tasks[id]); }
+function dueOf(c, id) { return (c && c.due && c.due[id]) || ""; }
+function progressOf(c) {
+  var ts = tplOf(c), d = 0;
+  for (var i = 0; i < ts.length; i++) if (taskDone(c, ts[i].id)) d++;
+  return { done: d, total: ts.length, pct: ts.length ? Math.round((d / ts.length) * 100) : 0 };
+}
+function stageStats(c) {
+  var ts = tplOf(c);
+  return STAGES.map(function (s) {
+    var list = ts.filter(function (t) { return t.s === s.id; });
+    var d = list.filter(function (t) { return taskDone(c, t.id); }).length;
+    return { s: s, done: d, total: list.length, pct: list.length ? Math.round((d / list.length) * 100) : 100 };
+  });
+}
+function currentStageIdx(c) {
+  var st = stageStats(c);
+  for (var i = 0; i < st.length; i++) if (st[i].done < st[i].total) return i;
+  return st.length - 1;
+}
+function nextDeadline(c) {
+  var best = null;
+  (c.schools || []).forEach(function (r) {
+    if (!r.deadline) return;
+    var d = daysUntil(r.deadline);
+    if (d === null || d < 0) return;
+    if (!best || r.deadline < best.deadline) best = r;
+  });
+  return best;
+}
+function overdue(c) {
+  var out = [], ts = tplOf(c);
+  ts.forEach(function (t) {
+    var d = dueOf(c, t.id);
+    if (!d || taskDone(c, t.id)) return;
+    var n = daysUntil(d);
+    if (n !== null && n < 0) out.push({ t: t, due: d, late: -n });
+  });
+  return out;
+}
+function dueSoon(c) {
+  var out = [], ts = tplOf(c);
+  ts.forEach(function (t) {
+    var d = dueOf(c, t.id);
+    if (!d || taskDone(c, t.id)) return;
+    var n = daysUntil(d);
+    if (n !== null && n >= 0 && n <= 7) out.push({ t: t, due: d, inDays: n });
+  });
+  return out;
+}
+function costOf(r) {
+  var gross = num(r.tuition) + num(r.fees) + num(r.living);
+  return { gross: gross, award: num(r.award), net: Math.max(0, gross - num(r.award)), has: gross > 0 || num(r.award) > 0 };
+}
+var SCH_STATES = ["Researching", "Applying", "Submitted", "Admitted", "Waitlisted", "Denied", "Enrolling"];
+function schPill(st) {
+  if (st === "Admitted" || st === "Enrolling") return "ok";
+  if (st === "Denied") return "crit";
+  if (st === "Submitted") return "brand";
+  if (st === "Waitlisted") return "warn";
+  return "";
+}
+function statusPill(st) { return st === "Active" ? "ok" : st === "Placed" ? "brand" : st === "Paused" ? "warn" : ""; }
+function unread(c) {
+  if (!c) return 0;
+  var mark = isAdvisor() ? c.lastReadA : c.lastReadC;
+  var from = isAdvisor() ? "client" : "advisor";
+  return S.msgs.filter(function (m) { return m.from === from && (!mark || m.at > mark); }).length;
+}
+
+/* ---------------- storage ---------------- */
+var chains = {}, pending = {}, timers = {};
+function queue(path, fn) {
+  var prev = chains[path] || Promise.resolve();
+  var next = prev.then(fn, fn).catch(function (e) {
+    console.warn("write failed", path, e);
+    toast(e && e.code === "invalid_argument" ? "You don't have permission to save that." : "Couldn't save — try again.");
+  });
+  chains[path] = next; return next;
+}
+function scheduleSave(id, ms) {
+  pending[id] = true;
+  clearTimeout(timers[id]);
+  timers[id] = setTimeout(function () { flush(id); }, ms == null ? 500 : ms);
+}
+function flush(id) {
+  var c = byId(id); if (!c) { pending[id] = false; return; }
+  c.updatedAt = new Date().toISOString();
+  var body = {}; for (var k in c) if (k !== "id") body[k] = c[k];
+  if (!DB) { pending[id] = false; return; }
+  queue("clients/" + id, function () { return DB.doc("clients/" + id).set(body); })
+    .then(function () { pending[id] = false; });
+}
+function saveCfg() { if (DB) queue("config/app", function () { return DB.doc("config/app").set(S.cfg); }); }
+function saveNote(cid, body) {
+  S.notes[cid] = body;
+  if (DB) queue("notes/" + cid, function () { return DB.doc("notes/" + cid).set({ body: body, at: new Date().toISOString() }); });
+}
+function saveTemplate(tid) {
+  var t = S.templates[tid]; if (!t || !DB) return;
+  queue("templates/" + tid, function () { return DB.doc("templates/" + tid).set({ name: t.name, tasks: t.tasks }); });
+}
+var codeCache = {};
+function setCode(code, cid) {
+  if (!DB || !code) return;
+  if (codeCache[code] === cid) return;
+  codeCache[code] = cid;
+  try { DB.doc("codes/" + code); } catch (e) { return; }
+  queue("codes/" + code, function () { return DB.doc("codes/" + code).set({ cid: cid }); });
+}
+function dropCode(code) {
+  if (!DB || !code) return;
+  delete codeCache[code];
+  try { DB.doc("codes/" + code); } catch (e) { return; }
+  queue("codes/" + code, function () { return DB.doc("codes/" + code).delete(); });
+}
+function sendMsg(cid, body) {
+  var m = { from: isAdvisor() ? "advisor" : "client", body: body, at: new Date().toISOString() };
+  var mid = "m" + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36);
+  m.id = mid;
+  S.msgs.push(m);
+  if (DB) queue("clients/" + cid + "/messages/" + mid, function () {
+    return DB.doc("clients/" + cid).collection("messages").doc(mid).set({ from: m.from, body: m.body, at: m.at });
+  });
+  markRead(cid);
+}
+function markRead(cid) {
+  var c = byId(cid); if (!c) return;
+  var k = isAdvisor() ? "lastReadA" : "lastReadC";
+  var now = new Date().toISOString();
+  if (c[k] === now) return;
+  c[k] = now; scheduleSave(cid, 900);
+}
+
+/* ---------------- boot ---------------- */
+var unsubs = [], msgUnsub = null, BOOTED = false;
+function addUn(f) { if (typeof f === "function") unsubs.push(f); }
+
+function boot() {
+  NB.render();
+  var w = window.claude, has = w && typeof w.use === "function";
+  Promise.all([has ? w.use("db") : null, has ? w.use("user") : null, has ? w.use("assets") : null]).then(function (r) {
+    DB = r[0] || null; USER = r[1] || null; ASSETS = r[2] || null;
+    var perm = USER
+      ? Promise.all([USER.isOwner(), USER.canEdit()]).then(function (a) { MAY_EDIT = !!(a[0] || a[1]); }, function () {})
+      : Promise.resolve();
+    if (!DB) { DBDOWN = true; return perm.then(finishBoot); }
+    var settle, loaded = new Promise(function (res) { settle = res; setTimeout(res, 8000); });
+    var got = 0;
+    function tick() { if (++got >= 1) settle(); }
+    addUn(DB.doc("config/app").onSnapshot(function (snap) {
+      if (snap.exists) {
+        var d = snap.data();
+        S.cfg = { orgName: d.orgName || "Northbound Advising", advisorCode: d.advisorCode || "", welcome: d.welcome || "" };
+      }
+      tick(); if (BOOTED) NB.render();
+    }, tick));
+    addUn(DB.collection("templates").onSnapshot(function (snap) {
+      var t = {};
+      snap.docs.forEach(function (d) { var o = d.data() || {}; t[d.id] = { id: d.id, name: o.name || d.id, tasks: o.tasks || [] }; });
+      S.templates = t; if (BOOTED) NB.render();
+    }, function () {}));
+    return Promise.all([perm, loaded]).then(finishBoot);
+  }).catch(function () { DBDOWN = true; finishBoot(); });
+  setTimeout(function () { if (!BOOTED) { DBDOWN = !DB; finishBoot(); } }, 13000);
+}
+
+function attachAdvisor() {
+  if (!DB) return Promise.resolve();
+  return new Promise(function (res) {
+    var done = false, t = setTimeout(function () { if (!done) { done = true; res(); } }, 6000);
+    addUn(DB.collection("clients").onSnapshot(function (snap) {
+      var next = [];
+      snap.docs.forEach(function (d) {
+        if (pending[d.id]) { var cur = byId(d.id); if (cur) { next.push(cur); return; } }
+        var o = d.data() || {}; o.id = d.id; next.push(o);
+      });
+      next.sort(function (a, b) { return String(a.name || "").localeCompare(String(b.name || "")); });
+      S.clients = next;
+      next.forEach(function (c) { if (c.code) setCode(String(c.code).toUpperCase(), c.id); });
+      if (!done) { done = true; clearTimeout(t); res(); }
+      if (BOOTED) NB.render();
+    }, function () { if (!done) { done = true; clearTimeout(t); res(); } }));
+    addUn(DB.collection("notes").onSnapshot(function (snap) {
+      var n = {};
+      snap.docs.forEach(function (d) { n[d.id] = (d.data() || {}).body || ""; });
+      S.notes = n; if (BOOTED) NB.render();
+    }, function () {}));
+  });
+}
+function attachClient(cid) {
+  if (!DB) return Promise.resolve();
+  return new Promise(function (res) {
+    var done = false, t = setTimeout(function () { if (!done) { done = true; res(); } }, 6000);
+    addUn(DB.doc("clients/" + cid).onSnapshot(function (snap) {
+      if (snap.exists) {
+        if (!pending[cid]) { var o = snap.data() || {}; o.id = cid; S.clients = [o]; }
+      } else { S.clients = []; }
+      if (!done) { done = true; clearTimeout(t); res(); }
+      if (BOOTED) NB.render();
+    }, function () { if (!done) { done = true; clearTimeout(t); res(); } }));
+  });
+}
+function attachMessages(cid) {
+  if (msgUnsub) { try { msgUnsub(); } catch (e) {} msgUnsub = null; }
+  S.msgs = []; S.msgFor = cid;
+  if (!DB || !cid) return;
+  msgUnsub = DB.doc("clients/" + cid).collection("messages").onSnapshot(function (snap) {
+    var out = [];
+    snap.docs.forEach(function (d) { var o = d.data() || {}; o.id = d.id; out.push(o); });
+    out.sort(function (a, b) { return String(a.at).localeCompare(String(b.at)); });
+    S.msgs = out;
+    if (BOOTED) NB.render();
+  }, function () {});
+}
+
+function finishBoot() {
+  if (BOOTED) return;
+  BOOTED = true;
+  var sess = null;
+  try { sess = JSON.parse(ls("nb.session") || "null"); } catch (e) {}
+  var go = Promise.resolve();
+  if (sess && sess.role === "client" && sess.id) {
+    S.role = "client"; S.meId = sess.id; S.open = sess.id; S.view = "client"; S.tab = "overview";
+    go = attachClient(sess.id).then(function () { attachMessages(sess.id); });
+  } else if ((sess && sess.role === "advisor") || MAY_EDIT) {
+    S.role = "advisor"; S.view = "clients";
+    go = attachAdvisor();
+  }
+  go.then(function () { S.loading = false; NB.render(); });
+  setTimeout(function () { if (S.loading) { S.loading = false; NB.render(); } }, 7000);
+}
+
+/* ---------------- auth ---------------- */
+function signInAdvisor() {
+  S.role = "advisor"; S.meId = null; S.open = null; S.view = "clients"; S.loading = true;
+  ls("nb.session", JSON.stringify({ role: "advisor" }));
+  NB.render();
+  attachAdvisor().then(function () { S.loading = false; NB.render(); });
+}
+function signInClient(cid) {
+  S.role = "client"; S.meId = cid; S.open = cid; S.view = "client"; S.tab = "overview"; S.loading = true;
+  ls("nb.session", JSON.stringify({ role: "client", id: cid }));
+  NB.render();
+  attachClient(cid).then(function () { attachMessages(cid); S.loading = false; NB.render(); });
+}
+function signOut() {
+  ls("nb.session", null);
+  unsubs.forEach(function (f) { try { f(); } catch (e) {} });
+  unsubs = [];
+  if (msgUnsub) { try { msgUnsub(); } catch (e) {} msgUnsub = null; }
+  S.role = null; S.meId = null; S.open = null; S.clients = []; S.notes = {}; S.msgs = []; S.msgFor = null;
+  S.loginTab = "client";
+  // keep config + templates live for the login screen
+  if (DB) {
+    addUn(DB.doc("config/app").onSnapshot(function (snap) {
+      if (snap.exists) {
+        var d = snap.data();
+        S.cfg = { orgName: d.orgName || "Northbound Advising", advisorCode: d.advisorCode || "", welcome: d.welcome || "" };
+      }
+      NB.render();
+    }, function () {}));
+  }
+  NB.render();
+}
+
+var NB = {
+  $: $, esc: esc, fmtDate: fmtDate, today: today, isoOf: isoOf, daysUntil: daysUntil, relAge: relAge, relTime: relTime,
+  initials: initials, money: money, num: num, toast: toast, ls: ls, ico: ico, ICONS: ICONS, CHECK: CHECK,
+  MON: MON, MONFULL: MONFULL,
+  STAGES: STAGES, TASKS: TASKS, DOCS: DOCS, DOCST: DOCST, RES: RES, SCHOOLS: SCHOOLS, SCH_STATES: SCH_STATES,
+  S: S, byId: byId, isAdvisor: isAdvisor, meClient: meClient,
+  tplOf: tplOf, taskDone: taskDone, dueOf: dueOf, progressOf: progressOf, stageStats: stageStats,
+  currentStageIdx: currentStageIdx, nextDeadline: nextDeadline, overdue: overdue, dueSoon: dueSoon,
+  costOf: costOf, schPill: schPill, statusPill: statusPill, unread: unread,
+  queue: queue, scheduleSave: scheduleSave, flush: flush, saveCfg: saveCfg, saveNote: saveNote,
+  saveTemplate: saveTemplate, setCode: setCode, dropCode: dropCode, sendMsg: sendMsg, markRead: markRead,
+  attachMessages: attachMessages, signInAdvisor: signInAdvisor, signInClient: signInClient, signOut: signOut,
+  boot: boot, render: function () {}
+};
+Object.defineProperty(NB, "DB", { get: function () { return DB; }, configurable: true });
+Object.defineProperty(NB, "ASSETS", { get: function () { return ASSETS; }, configurable: true });
+Object.defineProperty(NB, "MAY_EDIT", { get: function () { return MAY_EDIT; }, configurable: true });
+Object.defineProperty(NB, "DBDOWN", { get: function () { return DBDOWN; }, configurable: true });
+return NB;
+})();
+
+</script>
+<script>
+/* Northbound — views and interaction. */
+(function (NB) {
+"use strict";
+var $ = NB.$, esc = NB.esc, S = NB.S, ico = NB.ico, ICONS = NB.ICONS, CHECK = NB.CHECK;
+var STAGES = NB.STAGES, DOCS = NB.DOCS, DOCST = NB.DOCST, RES = NB.RES, SCHOOLS = NB.SCHOOLS, SCH_STATES = NB.SCH_STATES;
+var fmtDate = NB.fmtDate, daysUntil = NB.daysUntil, money = NB.money, num = NB.num, toast = NB.toast;
+var isAdvisor = NB.isAdvisor, meClient = NB.meClient, byId = NB.byId;
+
+/* ------------------------------------------------ login ------------------------------------------------ */
+function renderLogin() {
+  var host = $("#login"); host.hidden = false;
+  $("#shell").classList.remove("on");
+  var org = esc(S.cfg.orgName || "Northbound Advising");
+  host.innerHTML =
+    '<div class="brandside">' +
+      '<div style="display:flex;align-items:center;gap:11px">' +
+        '<svg class="logomark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="rgba(255,255,255,.14)"></rect>' +
+        '<path d="M11 28V12l18 16V12" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>' +
+        '<div style="font-weight:600;font-size:15px">' + org + "</div></div>" +
+      "<div><h1>Every step from first enquiry to the airport, in one place.</h1>" +
+      "<p>Sign in with the access code your advisor gave you. You see your own file and nothing else — " +
+      "your progress, your shortlist, your documents and your messages.</p></div>" +
+      '<div class="marks">' + STAGES.map(function (s) { return "<span>" + esc(s.name) + "</span>"; }).join("") + "</div>" +
+    "</div>" +
+    '<div class="formside"><div class="formwrap">' +
+      '<div class="eyebrow" style="margin-bottom:8px">Sign in</div>' +
+      '<div class="seg" role="group" aria-label="Sign in as">' +
+        '<button data-act="logintab" data-v="client" aria-pressed="' + (S.loginTab === "client") + '">Client portal</button>' +
+        '<button data-act="logintab" data-v="advisor" aria-pressed="' + (S.loginTab === "advisor") + '">Advisor</button></div>' +
+      (S.loginTab === "client"
+        ? '<div class="field"><label for="codeIn">Access code</label><input class="inp mono" id="codeIn" placeholder="NB-0000" autocomplete="off" spellcheck="false"></div>'
+        : '<div class="field"><label for="codeIn">Advisor passcode</label><input class="inp mono" id="codeIn" type="password" placeholder="••••••••" autocomplete="off"></div>') +
+      '<div id="loginErr" style="color:var(--crit);font-size:12.5px;margin-top:8px" hidden></div>' +
+      '<button class="btn pri" data-act="dologin" style="width:100%;justify-content:center;margin-top:16px">Continue</button>' +
+      (NB.MAY_EDIT ? '<button class="btn" data-act="ownerin" style="width:100%;justify-content:center;margin-top:8px">Open advisor console</button>' : "") +
+      '<p class="muted" style="font-size:12px;margin-top:18px;line-height:1.5">' +
+      (NB.DBDOWN ? "Shared storage is not available in this view, so nothing can be loaded or saved right now."
+                 : "Codes are issued by your advisor. A client sign-in loads only that client's record.") + "</p>" +
+    "</div></div>";
+  var inp = $("#codeIn");
+  if (inp) inp.addEventListener("keydown", function (e) { if (e.key === "Enter") doLogin(); });
+}
+function doLogin() {
+  var el = $("#codeIn"), v = (el && el.value || "").trim(), err = $("#loginErr");
+  function fail(m) { if (err) { err.hidden = false; err.textContent = m; } }
+  if (!v) return fail("Enter a code to continue.");
+  if (S.loginTab === "advisor") {
+    if (!S.cfg.advisorCode) return fail("No advisor passcode is set yet. Open the console as the account owner and set one in Settings.");
+    if (v !== S.cfg.advisorCode) return fail("That passcode is not recognised.");
+    return NB.signInAdvisor();
+  }
+  var code = v.toUpperCase().replace(/[^A-Z0-9_\-]/g, "");
+  if (!code) return fail("That access code is not recognised.");
+  if (!NB.DB) return fail("Storage is unavailable, so codes cannot be checked right now.");
+  fail("Checking…"); if (err) err.style.color = "var(--muted)";
+  var ref;
+  try { ref = NB.DB.doc("codes/" + code); }
+  catch (e) { return fail("That access code is not recognised."); }
+  ref.get().then(function (snap) {
+    if (err) err.style.color = "var(--crit)";
+    var d = snap.exists ? snap.data() : null;
+    if (!d || !d.cid) return fail("That access code is not recognised.");
+    NB.signInClient(d.cid);
+  }).catch(function () { if (err) err.style.color = "var(--crit)"; fail("Could not check that code. Try again."); });
+}
+
+/* ------------------------------------------------ shell ------------------------------------------------ */
+var NAV_ADVISOR = [
+  { v: "clients", n: "Clients", i: "clients" },
+  { v: "pipeline", n: "Pipeline", i: "pipeline" },
+  { v: "calendar", n: "Calendar", i: "cal" },
+  { v: "directory", n: "School directory", i: "school" },
+  { v: "resources", n: "Resource library", i: "book" },
+  { v: "settings", n: "Settings", i: "gear" }
+];
+var NAV_CLIENT = [
+  { v: "client:overview", n: "My progress", i: "home" },
+  { v: "client:tasks", n: "Tasks", i: "check" },
+  { v: "client:schools", n: "My schools", i: "school" },
+  { v: "client:docs", n: "Documents", i: "doc" },
+  { v: "client:messages", n: "Messages", i: "chat" },
+  { v: "calendar", n: "Calendar", i: "cal" },
+  { v: "directory", n: "School directory", i: "school" },
+  { v: "resources", n: "Resource library", i: "book" }
+];
+
+function render() {
+  $("#login").hidden = true;
+  $("#shell").classList.add("on");
+
+  if (S.loading) {
+    $("#nav").innerHTML = ""; $("#title").textContent = "Loading"; $("#crumb").textContent = "";
+    $("#topactions").innerHTML = "";
+    $("#view").innerHTML = '<div class="card"><div class="empty"><h3>Opening your workspace</h3><p>Fetching records.</p></div></div>';
+    return;
+  }
+  if (!S.role) { renderLogin(); return; }
+
+  var items = isAdvisor() ? NAV_ADVISOR : NAV_CLIENT;
+  var cur = isAdvisor() ? S.view : (S.view === "client" ? "client:" + S.tab : S.view);
+  var un = !isAdvisor() ? NB.unread(meClient()) : 0;
+  $("#nav").innerHTML = items.map(function (it) {
+    var badge = (it.v === "client:messages" && un) ? ' <span class="pill accent" style="margin-left:auto">' + un + "</span>" : "";
+    return '<a data-act="go" data-v="' + it.v + '" class="' + (cur === it.v ? "on" : "") + '">' + ico(ICONS[it.i]) + "<span>" + esc(it.n) + "</span>" + badge + "</a>";
+  }).join("");
+
+  $("#brandName").textContent = S.cfg.orgName || "Northbound Advising";
+  $("#brandRole").textContent = isAdvisor() ? "Advisor console" : "Client portal";
+  var who = isAdvisor() ? "Advisor" : ((meClient() && meClient().name) || "Client");
+  $("#meInitials").textContent = NB.initials(who);
+  $("#meName").textContent = who;
+  $("#meRole").textContent = isAdvisor() ? (S.clients.length + " client" + (S.clients.length === 1 ? "" : "s")) : "Applicant";
+
+  var v = $("#view"); v.innerHTML = ""; $("#topactions").innerHTML = ""; $("#crumb").textContent = "";
+
+  if (NB.DBDOWN) v.insertAdjacentHTML("beforeend",
+    '<div class="notice"><b>Not saving.</b> Shared storage is unavailable in this view, so changes will be lost on reload.</div>');
+
+  if (S.view === "clients") viewClients(v);
+  else if (S.view === "pipeline") viewPipeline(v);
+  else if (S.view === "calendar") viewCalendar(v);
+  else if (S.view === "directory") viewDirectory(v);
+  else if (S.view === "resources") viewResources(v);
+  else if (S.view === "settings") viewSettings(v);
+  else if (S.view === "templates") viewTemplates(v);
+  else if (S.view === "client") viewClient(v);
+  wire();
+}
+NB.render = render;
+
+function kpi(val, label, flag) {
+  return '<div class="kpi' + (flag ? " flag" : "") + '"><div class="v">' + esc(val) + '</div><div class="l">' + esc(label) + "</div></div>";
+}
+
+/* ------------------------------------------------ clients ------------------------------------------------ */
+function viewClients(v) {
+  $("#title").textContent = "Clients";
+  $("#topactions").innerHTML = '<button class="btn pri" data-act="newclient">+ New client</button>';
+
+  if (!S.clients.length) {
+    v.insertAdjacentHTML("beforeend",
+      '<div class="card"><div class="empty"><h3>No clients yet</h3>' +
+      "<p>Add the first applicant and they get an access code, a plan across eight stages, and a portal of their own.</p>" +
+      '<button class="btn pri" data-act="newclient" style="margin-top:16px">+ New client</button></div></div>');
+    return;
+  }
+  var q = S.cq.toLowerCase();
+  var list = S.clients.filter(function (c) {
+    if (S.cstatus && (c.status || "Active") !== S.cstatus) return false;
+    if (q && ((c.name || "") + " " + (c.field || "") + " " + (c.country || "") + " " + (c.targetTerm || "")).toLowerCase().indexOf(q) < 0) return false;
+    return true;
+  });
+
+  var rows = list.map(function (c) {
+    var p = NB.progressOf(c), si = NB.currentStageIdx(c), nd = NB.nextDeadline(c), od = NB.overdue(c);
+    var dl = nd ? daysUntil(nd.deadline) : null;
+    var dlCls = dl === null ? "" : dl <= 7 ? "crit" : dl <= 21 ? "warn" : "";
+    return '<tr class="clickable" data-act="openclient" data-v="' + esc(c.id) + '">' +
+      '<td><div style="display:flex;align-items:center;gap:10px"><div class="avatar">' + esc(NB.initials(c.name)) + "</div>" +
+        '<div style="min-width:0"><div style="font-weight:600">' + esc(c.name || "Unnamed") + "</div>" +
+        '<div class="muted" style="font-size:12px">' + esc(c.field || "Field not set") + (c.country ? " · " + esc(c.country) : "") + "</div></div></div></td>" +
+      "<td>" + esc(c.targetTerm || "—") + "</td>" +
+      '<td><span class="pill brand"><span class="dot"></span>' + esc(STAGES[si].n + ". " + STAGES[si].name) + "</span></td>" +
+      '<td style="min-width:132px"><div style="display:flex;align-items:center;gap:9px">' +
+        '<div class="bar" style="flex:1"><i style="width:' + p.pct + '%"></i></div>' +
+        '<span class="num" style="font-size:12px;font-weight:600;width:32px;text-align:right">' + p.pct + "%</span></div></td>" +
+      "<td>" + (nd ? '<span class="pill ' + dlCls + '">' + fmtDate(nd.deadline) + (dl !== null ? " · " + dl + "d" : "") + "</span>" : '<span class="muted">—</span>') + "</td>" +
+      "<td>" + (od.length ? '<span class="pill crit"><span class="dot"></span>' + od.length + " overdue</span>" : '<span class="pill ok">On track</span>') + "</td>" +
+      '<td><span class="pill ' + NB.statusPill(c.status) + '">' + esc(c.status || "Active") + "</span></td>" +
+      '<td class="muted" style="font-size:12px;white-space:nowrap">' + esc(NB.relAge(c.updatedAt)) + "</td>" +
+      "</tr>";
+  }).join("");
+
+  v.insertAdjacentHTML("beforeend",
+    '<div class="card"><div class="card-h" style="align-items:center"><div class="filters" style="flex:1">' +
+      '<input class="inp grow" id="cq" placeholder="Search clients" value="' + esc(S.cq) + '">' +
+      '<select class="inp" data-act="cstatus"><option value="">Every status</option>' +
+        ["Active", "Paused", "Placed", "Archived"].map(function (s) { return '<option ' + (S.cstatus === s ? "selected" : "") + ">" + s + "</option>"; }).join("") +
+      "</select></div>" +
+      '<span class="pill">' + list.length + " of " + S.clients.length + "</span></div>" +
+    '<div class="card-b flush"><div class="scrollx"><table class="tbl">' +
+    "<thead><tr><th>Client</th><th>Intake</th><th>Stage</th><th>Completion</th><th>Next deadline</th><th>Schedule</th><th>Status</th><th>Updated</th></tr></thead>" +
+    "<tbody>" + (rows || '<tr><td colspan="8"><div class="empty"><p>No client matches that search.</p></div></td></tr>') + "</tbody></table></div></div></div>");
+}
+
+/* ------------------------------------------------ pipeline ------------------------------------------------ */
+function viewPipeline(v) {
+  $("#title").textContent = "Pipeline";
+  var cs = S.clients;
+  if (!cs.length) {
+    v.insertAdjacentHTML("beforeend", '<div class="card"><div class="empty"><h3>Nothing to chart yet</h3><p>Pipeline figures appear once you have clients on the books.</p></div></div>');
+    return;
+  }
+  var active = cs.filter(function (c) { return (c.status || "Active") === "Active"; });
+  var avg = Math.round(cs.reduce(function (a, c) { return a + NB.progressOf(c).pct; }, 0) / cs.length);
+  var submitted = cs.filter(function (c) { return NB.taskDone(c, "t30"); }).length;
+  var offers = cs.filter(function (c) { return (c.schools || []).some(function (r) { return r.status === "Admitted" || r.status === "Enrolling"; }); }).length;
+  var visas = cs.filter(function (c) { return NB.taskDone(c, "t43"); }).length;
+  var late = cs.filter(function (c) { return NB.overdue(c).length > 0; }).length;
+
+  v.insertAdjacentHTML("beforeend",
+    '<div class="kpis">' + kpi(active.length, "Active clients") + kpi(avg + "%", "Average completion") +
+    kpi(submitted, "Applications submitted") + kpi(offers, "Clients holding an offer") +
+    kpi(visas, "Visas issued") + kpi(late, "Clients with overdue steps", late > 0) + "</div>");
+
+  var counts = STAGES.map(function () { return 0; });
+  cs.forEach(function (c) { counts[NB.currentStageIdx(c)]++; });
+  var max = Math.max.apply(null, counts.concat([1]));
+  var bars = STAGES.map(function (s, i) {
+    return '<div class="chartrow"><div class="lb" title="' + esc(s.name) + '">' + s.n + ". " + esc(s.name) + "</div>" +
+      '<div class="tr"><i style="width:' + Math.round((counts[i] / max) * 100) + '%"></i></div>' +
+      '<div class="vl">' + counts[i] + "</div></div>";
+  }).join("");
+
+  var att = [];
+  cs.forEach(function (c) {
+    NB.overdue(c).forEach(function (o) { att.push({ c: c, label: o.t.t, when: o.due, days: -o.late, kind: "late" }); });
+    (c.schools || []).forEach(function (r) {
+      if (!r.deadline) return;
+      var d = daysUntil(r.deadline);
+      if (d === null || d < 0 || d > 120) return;
+      att.push({ c: c, label: r.name, when: r.deadline, days: d, kind: "dl" });
+    });
+  });
+  att.sort(function (a, b) { return a.days - b.days; });
+  var attHtml = att.length ? att.slice(0, 14).map(function (x) {
+    var cls = x.kind === "late" ? "crit" : x.days <= 7 ? "crit" : x.days <= 21 ? "warn" : "";
+    return '<div class="schoolrow"><div style="min-width:0"><div class="nm">' + esc(x.label) + "</div>" +
+      '<div class="loc">' + esc(x.c.name) + " · " + (x.kind === "late" ? "overdue step" : "application deadline") + "</div></div>" +
+      '<div class="rt"><span class="pill ' + cls + '">' + fmtDate(x.when) + " · " + (x.days < 0 ? (-x.days) + "d late" : x.days + "d") + "</span></div></div>";
+  }).join("") : '<div class="empty"><p>Nothing overdue and no deadline inside 120 days.</p></div>';
+
+  v.insertAdjacentHTML("beforeend",
+    '<div class="grid2">' +
+      '<div class="card"><div class="card-h"><div><h3>Where clients are right now</h3>' +
+        '<p class="muted" style="font-size:12.5px;margin-top:3px">Counted at each client\'s first incomplete stage.</p></div></div>' +
+        '<div class="card-b"><div class="chart">' + bars + "</div></div></div>" +
+      '<div class="card"><div class="card-h"><div><h3>Needs attention</h3>' +
+        '<p class="muted" style="font-size:12.5px;margin-top:3px">Overdue steps first, then deadlines inside 120 days.</p></div></div>' +
+        '<div class="card-b flush">' + attHtml + "</div></div></div>");
+}
+
+/* ------------------------------------------------ calendar ------------------------------------------------ */
+function calEvents() {
+  var src = isAdvisor() ? S.clients : (meClient() ? [meClient()] : []);
+  var ev = {};
+  function push(date, o) { if (!date) return; (ev[date] = ev[date] || []).push(o); }
+  src.forEach(function (c) {
+    (c.schools || []).forEach(function (r) {
+      if (r.deadline) push(r.deadline, { k: "dl", label: r.name, who: c.name });
+    });
+    NB.tplOf(c).forEach(function (t) {
+      var d = NB.dueOf(c, t.id);
+      if (!d || NB.taskDone(c, t.id)) return;
+      var n = daysUntil(d);
+      push(d, { k: (n !== null && n < 0) ? "late" : "due", label: t.t, who: c.name });
+    });
+  });
+  return ev;
+}
+function viewCalendar(v) {
+  $("#title").textContent = "Calendar";
+  var now = new Date();
+  if (!S.cal) S.cal = { y: now.getFullYear(), m: now.getMonth() };
+  var y = S.cal.y, m = S.cal.m;
+  var first = new Date(y, m, 1), start = new Date(y, m, 1 - first.getDay());
+  var ev = calEvents(), tod = NB.today();
+  var cells = "";
+  for (var i = 0; i < 42; i++) {
+    var d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+    var iso = NB.isoOf(d), out = d.getMonth() !== m;
+    var list = (ev[iso] || []).slice(0, 4);
+    var more = (ev[iso] || []).length - list.length;
+    cells += '<div class="d' + (out ? " out" : "") + (iso === tod ? " now" : "") + '">' +
+      '<div class="dn">' + d.getDate() + "</div>" +
+      list.map(function (e) {
+        return '<div class="ev ' + (e.k === "dl" ? "" : e.k) + '" title="' + esc((isAdvisor() ? e.who + " — " : "") + e.label) + '">' +
+          (isAdvisor() ? esc(NB.initials(e.who)) + " " : "") + esc(e.label) + "</div>";
+      }).join("") +
+      (more > 0 ? '<div class="ev" style="background:transparent;color:var(--faint)">+' + more + " more</div>" : "") +
+      "</div>";
+  }
+  v.insertAdjacentHTML("beforeend",
+    '<div class="card"><div class="card-h" style="align-items:center">' +
+      '<div class="calbar"><button class="btn sm" data-act="calprev">←</button>' +
+      '<h3 class="serif" style="font-size:18px;min-width:168px;text-align:center">' + NB.MONFULL[m] + " " + y + "</h3>" +
+      '<button class="btn sm" data-act="calnext">→</button>' +
+      '<button class="btn sm" data-act="caltoday">Today</button></div>' +
+      '<div class="legend"><span><i style="background:var(--brand)"></i>Application deadline</span>' +
+      '<span><i style="background:var(--accent)"></i>Step due</span>' +
+      '<span><i style="background:var(--crit)"></i>Overdue</span></div></div>' +
+    '<div class="card-b"><div class="calhead">' + ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(function (d) { return "<span>" + d + "</span>"; }).join("") + "</div>" +
+    '<div class="cal">' + cells + "</div></div></div>");
+}
+
+/* ------------------------------------------------ client detail ------------------------------------------------ */
+function tabsFor() {
+  var t = [{ k: "overview", n: "Overview" }, { k: "tasks", n: "Tasks" }, { k: "schools", n: "Schools & cost" },
+           { k: "docs", n: "Documents" }, { k: "messages", n: "Messages" }];
+  if (isAdvisor()) t.push({ k: "notes", n: "Private notes" });
+  t.push({ k: "report", n: "Report" });
+  return t;
+}
+function viewClient(v) {
+  var c = meClient();
+  if (!c) {
+    v.insertAdjacentHTML("beforeend", '<div class="card"><div class="empty"><h3>Client record not found</h3><p>It may have been removed.</p></div></div>');
+    return;
+  }
+  if (S.msgFor !== c.id) NB.attachMessages(c.id);
+  var T = tabsFor();
+  $("#title").textContent = isAdvisor() ? (c.name || "Client") : (T.filter(function (x) { return x.k === S.tab; })[0] || T[0]).n;
+  if (isAdvisor()) {
+    $("#crumb").textContent = "Clients / " + (c.name || "");
+    $("#topactions").innerHTML =
+      '<button class="btn" data-act="go" data-v="clients">← All clients</button>' +
+      '<button class="btn" data-act="editclient" data-v="' + esc(c.id) + '">Edit record</button>';
+  } else {
+    $("#crumb").textContent = (c.targetTerm ? c.targetTerm + " intake" : "") + (c.field ? " · " + c.field : "");
+  }
+  var un = NB.unread(c);
+  var html = '<div class="card"><div class="tabs no-print" role="tablist">' + T.map(function (t) {
+    return '<button role="tab" aria-selected="' + (S.tab === t.k) + '" data-act="ctab" data-v="' + t.k + '">' + esc(t.n) +
+      (t.k === "messages" && un ? ' <span class="pill accent" style="margin-left:6px">' + un + "</span>" : "") + "</button>";
+  }).join("") + "</div>";
+
+  if (S.tab === "overview") html += cOverview(c);
+  else if (S.tab === "tasks") html += cTasks(c);
+  else if (S.tab === "schools") html += cSchools(c);
+  else if (S.tab === "docs") html += cDocs(c);
+  else if (S.tab === "messages") html += cMessages(c);
+  else if (S.tab === "notes") html += cNotes(c);
+  else if (S.tab === "report") html += cReport(c);
+  html += "</div>";
+  v.insertAdjacentHTML("beforeend", html);
+}
+
+function ringSvg(pct) {
+  var r = 40, C = 2 * Math.PI * r, off = C * (1 - pct / 100);
+  return '<div class="ring"><svg viewBox="0 0 96 96" width="100%" height="100%">' +
+    '<circle cx="48" cy="48" r="' + r + '" fill="none" stroke="var(--panel2)" stroke-width="8"></circle>' +
+    '<circle cx="48" cy="48" r="' + r + '" fill="none" stroke="var(--brand)" stroke-width="8" stroke-linecap="round" ' +
+    'stroke-dasharray="' + C.toFixed(1) + '" stroke-dashoffset="' + off.toFixed(1) + '"></circle></svg>' +
+    '<div class="ctr"><b>' + pct + "%</b><span>done</span></div></div>";
+}
+function duePill(c, t) {
+  var d = NB.dueOf(c, t.id);
+  if (!d) return "";
+  if (NB.taskDone(c, t.id)) return '<span class="pill">Due ' + fmtDate(d) + "</span>";
+  var n = daysUntil(d);
+  if (n === null) return "";
+  if (n < 0) return '<span class="pill crit"><span class="dot"></span>Overdue ' + (-n) + "d</span>";
+  if (n <= 7) return '<span class="pill warn">Due in ' + n + "d</span>";
+  return '<span class="pill">Due ' + fmtDate(d) + "</span>";
+}
+function cbHtml(t, done) {
+  var lock = !isAdvisor() && t.o === "a";
+  if (lock) return '<span class="cb" role="img" aria-label="' + esc(t.t) + ' — your advisor handles this" style="cursor:default;opacity:.55' +
+    (done ? ";background:var(--ok);border-color:var(--ok);color:#fff" : "") + '">' + CHECK + "</span>";
+  return '<button class="cb" role="checkbox" aria-checked="' + !!done + '" aria-label="' + esc(t.t) + '" data-act="tick" data-v="' + t.id + '">' + CHECK + "</button>";
+}
+
+function cOverview(c) {
+  var p = NB.progressOf(c), si = NB.currentStageIdx(c), st = NB.stageStats(c), nd = NB.nextDeadline(c);
+  var od = NB.overdue(c), soon = NB.dueSoon(c);
+  var ts = NB.tplOf(c);
+  var open = ts.filter(function (t) { return t.s === STAGES[si].id && !NB.taskDone(c, t.id); });
+  var welcome = S.cfg.welcome && !isAdvisor() ? '<div class="notice info" style="margin-bottom:16px">' + esc(S.cfg.welcome) + "</div>" : "";
+  var alert = od.length
+    ? '<div class="notice" style="margin-bottom:16px"><b>' + od.length + " step" + (od.length === 1 ? " is" : "s are") + " overdue.</b> " +
+      esc(od.slice(0, 3).map(function (o) { return o.t.t; }).join("; ")) + (od.length > 3 ? " …" : "") + "</div>"
+    : soon.length ? '<div class="notice info" style="margin-bottom:16px"><b>' + soon.length + " step" + (soon.length === 1 ? "" : "s") + " due this week.</b> " +
+      esc(soon.slice(0, 3).map(function (o) { return o.t.t; }).join("; ")) + "</div>" : "";
+
+  var stepper = '<div class="stepper">' + st.map(function (x, i) {
+    return '<div class="step ' + (x.pct === 100 ? "done" : "") + (i === si ? " cur" : "") + '">' +
+      '<div class="rail"><i style="width:' + x.pct + '%"></i></div>' +
+      '<div class="no">' + x.s.n + '</div><div class="nm">' + esc(x.s.name) + "</div>" +
+      '<div class="ct">' + x.done + "/" + x.total + "</div></div>";
+  }).join("") + "</div>";
+
+  var nextList = open.length ? open.slice(0, 5).map(function (t) {
+    return '<div class="task">' + cbHtml(t, false) +
+      '<div style="min-width:0"><div class="tt">' + esc(t.t) + '</div><div class="hh">' + esc(t.h) + "</div>" +
+      '<div class="meta"><span class="pill ' + (t.o === "a" ? "accent" : "brand") + '">' + (t.o === "a" ? "Advisor" : "You") + "</span>" +
+      duePill(c, t) + "</div></div></div>";
+  }).join("") : '<div class="empty"><p>Everything in this stage is done.</p></div>';
+
+  var schools = c.schools || [];
+  var subm = schools.filter(function (r) { return ["Submitted", "Admitted", "Denied", "Waitlisted", "Enrolling"].indexOf(r.status) >= 0; }).length;
+  var admitted = schools.filter(function (r) { return r.status === "Admitted" || r.status === "Enrolling"; }).length;
+  var docsDone = DOCS.filter(function (d) { return (c.docs || {})[d.id] === 3; }).length;
+
+  return '<div class="card-b">' + welcome + alert +
+    '<div class="rowsplit" style="margin-bottom:22px">' + ringSvg(p.pct) +
+      '<div style="flex:1;min-width:220px"><div class="eyebrow">Current stage</div>' +
+      '<h3 class="serif" style="font-size:22px;margin:4px 0 6px">' + STAGES[si].n + ". " + esc(STAGES[si].name) + "</h3>" +
+      '<p class="muted" style="max-width:56ch">' + esc(STAGES[si].blurb) + "</p>" +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">' +
+        '<span class="pill">' + p.done + " of " + p.total + " steps</span>" +
+        (nd ? '<span class="pill ' + (daysUntil(nd.deadline) <= 21 ? "warn" : "") + '">Next deadline ' + fmtDate(nd.deadline) + "</span>" : "") +
+        '<span class="pill">' + schools.length + " school" + (schools.length === 1 ? "" : "s") + " on the list</span>" +
+      "</div></div></div>" + stepper +
+    '<div class="grid3" style="margin-top:22px">' + kpi(subm, "Applications submitted") + kpi(admitted, "Offers in hand") +
+      kpi(docsDone + "/" + DOCS.length, "Documents verified") + "</div></div>" +
+    '<div class="card-h" style="border-top:1px solid var(--line)"><div><h3>What is next</h3>' +
+    '<p class="muted" style="font-size:12.5px;margin-top:3px">Open steps in the current stage.</p></div></div>' +
+    '<div class="card-b flush">' + nextList + "</div>";
+}
+
+function cTasks(c) {
+  var st = NB.stageStats(c), ts = NB.tplOf(c), html = "";
+  STAGES.forEach(function (s, i) {
+    var list = ts.filter(function (t) { return t.s === s.id; });
+    if (!list.length) return;
+    html += '<div class="stagehead"><span class="n">' + s.n + '</span><h4>' + esc(s.name) + "</h4>" +
+      '<span class="r">' + st[i].done + " / " + st[i].total + "</span></div>";
+    html += list.map(function (t) {
+      var d = NB.taskDone(c, t.id);
+      return '<div class="task ' + (d ? "done" : "") + '">' + cbHtml(t, d) +
+        '<div style="min-width:0;flex:1"><div class="tt">' + esc(t.t) + '</div><div class="hh">' + esc(t.h || "") + "</div>" +
+        '<div class="meta"><span class="pill ' + (t.o === "a" ? "accent" : "brand") + '">' + (t.o === "a" ? "Advisor" : (isAdvisor() ? "Client" : "You")) + "</span>" +
+        (d && c.tasks[t.id] !== true ? '<span class="pill ok">Done ' + fmtDate(c.tasks[t.id]) + "</span>" : "") +
+        duePill(c, t) +
+        (isAdvisor() ? '<input type="date" class="dateinp" data-act="setdue" data-v="' + t.id + '" value="' + esc(NB.dueOf(c, t.id)) + '" aria-label="Target date">' : "") +
+        "</div></div></div>";
+    }).join("");
+  });
+  return '<div class="card-h"><div><h3>The plan</h3><p class="muted" style="font-size:12.5px;margin-top:3px">' +
+    (isAdvisor() ? "Set a target date on any step — the client sees it, and overdue steps flag on your client list."
+                 : "Steps marked Advisor are handled for you. Tick off your own as you finish them.") +
+    "</p></div>" + (isAdvisor() ? '<button class="btn sm" data-act="go" data-v="templates">Edit this plan</button>' : "") + "</div>" +
+    '<div class="card-b flush">' + html + "</div>";
+}
+
+function cSchools(c) {
+  var rows = c.schools || [];
+  var body = rows.length ? rows.map(function (r, i) {
+    var d = r.deadline ? daysUntil(r.deadline) : null;
+    var cls = d === null || d < 0 ? "" : d <= 7 ? "crit" : d <= 21 ? "warn" : "";
+    var k = NB.costOf(r);
+    return '<div class="schoolrow"><div style="min-width:0;flex:1 1 220px">' +
+      '<div class="nm">' + esc(r.name) + "</div>" +
+      '<div class="loc">' + esc(r.program || "Programme not set") + (r.loc ? " · " + esc(r.loc) : "") + "</div>" +
+      (k.has ? '<div class="loc money" style="margin-top:3px">Net year one ' + money(k.net) + (k.award ? " · award " + money(k.award) : "") + "</div>" : "") +
+      (r.note ? '<div class="loc" style="margin-top:3px">' + esc(r.note) + "</div>" : "") + "</div>" +
+      '<div class="rt">' + (r.deadline ? '<span class="pill ' + cls + '">' + fmtDate(r.deadline) + (d !== null && d >= 0 ? " · " + d + "d" : "") + "</span>" : "") +
+        '<select class="inp" style="width:auto;padding:5px 28px 5px 9px;font-size:12px" data-act="schstat" data-v="' + i + '">' +
+        SCH_STATES.map(function (s) { return "<option " + (r.status === s ? "selected" : "") + ">" + esc(s) + "</option>"; }).join("") + "</select>" +
+        '<button class="btn ghost sm" data-act="editsch" data-v="' + i + '">Edit</button>' +
+        '<button class="btn ghost sm" data-act="delsch" data-v="' + i + '" aria-label="Remove">✕</button></div></div>';
+  }).join("") : '<div class="empty"><h3>No schools on the list yet</h3><p>Build a longlist from the directory, then cut it to two reach, four match and two safe programmes.</p>' +
+    '<button class="btn pri" data-act="go" data-v="directory" style="margin-top:14px">Open the directory</button></div>';
+
+  var costed = rows.filter(function (r) { return NB.costOf(r).has; });
+  var cost = "";
+  if (costed.length) {
+    var maxNet = Math.max.apply(null, costed.map(function (r) { return NB.costOf(r).net; }).concat([1]));
+    var budget = num(c.budget);
+    cost = '<div class="costwrap"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:14px">' +
+      '<div><h3 style="font-size:14.5px">Net cost of year one</h3>' +
+      '<p class="muted" style="font-size:12.5px;margin-top:3px">Tuition plus fees plus living cost, less any award. Figures are the ones you entered per school.</p></div>' +
+      (budget ? '<span class="pill">Funds available ' + money(budget) + " / year</span>" : '<span class="pill warn">No annual budget set on this record</span>') + "</div>" +
+      '<div class="chart">' + costed.map(function (r) {
+        var k = NB.costOf(r), gap = budget ? k.net - budget : 0;
+        return '<div class="chartrow" style="grid-template-columns:150px minmax(0,1fr) 92px">' +
+          '<div class="lb" title="' + esc(r.name) + '">' + esc(r.name) + "</div>" +
+          '<div class="tr"><i style="width:' + Math.round((k.net / maxNet) * 100) + '%;background:' + (budget && gap > 0 ? "var(--crit)" : "var(--brand)") + '"></i></div>' +
+          '<div class="vl money">' + money(k.net) + "</div></div>" +
+          (budget ? '<div class="chartrow" style="grid-template-columns:150px minmax(0,1fr) 92px;margin-top:-4px">' +
+            '<div></div><div class="lb" style="font-size:11.5px">' + (gap > 0 ? "Gap to close " + money(gap) : "Covered, " + money(-gap) + " spare") + "</div><div></div></div>" : "");
+      }).join("") + "</div></div>";
+  }
+
+  return '<div class="card-h"><div><h3>Shortlist</h3><p class="muted" style="font-size:12.5px;margin-top:3px">' +
+    "Record the funding or priority deadline here, not the final one. Add cost figures from each school's own cost-of-attendance page.</p></div>" +
+    '<div style="display:flex;gap:8px"><button class="btn" data-act="setbudget">Annual budget</button>' +
+    '<button class="btn pri" data-act="addsch">+ Add school</button></div></div>' +
+    '<div class="card-b flush">' + body + "</div>" + cost;
+}
+
+function fileIcon(f) {
+  if (f.type && f.type.indexOf("image/") === 0) return '<img src="/_blob/' + esc(f.aid) + '" alt="">';
+  var ext = (f.name || "").split(".").pop().slice(0, 4).toUpperCase();
+  return '<div class="fi">' + esc(ext || "FILE") + "</div>";
+}
+function cDocs(c) {
+  var m = c.docs || {};
+  var rows = DOCS.map(function (d) {
+    var s = m[d.id] || 0;
+    var cls = s === 3 ? "ok" : s === 2 ? "brand" : s === 1 ? "warn" : "";
+    return '<div class="schoolrow"><div style="min-width:0;flex:1 1 240px">' +
+      '<div class="nm">' + esc(d.t) + '</div><div class="loc">' + esc(d.h) + "</div></div>" +
+      '<div class="rt"><span class="pill ' + cls + '">' + esc(DOCST[s]) + "</span>" +
+      '<button class="btn sm" data-act="docnext" data-v="' + d.id + '">Advance</button></div></div>';
+  }).join("");
+  var done = DOCS.filter(function (d) { return m[d.id] === 3; }).length;
+  var files = c.files || [];
+  var fileHtml = files.length
+    ? '<div class="filegrid">' + files.map(function (f, i) {
+        return '<div class="filechip">' + fileIcon(f) +
+          '<div style="min-width:0;flex:1"><div style="font-weight:500;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(f.name) + "</div>" +
+          '<div class="muted" style="font-size:11.5px">' + esc(NB.relTime(f.at)) + (f.size ? " · " + Math.max(1, Math.round(f.size / 1024)) + " KB" : "") + "</div></div>" +
+          '<a class="btn ghost sm" href="/_blob/' + esc(f.aid) + '" target="_blank" rel="noopener">Open</a>' +
+          (isAdvisor() ? '<button class="btn ghost sm" data-act="delfile" data-v="' + i + '" aria-label="Remove">✕</button>' : "") + "</div>";
+      }).join("") + "</div>"
+    : '<div class="empty"><p>' + (isAdvisor() ? "Nothing attached yet. Upload transcripts, the credential evaluation, SOP drafts or the I-20 so they live with the file."
+        : "Your advisor has not attached anything yet.") + "</p></div>";
+
+  return '<div class="card-h"><div><h3>Document tracker</h3>' +
+    '<p class="muted" style="font-size:12.5px;margin-top:3px">' + done + " of " + DOCS.length + " verified. Statuses cycle: not started → requested → received → verified.</p></div>" +
+    '<div style="min-width:160px"><div class="bar"><i style="width:' + Math.round(done / DOCS.length * 100) + '%"></i></div></div></div>' +
+    '<div class="card-b flush">' + rows + "</div>" +
+    '<div class="card-h" style="border-top:1px solid var(--line)"><div><h3>Attached files</h3>' +
+    '<p class="muted" style="font-size:12.5px;margin-top:3px">' +
+    (isAdvisor() ? "Stored with this artifact and visible to this client." : "Uploaded by your advisor.") + "</p></div>" +
+    (isAdvisor() && NB.ASSETS ? '<label class="btn pri" style="cursor:pointer">+ Upload file<input type="file" id="fileIn" hidden></label>' : "") + "</div>" +
+    fileHtml;
+}
+
+function cMessages(c) {
+  var mine = isAdvisor() ? "advisor" : "client";
+  var body = S.msgs.length ? S.msgs.map(function (m) {
+    return '<div class="bub ' + (m.from === mine ? "mine" : "") + '">' + esc(m.body) +
+      '<div class="wh">' + (m.from === "advisor" ? "Advisor" : esc(c.name || "Client")) + " · " + esc(NB.relTime(m.at)) + "</div></div>";
+  }).join("") : '<div class="empty"><p>No messages yet. Anything written here stays attached to this client\'s file.</p></div>';
+  return '<div class="card-h"><div><h3>Messages</h3><p class="muted" style="font-size:12.5px;margin-top:3px">' +
+    (isAdvisor() ? "Only you and this client can see this thread." : "Questions for your advisor — answers land right here.") + "</p></div></div>" +
+    '<div class="thread" id="thread">' + body + "</div>" +
+    '<div class="composer"><textarea class="inp" id="msgIn" placeholder="Write a message…" rows="1"></textarea>' +
+    '<button class="btn pri" data-act="sendmsg">Send</button></div>';
+}
+
+function cNotes(c) {
+  return '<div class="card-h"><div><h3>Private notes</h3>' +
+    '<p class="muted" style="font-size:12.5px;margin-top:3px">Stored separately and restricted to editors — a client signed in to the portal cannot read this, in the page or underneath it.</p></div></div>' +
+    '<div class="card-b"><textarea class="inp" id="notesBox" style="min-height:220px" placeholder="Call notes, family situation, funding constraints, what to chase next…">' +
+    esc(S.notes[c.id] || "") + "</textarea>" +
+    '<p class="muted" style="font-size:12px;margin-top:8px">Saved when you click away.</p></div>';
+}
+
+function cReport(c) {
+  var p = NB.progressOf(c), st = NB.stageStats(c), si = NB.currentStageIdx(c), ts = NB.tplOf(c);
+  var od = NB.overdue(c), m = c.docs || {};
+  var outstanding = ts.filter(function (t) { return !NB.taskDone(c, t.id); }).slice(0, 14);
+  var missing = DOCS.filter(function (d) { return (m[d.id] || 0) < 3; });
+  var schools = (c.schools || []);
+  return '<div class="card-h no-print"><div><h3>Status report</h3>' +
+    '<p class="muted" style="font-size:12.5px;margin-top:3px">A one-page summary to print, save as PDF, or hand to a sponsor.</p></div>' +
+    '<button class="btn pri" data-act="printrep">Print / save as PDF</button></div>' +
+    '<div class="card-b rep">' +
+      '<div class="printonly" style="margin-bottom:18px;border-bottom:2px solid var(--brand);padding-bottom:10px">' +
+        '<div style="font-family:var(--serif);font-size:22px;font-weight:600">' + esc(S.cfg.orgName || "Northbound Advising") + "</div>" +
+        '<div class="muted" style="font-size:12px">Application status report · ' + fmtDate(NB.today()) + "</div></div>" +
+      '<h3 class="serif" style="font-size:24px">' + esc(c.name || "") + "</h3>" +
+      '<p class="muted" style="margin-bottom:18px">' + esc([c.field, c.targetTerm ? c.targetTerm + " intake" : "", c.country].filter(Boolean).join(" · ")) + "</p>" +
+      '<div class="grid3" style="margin-bottom:20px">' + kpi(p.pct + "%", "Plan complete") +
+        kpi(STAGES[si].n + " of 8", "Current stage — " + STAGES[si].name) + kpi(schools.length, "Schools on the list") + "</div>" +
+      '<h4 style="margin:18px 0 8px">Stage by stage</h4><div class="chart">' + st.map(function (x) {
+        return '<div class="chartrow"><div class="lb">' + x.s.n + ". " + esc(x.s.name) + "</div>" +
+          '<div class="tr"><i style="width:' + x.pct + '%"></i></div><div class="vl">' + x.done + "/" + x.total + "</div></div>";
+      }).join("") + "</div>" +
+      '<h4 style="margin:22px 0 8px">Shortlist</h4>' +
+      (schools.length ? '<div class="scrollx"><table class="tbl"><thead><tr><th>Institution</th><th>Programme</th><th>Deadline</th><th>Status</th><th>Net year one</th></tr></thead><tbody>' +
+        schools.map(function (r) {
+          var k = NB.costOf(r);
+          return "<tr><td>" + esc(r.name) + "</td><td>" + esc(r.program || "—") + "</td><td>" + (r.deadline ? fmtDate(r.deadline) : "—") +
+            '</td><td><span class="pill ' + NB.schPill(r.status) + '">' + esc(r.status || "—") + "</span></td>" +
+            '<td class="money">' + (k.has ? money(k.net) : "—") + "</td></tr>";
+        }).join("") + "</tbody></table></div>" : '<p class="muted">No schools recorded yet.</p>') +
+      '<h4 style="margin:22px 0 8px">Outstanding documents</h4>' +
+      (missing.length ? "<ul style=\"margin:0;padding-left:20px;color:var(--muted);line-height:1.7\">" + missing.map(function (d) {
+          return "<li>" + esc(d.t) + " — <b style=\"color:var(--text)\">" + esc(DOCST[m[d.id] || 0]) + "</b></li>";
+        }).join("") + "</ul>" : '<p class="muted">Every document on the list is verified.</p>') +
+      '<h4 style="margin:22px 0 8px">Next actions</h4>' +
+      (outstanding.length ? "<ul style=\"margin:0;padding-left:20px;color:var(--muted);line-height:1.7\">" + outstanding.map(function (t) {
+          var d = NB.dueOf(c, t.id), n = d ? daysUntil(d) : null;
+          return "<li>" + esc(t.t) + " <span style=\"font-size:12px\">(" + (t.o === "a" ? "advisor" : "client") +
+            (d ? ", due " + fmtDate(d) + (n !== null && n < 0 ? " — overdue" : "") : "") + ")</span></li>";
+        }).join("") + "</ul>" : '<p class="muted">Nothing outstanding.</p>') +
+      (od.length ? '<p style="margin-top:16px;color:var(--crit);font-weight:600">' + od.length + " step" + (od.length === 1 ? " is" : "s are") + " past its target date.</p>" : "") +
+      '<p class="muted" style="font-size:11.5px;margin-top:26px;border-top:1px solid var(--line);padding-top:10px">' +
+      "Prepared by " + esc(S.cfg.orgName || "Northbound Advising") + " on " + fmtDate(NB.today()) +
+      ". General planning information, not legal or immigration advice.</p>" +
+    "</div>";
+}
+
+/* ------------------------------------------------ directory ------------------------------------------------ */
+var TAGN = { ivy: "Ivy League", hbcu: "HBCU", tech: "Institute of technology", art: "Art & design", med: "Health sciences" };
+function viewDirectory(v) {
+  $("#title").textContent = "School directory";
+  var states = SCHOOLS.reduce(function (a, s) { if (a.indexOf(s.state) < 0) a.push(s.state); return a; }, []).sort();
+  var q = S.dir.q.toLowerCase();
+  var list = SCHOOLS.filter(function (s) {
+    if (S.dir.st && s.state !== S.dir.st) return false;
+    if (S.dir.ctrl && s.control !== S.dir.ctrl) return false;
+    if (S.dir.tag && s.tags.indexOf(S.dir.tag) < 0) return false;
+    if (q && (s.name + " " + s.city + " " + s.state).toLowerCase().indexOf(q) < 0) return false;
+    return true;
+  });
+  var shown = list.slice(0, S.dir.limit);
+  var target = meClient(), have = {};
+  if (target) (target.schools || []).forEach(function (r) { if (r.sid) have[r.sid] = 1; });
+
+  v.insertAdjacentHTML("beforeend",
+    '<div class="card"><div class="card-h" style="align-items:center"><div class="filters" style="flex:1">' +
+      '<input class="inp grow" id="dq" placeholder="Search ' + SCHOOLS.length + ' institutions by name or city" value="' + esc(S.dir.q) + '">' +
+      '<select class="inp" data-act="dfil" data-k="st"><option value="">All states</option>' +
+        states.map(function (s) { return "<option " + (S.dir.st === s ? "selected" : "") + ">" + s + "</option>"; }).join("") + "</select>" +
+      '<select class="inp" data-act="dfil" data-k="ctrl"><option value="">Public & private</option>' +
+        ["Public", "Private"].map(function (s) { return "<option " + (S.dir.ctrl === s ? "selected" : "") + ">" + s + "</option>"; }).join("") + "</select>" +
+      '<select class="inp" data-act="dfil" data-k="tag"><option value="">Any type</option>' +
+        Object.keys(TAGN).map(function (k) { return '<option value="' + k + '" ' + (S.dir.tag === k ? "selected" : "") + ">" + TAGN[k] + "</option>"; }).join("") + "</select>" +
+      "</div><span class=\"pill\">" + list.length + " result" + (list.length === 1 ? "" : "s") + "</span></div>" +
+    '<div class="card-b" style="padding-bottom:0"><div class="notice info"><span>' +
+      "<b>Tuition, deadlines and entry requirements are not stored here.</b> They change every cycle and differ by department — " +
+      "open the school's own graduate admissions page and record the figures on the shortlist." +
+      (isAdvisor() && !S.open ? " <b>Open a client first</b> to add schools to their list." : "") + "</span></div></div>" +
+    '<div class="card-b flush">' + (shown.length ? shown.map(function (s) {
+      return '<div class="schoolrow"><div style="min-width:0;flex:1 1 240px"><div class="nm">' + esc(s.name) + "</div>" +
+        '<div class="loc">' + esc(s.city) + ", " + esc(s.state) + " · " + esc(s.control) +
+        (s.tags.length ? " · " + s.tags.map(function (t) { return esc(TAGN[t] || t); }).join(", ") : "") + "</div></div>" +
+        '<div class="rt"><a class="btn sm" target="_blank" rel="noopener" href="https://www.google.com/search?q=' +
+          encodeURIComponent(s.name + " graduate admissions") + '">Admissions ↗</a>' +
+        (target ? (have[s.id] ? '<span class="pill ok"><span class="dot"></span>On list</span>'
+                              : '<button class="btn sm pri" data-act="addfromdir" data-v="' + s.id + '">Add to list</button>') : "") +
+        "</div></div>";
+    }).join("") : '<div class="empty"><h3>No matches</h3><p>Widen the filters or clear the search.</p></div>') + "</div>" +
+    (list.length > shown.length ? '<div class="card-b" style="text-align:center;border-top:1px solid var(--line)"><button class="btn" data-act="dmore">Show 60 more (' + (list.length - shown.length) + " remaining)</button></div>" : "") +
+    "</div>");
+}
+
+/* ------------------------------------------------ resources ------------------------------------------------ */
+function viewResources(v) {
+  $("#title").textContent = "Resource library";
+  var sec = RES.filter(function (r) { return r.id === S.res; })[0] || RES[0];
+  v.insertAdjacentHTML("beforeend",
+    '<div class="res-nav">' + RES.map(function (r) {
+      return '<button data-act="res" data-v="' + r.id + '" aria-pressed="' + (r.id === sec.id) + '">' + esc(r.name) + "</button>";
+    }).join("") + "</div>" +
+    '<div class="card"><div class="card-h"><div><h3 class="serif" style="font-size:19px">' + esc(sec.name) + "</h3>" +
+    '<p class="muted" style="font-size:13px;margin-top:5px;max-width:70ch">' + esc(sec.lede) + "</p></div></div>" +
+    '<div class="card-b flush">' + sec.items.map(function (it) {
+      return '<div class="res-item"><h4>' + esc(it.t) + "</h4><p>" + esc(it.b) + "</p></div>";
+    }).join("") + "</div>" +
+    (sec.links ? '<div class="linklist" style="border-top:1px solid var(--line)">' + sec.links.map(function (l) {
+      return '<a href="' + esc(l.u) + '" target="_blank" rel="noopener">' + esc(l.t) + " ↗</a>";
+    }).join("") + "</div>" : "") + "</div>" +
+    '<p class="muted" style="font-size:12px;max-width:70ch">General guidance for planning, not legal or immigration advice. ' +
+    "Requirements differ by school, by embassy and by year — confirm everything against the official sources above.</p>");
+}
+
+/* ------------------------------------------------ settings ------------------------------------------------ */
+function viewSettings(v) {
+  $("#title").textContent = "Settings";
+  v.insertAdjacentHTML("beforeend",
+    '<div class="grid2">' +
+    '<div class="card"><div class="card-h"><div><h3>Practice details</h3>' +
+      '<p class="muted" style="font-size:12.5px;margin-top:3px">Shown on the sign-in screen and in the sidebar.</p></div></div>' +
+      '<div class="card-b" style="display:flex;flex-direction:column;gap:14px">' +
+      '<div class="field"><label for="setName">Practice name</label><input class="inp" id="setName" value="' + esc(S.cfg.orgName) + '"></div>' +
+      '<div class="field"><label for="setCode">Advisor passcode</label><input class="inp mono" id="setCode" value="' + esc(S.cfg.advisorCode) + '" placeholder="set a passcode"></div>' +
+      '<div class="field"><label for="setWelcome">Welcome note on every client dashboard</label><textarea class="inp" id="setWelcome" style="min-height:80px">' + esc(S.cfg.welcome) + "</textarea></div>" +
+      '<div><button class="btn pri" data-act="savecfg">Save</button></div></div></div>' +
+    '<div class="card"><div class="card-h"><div><h3>What each person can see</h3></div></div>' +
+      '<div class="card-b" style="display:flex;flex-direction:column;gap:12px;font-size:13.5px;color:var(--muted)">' +
+      "<p>A client signs in with their access code and their session loads <b style=\"color:var(--text)\">only their own record</b> — the client list is never fetched, and the code is checked against a single lookup rather than by scanning everyone.</p>" +
+      "<p>Your private notes are stored apart from the client file and restricted to editors, so a client cannot reach them even outside the page.</p>" +
+      "<p><b style=\"color:var(--text)\">Where the line actually is:</b> progress records live in one shared store. Someone technical who has been given the link could, with effort, reach another client's progress data underneath the page. Codes and the split above cover ordinary confidentiality; a hard guarantee would need a hosted app with a real server.</p>" +
+      "<p>Share the page from the Share menu with <i>Can interact</i> so clients can tick their own steps. Anyone you give <i>Can edit</i> becomes a second advisor.</p>" +
+      "</div></div></div>" +
+    '<div class="card"><div class="card-h"><div><h3>Client access codes</h3>' +
+      '<p class="muted" style="font-size:12.5px;margin-top:3px">Regenerate a code if it has been shared with the wrong person — the old one stops working straight away.</p></div></div>' +
+      '<div class="card-b flush">' + (S.clients.length ? S.clients.map(function (c) {
+        return '<div class="schoolrow"><div style="min-width:0;flex:1"><div class="nm">' + esc(c.name) + "</div>" +
+          '<div class="loc">' + esc(c.email || "no email on file") + " · plan: " + esc((S.templates[c.template || "default"] || {}).name || "Standard") + "</div></div>" +
+          '<div class="rt"><span class="pill mono">' + esc(c.code || "—") + "</span>" +
+          '<button class="btn sm" data-act="regen" data-v="' + esc(c.id) + '">New code</button>' +
+          '<button class="btn sm danger" data-act="delclient" data-v="' + esc(c.id) + '">Delete</button></div></div>';
+      }).join("") : '<div class="empty"><p>No clients yet.</p></div>') + "</div></div>" +
+    '<div class="card"><div class="card-h"><div><h3>Task templates</h3>' +
+      '<p class="muted" style="font-size:12.5px;margin-top:3px">Different plans for different kinds of client — taught MS, MBA, PhD-track.</p></div>' +
+      '<button class="btn" data-act="go" data-v="templates">Open templates</button></div></div>');
+}
+
+/* ------------------------------------------------ templates ------------------------------------------------ */
+function viewTemplates(v) {
+  $("#title").textContent = "Task templates";
+  $("#crumb").textContent = "Settings / Templates";
+  $("#topactions").innerHTML = '<button class="btn" data-act="go" data-v="settings">← Settings</button>' +
+    '<button class="btn pri" data-act="tplnew">+ New template</button>';
+  var ids = Object.keys(S.templates);
+  if (!ids.length) {
+    v.insertAdjacentHTML("beforeend", '<div class="card"><div class="empty"><h3>No templates stored</h3>' +
+      '<p>The built-in 49-step plan is in use. Create a template to start editing the steps.</p>' +
+      '<button class="btn pri" data-act="tplnew" style="margin-top:14px">+ New template</button></div></div>');
+    return;
+  }
+  var tid = S.tplOpen && S.templates[S.tplOpen] ? S.tplOpen : ids[0];
+  var t = S.templates[tid];
+  var used = S.clients.filter(function (c) { return (c.template || "default") === tid; }).length;
+
+  v.insertAdjacentHTML("beforeend",
+    '<div class="res-nav">' + ids.map(function (i) {
+      return '<button data-act="tplopen" data-v="' + esc(i) + '" aria-pressed="' + (i === tid) + '">' + esc(S.templates[i].name) + "</button>";
+    }).join("") + "</div>" +
+    '<div class="card"><div class="card-h"><div><h3 class="serif" style="font-size:19px">' + esc(t.name) + "</h3>" +
+      '<p class="muted" style="font-size:12.5px;margin-top:4px">' + t.tasks.length + " steps · used by " + used + " client" + (used === 1 ? "" : "s") + "</p></div>" +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm" data-act="tplrename" data-v="' + esc(tid) + '">Rename</button>' +
+      '<button class="btn sm" data-act="tpldup" data-v="' + esc(tid) + '">Duplicate</button>' +
+      (tid !== "default" ? '<button class="btn sm danger" data-act="tpldel" data-v="' + esc(tid) + '">Delete</button>' : "") + "</div></div>" +
+    '<div class="card-b flush">' + STAGES.map(function (s) {
+      var list = t.tasks.filter(function (x) { return x.s === s.id; });
+      return '<div class="stagehead"><span class="n">' + s.n + '</span><h4>' + esc(s.name) + "</h4>" +
+        '<span class="r">' + list.length + ' step' + (list.length === 1 ? "" : "s") + "</span>" +
+        '<button class="btn ghost sm" data-act="stepadd" data-v="' + esc(tid) + "|" + esc(s.id) + '">+ Add</button></div>' +
+        (list.length ? list.map(function (x) {
+          return '<div class="tplrow"><div style="min-width:0;flex:1"><div style="font-weight:500">' + esc(x.t) + "</div>" +
+            '<div class="muted" style="font-size:12.5px;margin-top:2px">' + esc(x.h || "No guidance note") + "</div></div>" +
+            '<span class="pill ' + (x.o === "a" ? "accent" : "brand") + '">' + (x.o === "a" ? "Advisor" : "Client") + "</span>" +
+            '<button class="btn ghost sm" data-act="stepedit" data-v="' + esc(tid) + "|" + esc(x.id) + '">Edit</button>' +
+            '<button class="btn ghost sm" data-act="stepdel" data-v="' + esc(tid) + "|" + esc(x.id) + '" aria-label="Delete">✕</button></div>';
+        }).join("") : '<div class="tplrow"><span class="muted" style="font-size:13px">No steps in this stage.</span></div>');
+    }).join("") + "</div></div>" +
+    '<p class="muted" style="font-size:12px;max-width:70ch">Deleting a step keeps any tick a client already made against it, so restoring the step restores their progress.</p>');
+}
+
+/* ------------------------------------------------ modals ------------------------------------------------ */
+function closeModal() { $("#modalHost").innerHTML = ""; }
+function modal(title, bodyHtml, okLabel, onOk) {
+  $("#modalHost").innerHTML =
+    '<div class="scrim" data-act="scrim"><div class="modal" role="dialog" aria-modal="true">' +
+    '<div class="card-h"><h3>' + esc(title) + '</h3><button class="btn ghost sm" data-act="closemodal" aria-label="Close">✕</button></div>' +
+    '<div class="mb">' + bodyHtml + "</div>" +
+    '<div class="mf"><button class="btn" data-act="closemodal">Cancel</button>' +
+    '<button class="btn pri" data-act="modalok">' + esc(okLabel) + "</button></div></div></div>";
+  $("#modalHost")._ok = onOk;
+  var f = $("#modalHost").querySelector("input,select,textarea"); if (f) f.focus();
+}
+function fld(id, label, val, ph, type) {
+  return '<div class="field"><label for="' + id + '">' + esc(label) + '</label><input class="inp" id="' + id +
+    '" type="' + (type || "text") + '" value="' + esc(val == null ? "" : val) + '" placeholder="' + esc(ph || "") + '"></div>';
+}
+function sel(id, label, val, opts) {
+  return '<div class="field"><label for="' + id + '">' + esc(label) + '</label><select class="inp" id="' + id + '">' +
+    opts.map(function (o) {
+      var value = typeof o === "string" ? o : o.v, text = typeof o === "string" ? o : o.n;
+      return '<option value="' + esc(value) + '" ' + (value === val ? "selected" : "") + ">" + esc(text) + "</option>";
+    }).join("") + "</select></div>";
+}
+function newCode() {
+  var n = ""; for (var i = 0; i < 4; i++) n += Math.floor(Math.random() * 10);
+  return "NB-" + n;
+}
+var TERMS = ["Fall 2027", "Spring 2028", "Fall 2028", "Spring 2029", "Fall 2029", "Not set"];
+
+function clientModal(existing) {
+  var c = existing || {};
+  var tplOpts = Object.keys(S.templates).map(function (i) { return { v: i, n: S.templates[i].name }; });
+  if (!tplOpts.length) tplOpts = [{ v: "default", n: "Standard plan" }];
+  modal(existing ? "Edit client" : "New client",
+    fld("fName", "Full name (exactly as on the passport)", c.name, "Ama Serwaa Boateng") +
+    '<div class="grid2" style="gap:12px">' + fld("fEmail", "Email", c.email, "name@example.com", "email") + fld("fPhone", "Phone", c.phone, "+233 …") + "</div>" +
+    '<div class="grid2" style="gap:12px">' + fld("fCountry", "Country", c.country, "Ghana") + fld("fField", "Field of study", c.field, "MS Computer Science") + "</div>" +
+    '<div class="grid2" style="gap:12px">' + sel("fTerm", "Target intake", c.targetTerm || "Fall 2027", TERMS) +
+      sel("fStatus", "Status", c.status || "Active", ["Active", "Paused", "Placed", "Archived"]) + "</div>" +
+    '<div class="grid2" style="gap:12px">' + sel("fTpl", "Plan", c.template || "default", tplOpts) +
+      fld("fBudget", "Funds available per year (USD)", c.budget || "", "25000") + "</div>" +
+    fld("fCode", "Access code", c.code || newCode(), ""),
+    existing ? "Save changes" : "Create client",
+    function () {
+      var name = $("#fName").value.trim();
+      if (!name) { toast("A name is required."); return false; }
+      var oldCode = existing && existing.code ? String(existing.code).toUpperCase() : "";
+      var body = {
+        name: name, email: $("#fEmail").value.trim(), phone: $("#fPhone").value.trim(),
+        country: $("#fCountry").value.trim(), field: $("#fField").value.trim(),
+        targetTerm: $("#fTerm").value, status: $("#fStatus").value, template: $("#fTpl").value,
+        budget: num($("#fBudget").value),
+        code: ($("#fCode").value.trim().toUpperCase() || newCode()).replace(/[^A-Z0-9_\-]/g, "")
+      };
+      if (!body.code) body.code = newCode();
+      if (existing) {
+        for (var k in body) existing[k] = body[k];
+        if (oldCode && oldCode !== body.code) NB.dropCode(oldCode);
+        NB.setCode(body.code, existing.id);
+        NB.scheduleSave(existing.id, 0); toast("Client updated");
+      } else {
+        var id = "c" + Date.now().toString(36) + Math.floor(Math.random() * 1000).toString(36);
+        body.tasks = {}; body.due = {}; body.docs = {}; body.schools = []; body.files = [];
+        body.createdAt = new Date().toISOString(); body.updatedAt = body.createdAt;
+        body.id = id; S.clients.push(body);
+        S.clients.sort(function (a, b) { return String(a.name).localeCompare(String(b.name)); });
+        NB.setCode(body.code, id);
+        NB.scheduleSave(id, 0);
+        toast("Client created — access code " + body.code);
+      }
+      render(); return true;
+    });
+}
+
+function schoolModal(idx) {
+  var c = meClient(); if (!c) return;
+  var r = idx != null ? (c.schools || [])[idx] : {};
+  modal(idx != null ? "Edit school" : "Add school",
+    fld("sName", "Institution", r.name, "University of Texas at Dallas") +
+    fld("sProg", "Programme", r.program, "MS Information Technology & Management") +
+    '<div class="grid2" style="gap:12px">' + fld("sDl", "Funding / priority deadline", r.deadline, "", "date") +
+      sel("sSt", "Status", r.status || "Researching", SCH_STATES) + "</div>" +
+    '<p class="muted" style="font-size:12px;margin:2px 0 -4px">Cost figures come from the school\'s own cost-of-attendance page. Leave blank until you have them.</p>' +
+    '<div class="grid2" style="gap:12px">' + fld("sTu", "Tuition per year (USD)", r.tuition || "", "0") + fld("sFe", "Fees per year", r.fees || "", "0") + "</div>" +
+    '<div class="grid2" style="gap:12px">' + fld("sLi", "Living cost per year", r.living || "", "0") + fld("sAw", "Award / assistantship per year", r.award || "", "0") + "</div>" +
+    fld("sNote", "Note", r.note, "Assistantship form is separate and closes two weeks earlier"),
+    idx != null ? "Save" : "Add to list",
+    function () {
+      var nm = $("#sName").value.trim();
+      if (!nm) { toast("Name the institution."); return false; }
+      var o = { sid: r.sid || null, name: nm, program: $("#sProg").value.trim(), deadline: $("#sDl").value || "",
+        status: $("#sSt").value, note: $("#sNote").value.trim(), loc: r.loc || "",
+        tuition: num($("#sTu").value), fees: num($("#sFe").value), living: num($("#sLi").value), award: num($("#sAw").value) };
+      c.schools = c.schools || [];
+      if (idx != null) c.schools[idx] = o; else c.schools.push(o);
+      NB.scheduleSave(c.id, 0); render(); return true;
+    });
+}
+
+function stepModal(tid, stage, stepId) {
+  var t = S.templates[tid]; if (!t) return;
+  var x = stepId ? t.tasks.filter(function (a) { return a.id === stepId; })[0] : null;
+  modal(x ? "Edit step" : "Add step",
+    fld("xT", "Step", x ? x.t : "", "Official transcripts requested") +
+    '<div class="field"><label for="xH">Guidance note</label><textarea class="inp" id="xH" style="min-height:76px" placeholder="What the client actually has to do, and the trap to avoid.">' + esc(x ? x.h : "") + "</textarea></div>" +
+    sel("xS", "Stage", x ? x.s : stage, STAGES.map(function (s) { return { v: s.id, n: s.n + ". " + s.name }; })) +
+    sel("xO", "Owner", x ? x.o : "c", [{ v: "c", n: "Client" }, { v: "a", n: "Advisor" }]),
+    x ? "Save step" : "Add step",
+    function () {
+      var title = $("#xT").value.trim();
+      if (!title) { toast("Give the step a title."); return false; }
+      var o = { id: x ? x.id : "x" + Date.now().toString(36) + Math.floor(Math.random() * 1e3).toString(36),
+        t: title, h: $("#xH").value.trim(), s: $("#xS").value, o: $("#xO").value };
+      if (x) { for (var k in o) x[k] = o[k]; } else { t.tasks.push(o); }
+      NB.saveTemplate(tid); render(); return true;
+    });
+}
+
+/* ------------------------------------------------ wiring ------------------------------------------------ */
+function wire() {
+  var notes = $("#notesBox");
+  if (notes) notes.addEventListener("blur", function () {
+    var c = meClient(); if (!c) return;
+    if ((S.notes[c.id] || "") === notes.value) return;
+    NB.saveNote(c.id, notes.value); toast("Notes saved");
+  });
+  var dq = $("#dq");
+  if (dq) dq.addEventListener("input", function () {
+    S.dir.q = dq.value; S.dir.limit = 60;
+    var pos = dq.selectionStart; render();
+    var n = $("#dq"); if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch (e) {} }
+  });
+  var cq = $("#cq");
+  if (cq) cq.addEventListener("input", function () {
+    S.cq = cq.value;
+    var pos = cq.selectionStart; render();
+    var n = $("#cq"); if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch (e) {} }
+  });
+  var th = $("#thread"); if (th) th.scrollTop = th.scrollHeight;
+  var mi = $("#msgIn");
+  if (mi) {
+    mi.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); doSend(); }
+    });
+    var c = meClient(); if (c && NB.unread(c)) NB.markRead(c.id);
+  }
+  var fi = $("#fileIn");
+  if (fi) fi.addEventListener("change", function () {
+    var f = fi.files && fi.files[0]; if (!f) return;
+    doUpload(f);
+  });
+}
+function doSend() {
+  var c = meClient(), mi = $("#msgIn");
+  if (!c || !mi) return;
+  var body = mi.value.trim(); if (!body) return;
+  mi.value = "";
+  NB.sendMsg(c.id, body);
+  render();
+}
+function doUpload(f) {
+  var c = meClient(); if (!c) return;
+  if (!NB.ASSETS) { toast("Uploads are not available in this view."); return; }
+  if (f.size > 19 * 1024 * 1024) { toast("That file is too large — 19 MB maximum."); return; }
+  toast("Uploading " + f.name + "…");
+  NB.ASSETS.upload(f).then(function (a) {
+    c.files = c.files || [];
+    c.files.push({ aid: a.id, name: f.name, type: f.type || "", size: f.size, at: new Date().toISOString() });
+    NB.scheduleSave(c.id, 0); render(); toast("Uploaded");
+  }).catch(function (e) {
+    console.warn(e); toast("Upload failed — try a smaller file or a different format.");
+  });
+}
+
+document.addEventListener("click", function (e) {
+  var t = e.target.closest("[data-act]");
+  if (!t) return;
+  var a = t.getAttribute("data-act"), v = t.getAttribute("data-v");
+
+  if (a === "logintab") { S.loginTab = v; render(); return; }
+  if (a === "dologin") { doLogin(); return; }
+  if (a === "ownerin") { NB.signInAdvisor(); return; }
+  if (a === "signout") { NB.signOut(); return; }
+
+  if (a === "go") {
+    if (v.indexOf("client:") === 0) { S.view = "client"; S.tab = v.slice(7); }
+    else { S.view = v; if (v === "clients" && isAdvisor()) S.open = null; }
+    render(); return;
+  }
+  if (a === "openclient") { S.open = v; S.view = "client"; S.tab = "overview"; NB.attachMessages(v); render(); return; }
+  if (a === "ctab") { S.tab = v; render(); return; }
+  if (a === "res") { S.res = v; render(); return; }
+  if (a === "dmore") { S.dir.limit += 60; render(); return; }
+  if (a === "calprev") { S.cal.m--; if (S.cal.m < 0) { S.cal.m = 11; S.cal.y--; } render(); return; }
+  if (a === "calnext") { S.cal.m++; if (S.cal.m > 11) { S.cal.m = 0; S.cal.y++; } render(); return; }
+  if (a === "caltoday") { var n = new Date(); S.cal = { y: n.getFullYear(), m: n.getMonth() }; render(); return; }
+  if (a === "printrep") { window.print(); return; }
+
+  if (a === "newclient") { clientModal(null); return; }
+  if (a === "editclient") { clientModal(byId(v)); return; }
+  if (a === "delclient") {
+    var c0 = byId(v); if (!c0) return;
+    modal("Delete " + c0.name + "?", "<p>This removes the record, their progress, their shortlist and their messages for good. It cannot be undone.</p>",
+      "Delete permanently", function () {
+        S.clients = S.clients.filter(function (x) { return x.id !== v; });
+        if (c0.code) NB.dropCode(String(c0.code).toUpperCase());
+        if (NB.DB) NB.queue("clients/" + v, function () { return NB.DB.doc("clients/" + v).delete(); });
+        if (NB.DB) NB.queue("notes/" + v, function () { return NB.DB.doc("notes/" + v).delete(); });
+        if (S.open === v) { S.open = null; S.view = "clients"; }
+        render(); toast("Client deleted"); return true;
+      });
+    return;
+  }
+  if (a === "regen") {
+    var c1 = byId(v); if (!c1) return;
+    if (c1.code) NB.dropCode(String(c1.code).toUpperCase());
+    c1.code = newCode(); NB.setCode(c1.code, c1.id);
+    NB.scheduleSave(c1.id, 0); render(); toast("New code: " + c1.code); return;
+  }
+  if (a === "savecfg") {
+    S.cfg.orgName = $("#setName").value.trim() || "Northbound Advising";
+    S.cfg.advisorCode = $("#setCode").value.trim();
+    S.cfg.welcome = $("#setWelcome").value.trim();
+    NB.saveCfg(); render(); toast("Settings saved"); return;
+  }
+  if (a === "setbudget") {
+    var cb = meClient(); if (!cb) return;
+    modal("Funds available per year", fld("bAmt", "Amount the family can commit each year (USD)", cb.budget || "", "25000") +
+      '<p class="muted" style="font-size:12.5px">Used to work out the funding gap against each school\'s net cost.</p>',
+      "Save", function () { cb.budget = num($("#bAmt").value); NB.scheduleSave(cb.id, 0); render(); return true; });
+    return;
+  }
+
+  if (a === "tick") {
+    var c2 = meClient(); if (!c2) return;
+    var ts = NB.tplOf(c2), td = null;
+    for (var ti = 0; ti < ts.length; ti++) if (ts[ti].id === v) { td = ts[ti]; break; }
+    if (td && !isAdvisor() && td.o === "a") { toast("Your advisor marks this one off."); return; }
+    c2.tasks = c2.tasks || {};
+    if (c2.tasks[v]) delete c2.tasks[v]; else c2.tasks[v] = NB.today();
+    NB.scheduleSave(c2.id); render(); return;
+  }
+  if (a === "docnext") {
+    var c3 = meClient(); if (!c3) return;
+    c3.docs = c3.docs || {};
+    c3.docs[v] = ((c3.docs[v] || 0) + 1) % 4;
+    NB.scheduleSave(c3.id); render(); return;
+  }
+  if (a === "addsch") { schoolModal(null); return; }
+  if (a === "editsch") { schoolModal(Number(v)); return; }
+  if (a === "delsch") {
+    var c4 = meClient(); if (!c4) return;
+    c4.schools.splice(Number(v), 1); NB.scheduleSave(c4.id, 0); render(); return;
+  }
+  if (a === "delfile") {
+    var c6 = meClient(); if (!c6) return;
+    var f = (c6.files || [])[Number(v)]; if (!f) return;
+    modal("Remove " + f.name + "?", "<p>The file is deleted from this workspace for good.</p>", "Remove", function () {
+      c6.files.splice(Number(v), 1); NB.scheduleSave(c6.id, 0);
+      if (NB.ASSETS && f.aid) NB.ASSETS.delete(f.aid).catch(function () {});
+      render(); return true;
+    });
+    return;
+  }
+  if (a === "addfromdir") {
+    var c5 = meClient();
+    if (!c5) { toast("Open a client first, then add schools to their list."); return; }
+    var s = null;
+    for (var i = 0; i < SCHOOLS.length; i++) if (SCHOOLS[i].id === v) { s = SCHOOLS[i]; break; }
+    if (!s) return;
+    c5.schools = c5.schools || [];
+    c5.schools.push({ sid: s.id, name: s.name, program: "", deadline: "", status: "Researching", note: "",
+      loc: s.city + ", " + s.state, tuition: 0, fees: 0, living: 0, award: 0 });
+    NB.scheduleSave(c5.id, 0); render(); toast("Added to " + (c5.name || "the") + "'s list"); return;
+  }
+  if (a === "sendmsg") { doSend(); return; }
+
+  if (a === "tplopen") { S.tplOpen = v; render(); return; }
+  if (a === "tplnew" || a === "tpldup") {
+    var src = a === "tpldup" ? (S.templates[v] || {}) : null;
+    var base = src && src.tasks ? src.tasks : (S.templates["default"] && S.templates["default"].tasks) || NB.TASKS;
+    modal(a === "tpldup" ? "Duplicate template" : "New template",
+      fld("tName", "Name", a === "tpldup" ? (src.name || "") + " copy" : "", "MBA applicants"),
+      "Create", function () {
+        var nm = $("#tName").value.trim(); if (!nm) { toast("Name it first."); return false; }
+        var id = "tpl" + Date.now().toString(36);
+        S.templates[id] = { id: id, name: nm, tasks: JSON.parse(JSON.stringify(base)) };
+        NB.saveTemplate(id); S.tplOpen = id; render(); toast("Template created"); return true;
+      });
+    return;
+  }
+  if (a === "tplrename") {
+    var tr = S.templates[v]; if (!tr) return;
+    modal("Rename template", fld("tName", "Name", tr.name, ""), "Save", function () {
+      var nm = $("#tName").value.trim(); if (!nm) return false;
+      tr.name = nm; NB.saveTemplate(v); render(); return true;
+    });
+    return;
+  }
+  if (a === "tpldel") {
+    if (v === "default") { toast("The standard plan cannot be deleted."); return; }
+    var usedBy = S.clients.filter(function (c) { return c.template === v; });
+    modal("Delete this template?",
+      "<p>" + (usedBy.length ? usedBy.length + " client" + (usedBy.length === 1 ? "" : "s") + " will move back to the standard plan. Their ticks are kept."
+                              : "No client is using it.") + "</p>",
+      "Delete", function () {
+        usedBy.forEach(function (c) { c.template = "default"; NB.scheduleSave(c.id, 0); });
+        delete S.templates[v];
+        if (NB.DB) NB.queue("templates/" + v, function () { return NB.DB.doc("templates/" + v).delete(); });
+        S.tplOpen = null; render(); return true;
+      });
+    return;
+  }
+  if (a === "stepadd") { var pa = v.split("|"); stepModal(pa[0], pa[1], null); return; }
+  if (a === "stepedit") { var pe = v.split("|"); stepModal(pe[0], null, pe[1]); return; }
+  if (a === "stepdel") {
+    var pd = v.split("|"), tt = S.templates[pd[0]]; if (!tt) return;
+    tt.tasks = tt.tasks.filter(function (x) { return x.id !== pd[1]; });
+    NB.saveTemplate(pd[0]); render(); return;
+  }
+
+  if (a === "closemodal" || a === "scrim") { if (a === "scrim" && e.target !== t) return; closeModal(); return; }
+  if (a === "modalok") { var fn = $("#modalHost")._ok; if (!fn || fn() !== false) closeModal(); return; }
+});
+
+document.addEventListener("change", function (e) {
+  var t = e.target.closest("[data-act]");
+  if (!t) return;
+  var a = t.getAttribute("data-act");
+  if (a === "dfil") { S.dir[t.getAttribute("data-k")] = t.value; S.dir.limit = 60; render(); return; }
+  if (a === "cstatus") { S.cstatus = t.value; render(); return; }
+  if (a === "schstat") {
+    var c = meClient(); if (!c) return;
+    c.schools[Number(t.getAttribute("data-v"))].status = t.value;
+    NB.scheduleSave(c.id, 0); render(); return;
+  }
+  if (a === "setdue") {
+    var c2 = meClient(); if (!c2) return;
+    c2.due = c2.due || {};
+    var id = t.getAttribute("data-v");
+    if (t.value) c2.due[id] = t.value; else delete c2.due[id];
+    NB.scheduleSave(c2.id, 0); render(); return;
+  }
+});
+document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeModal(); });
+
+NB.boot();
+})(window.NB);
+
+</script>
