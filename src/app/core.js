@@ -1,4 +1,4 @@
-/* Northbound — core: helpers, state, storage, auth, boot. Views live in the next script. */
+/* Katakyie Advisors — core: helpers, state, storage, auth, boot. Views live in the next script. */
 window.NB = (function () {
 "use strict";
 
@@ -84,6 +84,7 @@ var ICONS = {
   home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.6V20h14V9.6"/>',
   cal: '<rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
   chat: '<path d="M21 11.5a8 8 0 0 1-11.6 7.1L3 20.5l1.9-6A8 8 0 1 1 21 11.5Z"/>',
+  bell: '<path d="M18 8.6a6 6 0 1 0-12 0c0 6-2.4 7.4-2.4 7.4h16.8S18 14.6 18 8.6Z"/><path d="M13.7 20a2 2 0 0 1-3.4 0"/>',
   money: '<path d="M12 2.5v19"/><path d="M16.8 6.2H9.9a2.9 2.9 0 0 0 0 5.8h4.2a2.9 2.9 0 0 1 0 5.8H6.6"/>'
 };
 
@@ -91,8 +92,8 @@ var ICONS = {
 var DB = null, USER = null, ASSETS = null, MAY_EDIT = false, DBDOWN = false;
 var S = {
   role: null, meId: null,
-  clients: [], notes: {}, billing: {}, templates: {}, msgs: [], msgFor: null,
-  cfg: { orgName: "Northbound Advising", advisorCode: "", welcome: "" },
+  clients: [], notes: {}, billing: {}, templates: {}, board: [], extra: {}, msgs: [], msgFor: null,
+  cfg: { orgName: "Katakyie Advisors", advisorCode: "", welcome: "" },
   view: "clients", open: null, tab: "overview",
   res: RES[0].id,
   dir: { q: "", st: "", ctrl: "", tag: "", limit: 60 },
@@ -242,6 +243,31 @@ function saveNote(cid, body) {
   S.notes[cid] = body;
   if (DB) queue("notes/" + cid, function () { return DB.doc("notes/" + cid).set({ body: body, at: new Date().toISOString() }); });
 }
+function allSchools() {
+  var extra = Object.keys(S.extra || {}).map(function (k) {
+    var o = S.extra[k];
+    return { id: "x" + k, docId: k, name: o.name || "", city: o.city || "", state: o.state || "",
+             control: o.control || "Private", tags: o.tags || [], custom: true };
+  }).filter(function (o) { return o.name; });
+  extra.sort(function (a, b) { return a.name.localeCompare(b.name); });
+  return SCHOOLS.concat(extra);
+}
+function saveSchool(id, obj) {
+  if (!DB) return;
+  queue("directory/" + id, function () { return DB.doc("directory/" + id).set(obj); });
+}
+function dropSchool(id) {
+  if (!DB) return;
+  queue("directory/" + id, function () { return DB.doc("directory/" + id).delete(); });
+}
+function saveBoardItem(id, obj) {
+  if (!DB) return;
+  queue("board/" + id, function () { return DB.doc("board/" + id).set(obj); });
+}
+function dropBoardItem(id) {
+  if (!DB) return;
+  queue("board/" + id, function () { return DB.doc("board/" + id).delete(); });
+}
 function saveBilling(cid, obj) {
   S.billing[cid] = obj;
   if (DB) queue("billing/" + cid, function () { return DB.doc("billing/" + cid).set(obj); });
@@ -294,17 +320,29 @@ function boot() {
     var perm = USER
       ? Promise.all([USER.isOwner(), USER.canEdit()]).then(function (a) { MAY_EDIT = !!(a[0] || a[1]); }, function () {})
       : Promise.resolve();
-    if (!DB) { DBDOWN = true; return perm.then(finishBoot); }
+    if (!DB) { DBDOWN = true; S.board = (window.NB_BOARD || []).slice(); return perm.then(finishBoot); }
     var settle, loaded = new Promise(function (res) { settle = res; setTimeout(res, 8000); });
     var got = 0;
     function tick() { if (++got >= 1) settle(); }
     addUn(DB.doc("config/app").onSnapshot(function (snap) {
       if (snap.exists) {
         var d = snap.data();
-        S.cfg = { orgName: d.orgName || "Northbound Advising", advisorCode: d.advisorCode || "", welcome: d.welcome || "" };
+        S.cfg = { orgName: d.orgName || "Katakyie Advisors", advisorCode: d.advisorCode || "", welcome: d.welcome || "" };
       }
       tick(); if (BOOTED) NB.render();
     }, tick));
+    addUn(DB.collection("board").onSnapshot(function (snap) {
+      var b = [];
+      snap.docs.forEach(function (d) { var o = d.data() || {}; o.id = d.id; b.push(o); });
+      b.sort(function (x, y) { return String(x.closes || "9999").localeCompare(String(y.closes || "9999")); });
+      S.board = b.concat(window.NB_BOARD || []);
+      if (BOOTED) NB.render();
+    }, function () { S.board = (window.NB_BOARD || []).slice(); }));
+    addUn(DB.collection("directory").onSnapshot(function (snap) {
+      var e = {};
+      snap.docs.forEach(function (d) { e[d.id] = d.data() || {}; });
+      S.extra = e; if (BOOTED) NB.render();
+    }, function () {}));
     addUn(DB.collection("templates").onSnapshot(function (snap) {
       var t = {};
       snap.docs.forEach(function (d) { var o = d.data() || {}; t[d.id] = { id: d.id, name: o.name || d.id, tasks: o.tasks || [] }; });
@@ -411,7 +449,7 @@ function signOut() {
     addUn(DB.doc("config/app").onSnapshot(function (snap) {
       if (snap.exists) {
         var d = snap.data();
-        S.cfg = { orgName: d.orgName || "Northbound Advising", advisorCode: d.advisorCode || "", welcome: d.welcome || "" };
+        S.cfg = { orgName: d.orgName || "Katakyie Advisors", advisorCode: d.advisorCode || "", welcome: d.welcome || "" };
       }
       NB.render();
     }, function () {}));
@@ -429,6 +467,8 @@ var NB = {
   currentStageIdx: currentStageIdx, nextDeadline: nextDeadline, overdue: overdue, dueSoon: dueSoon,
   costOf: costOf, schPill: schPill, statusPill: statusPill, unread: unread,
   billOf: billOf, scoreFlags: scoreFlags, anyScoreFlags: anyScoreFlags, refGaps: refGaps,
+  allSchools: allSchools, saveSchool: saveSchool, dropSchool: dropSchool,
+  saveBoardItem: saveBoardItem, dropBoardItem: dropBoardItem,
   queue: queue, scheduleSave: scheduleSave, flush: flush, saveCfg: saveCfg, saveNote: saveNote,
   saveTemplate: saveTemplate, saveBilling: saveBilling, setCode: setCode, dropCode: dropCode, sendMsg: sendMsg, markRead: markRead,
   attachMessages: attachMessages, signInAdvisor: signInAdvisor, signInClient: signInClient, signOut: signOut,

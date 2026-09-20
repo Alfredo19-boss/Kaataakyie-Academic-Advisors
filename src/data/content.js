@@ -246,3 +246,28 @@ window.NB_RESOURCES = [
     ]
   }
 ];
+
+/* Cycle board — what feeds the ticker before anyone adds anything of their own.
+   Deliberately carries no invented dates: the major programmes set theirs per country and per year,
+   so each entry names the programme, says what is true about its cycle, and links to the official page.
+   Add dated entries of your own from the Opportunities screen; they lead the ticker. */
+window.NB_BOARD = [
+  { id: "seed-cycle", kind: "cycle", title: "Fall 2027 applications are open",
+    detail: "Most US graduate programmes take Fall 2027 applications from September. Priority and funding deadlines cluster December to January — aim at those, not the final date.", url: "" },
+  { id: "seed-assist", kind: "cycle", title: "Assistantship rounds run early",
+    detail: "Teaching and research assistantships are usually a separate departmental application, decided before the admission letter goes out. Ask the graduate coordinator which ones need a form.", url: "" },
+  { id: "seed-fulbright", kind: "scholarship", title: "Fulbright Foreign Student Program",
+    detail: "The 2027–28 cycle is running. Deadlines are set by each country's US embassy or binational commission, so the date that matters is the one for the applicant's own country.", url: "https://foreign.fulbrightonline.org" },
+  { id: "seed-kh", kind: "scholarship", title: "Knight-Hennessy Scholars, Stanford",
+    detail: "Full funding for any Stanford graduate programme. One round a year, applied for alongside the degree application — check the dates page before planning around it.", url: "https://knight-hennessy.stanford.edu/admission" },
+  { id: "seed-aauw", kind: "scholarship", title: "AAUW International Fellowships",
+    detail: "For women who are not US citizens or permanent residents, studying full time in the US. Annual cycle.", url: "https://www.aauw.org/resources/programs/fellowships-grants/" },
+  { id: "seed-mcf", kind: "scholarship", title: "Mastercard Foundation Scholars Program",
+    detail: "Runs through partner universities rather than centrally — the partner list is where to start, and each partner runs its own selection.", url: "https://mastercardfdn.org/en/what-we-do/our-programs/mastercard-foundation-scholars-program/" },
+  { id: "seed-rotary", kind: "scholarship", title: "Rotary Peace Fellowships",
+    detail: "Master's level study at partner universities, including in the US. Applications go through a local Rotary district first, which adds months to the front of the process.", url: "https://www.rotary.org/en/our-programs/peace-fellowships" },
+  { id: "seed-jj", kind: "scholarship", title: "Joint Japan/World Bank Graduate Scholarship",
+    detail: "Development-related master's programmes for nationals of World Bank member countries, including several US universities.", url: "https://www.worldbank.org/en/programs/scholarships" },
+  { id: "seed-akf", kind: "scholarship", title: "Aga Khan Foundation International Scholarship",
+    detail: "Half grant, half loan, for postgraduate study. Applications open annually and are made to the local AKF office.", url: "https://the.akdn/en/what-we-do/developing-human-capacity/education/international-scholarship-programme" }
+];

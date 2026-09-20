@@ -1,4 +1,4 @@
-/* Northbound — views and interaction. */
+/* Katakyie Advisors — views and interaction. */
 (function (NB) {
 "use strict";
 var $ = NB.$, esc = NB.esc, S = NB.S, ico = NB.ico, ICONS = NB.ICONS, CHECK = NB.CHECK;
@@ -6,18 +6,105 @@ var STAGES = NB.STAGES, DOCS = NB.DOCS, DOCST = NB.DOCST, RES = NB.RES, SCHOOLS 
 var fmtDate = NB.fmtDate, daysUntil = NB.daysUntil, money = NB.money, num = NB.num, toast = NB.toast;
 var isAdvisor = NB.isAdvisor, meClient = NB.meClient, byId = NB.byId;
 
+
+/* ---------------------------------------- portal chrome ---------------------------------------- */
+var PORTALS = {
+  clients:    { e: "Book of business", n: "Clients",            d: "Every applicant on the books, where each one stands, and who is slipping." },
+  pipeline:   { e: "Overview",         n: "Pipeline",           d: "The whole practice at a glance — stage distribution, and what needs attention first." },
+  business:   { e: "The practice",     n: "Business",           d: "Fees contracted, money collected, where clients come from, and where past clients landed." },
+  calendar:   { e: "Dates",            n: "Calendar",           d: "Application deadlines and target dates across everyone, month by month." },
+  board:      { e: "Cycle board",      n: "Opportunities",      d: "What is open right now. Everything here feeds the ticker at the top of every screen." },
+  directory:  { e: "Reference",        n: "School Directory",   d: "Every US institution that awards a master's degree, with room to add your own." },
+  resources:  { e: "Reference",        n: "Resource Library",   d: "Nine sections, from the eighteen-month timeline to post-arrival compliance." },
+  settings:   { e: "Administration",   n: "Settings",           d: "Practice details, access codes, and who can see what." },
+  templates:  { e: "Administration",   n: "Task Templates",     d: "The plans clients are worked through. Edit the steps, or keep a different plan per client type." },
+  overview:   { e: "Client portal",    n: "Command Centre",     d: "Where this application stands today, and the next thing that has to happen." },
+  tasks:      { e: "Client portal",    n: "The Plan",           d: "Every step across eight stages, with target dates and who owns each one." },
+  schools:    { e: "Client portal",    n: "Shortlist & Cost",   d: "Where they are applying, what a year costs, and what the funding gap is." },
+  file:       { e: "Client portal",    n: "Application File",   d: "Test scores against each programme's floor, and every referee tracked school by school." },
+  docs:       { e: "Client portal",    n: "Document Vault",     d: "The paper trail, from sealed transcripts to the I-20." },
+  messages:   { e: "Client portal",    n: "Direct Line",        d: "Everything said about this application, kept with the file instead of in a chat app." },
+  billing:    { e: "Client portal",    n: "Account",            d: "Fee agreed, payments received, balance outstanding. Editors only." },
+  notes:      { e: "Client portal",    n: "Private Notes",      d: "Yours alone — restricted at the database, not merely hidden from the page." },
+  report:     { e: "Client portal",    n: "Status Report",      d: "A one-page summary to print, save as PDF, or hand to a sponsor." }
+};
+function head(key, o) {
+  o = o || {};
+  var p = PORTALS[key] || { e: "", n: key, d: "" };
+  return '<div class="portalhead"><div class="ph-main">' +
+      '<div class="eyebrow">' + esc(o.eyebrow || p.e) + "</div>" +
+      "<h1>" + esc(o.title || p.n) + "</h1>" +
+      '<p class="ph-lede">' + esc(o.lede || p.d) + "</p></div>" +
+    (o.actions ? '<div class="ph-act no-print">' + o.actions + "</div>" : "") +
+    (o.stats && o.stats.length ? '<div class="ph-stats">' + o.stats.map(function (x) {
+      return '<div' + (x.flag ? ' class="flag"' : "") + "><b>" + esc(x.v) + "</b><span>" + esc(x.l) + "</span></div>";
+    }).join("") + "</div>" : "") +
+    "</div>";
+}
+function tabbar(tabs, current, act) {
+  return '<div class="tabbar no-print" role="tablist">' + tabs.map(function (t) {
+    return '<button role="tab" aria-selected="' + (current === t.k) + '" data-act="' + act + '" data-v="' + t.k + '">' +
+      esc(t.n) + (t.badge ? ' <span class="pill accent">' + t.badge + "</span>" : "") + "</button>";
+  }).join("") + "</div>";
+}
+
+/* ---------------------------------------- ticker ---------------------------------------- */
+function tickerItems() {
+  var out = [];
+  (S.board || []).forEach(function (b) {
+    var when = "";
+    if (b.closes) {
+      var d = daysUntil(b.closes);
+      if (d !== null && d < 0) return;                    // expired entries drop off by themselves
+      when = d === null ? "" : d === 0 ? "closes today" : "closes in " + d + "d";
+    } else if (b.opens) {
+      var o = daysUntil(b.opens);
+      when = o !== null && o > 0 ? "opens in " + o + "d" : "open now";
+    }
+    out.push({ k: b.kind === "scholarship" ? "Funding" : b.kind === "cycle" ? "Cycle" : "Open",
+               t: b.title, d: when || b.detail, url: b.url, cls: "" });
+  });
+  if (isAdvisor()) {
+    var soon = [];
+    S.clients.forEach(function (c) {
+      (c.schools || []).forEach(function (r) {
+        if (!r.deadline) return;
+        var d = daysUntil(r.deadline);
+        if (d === null || d < 0 || d > 45) return;
+        soon.push({ k: d <= 7 ? "Closing" : "Deadline", t: r.name, d: esc(c.name) + " · " + d + "d", url: "", cls: d <= 7 ? "hot" : "" });
+      });
+    });
+    soon.sort(function (a, b) { return a.d.localeCompare(b.d); });
+    out = soon.concat(out);
+  }
+  return out;
+}
+function renderTicker() {
+  var el = $("#ticker");
+  if (!el) return;
+  var items = tickerItems();
+  if (!items.length) { el.hidden = true; return; }
+  el.hidden = false;
+  var run = items.map(function (i) {
+    var inner = '<span class="k">' + esc(i.k) + "</span><b>" + esc(i.t) + "</b><span>" + (i.d || "") + "</span>";
+    return '<span class="it ' + i.cls + '">' + (i.url ? '<a href="' + esc(i.url) + '" target="_blank" rel="noopener">' + inner + "</a>" : inner) + "</span>";
+  }).join("");
+  el.innerHTML = '<span class="tag">Cycle board</span><div class="tickwin"><div class="track">' + run + run + "</div></div>";
+  el.querySelector(".track").style.animationDuration = Math.max(40, items.length * 9) + "s";
+}
+
 /* ------------------------------------------------ login ------------------------------------------------ */
 function renderLogin() {
   var host = $("#login"); host.hidden = false;
   $("#shell").classList.remove("on");
-  var org = esc(S.cfg.orgName || "Northbound Advising");
+  var org = esc(S.cfg.orgName || "Katakyie Advisors");
   host.innerHTML =
     '<div class="brandside">' +
       '<div style="display:flex;align-items:center;gap:11px">' +
         '<svg class="logomark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="rgba(255,255,255,.14)"></rect>' +
         '<path d="M11 28V12l18 16V12" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>' +
         '<div style="font-weight:600;font-size:15px">' + org + "</div></div>" +
-      "<div><h1>Every step from first enquiry to the airport, in one place.</h1>" +
+      "<div><h1>From the first enquiry to the airport, tracked to the day.</h1>" +
       "<p>Sign in with the access code your advisor gave you. You see your own file and nothing else — " +
       "your progress, your shortlist, your documents and your messages.</p></div>" +
       '<div class="marks">' + STAGES.map(function (s) { return "<span>" + esc(s.name) + "</span>"; }).join("") + "</div>" +
@@ -28,7 +115,7 @@ function renderLogin() {
         '<button data-act="logintab" data-v="client" aria-pressed="' + (S.loginTab === "client") + '">Client portal</button>' +
         '<button data-act="logintab" data-v="advisor" aria-pressed="' + (S.loginTab === "advisor") + '">Advisor</button></div>' +
       (S.loginTab === "client"
-        ? '<div class="field"><label for="codeIn">Access code</label><input class="inp mono" id="codeIn" placeholder="NB-0000" autocomplete="off" spellcheck="false"></div>'
+        ? '<div class="field"><label for="codeIn">Access code</label><input class="inp mono" id="codeIn" placeholder="KA-0000" autocomplete="off" spellcheck="false"></div>'
         : '<div class="field"><label for="codeIn">Advisor passcode</label><input class="inp mono" id="codeIn" type="password" placeholder="••••••••" autocomplete="off"></div>') +
       '<div id="loginErr" style="color:var(--crit);font-size:12.5px;margin-top:8px" hidden></div>' +
       '<button class="btn pri" data-act="dologin" style="width:100%;justify-content:center;margin-top:16px">Continue</button>' +
@@ -70,6 +157,7 @@ var NAV_ADVISOR = [
   { v: "pipeline", n: "Pipeline", i: "pipeline" },
   { v: "business", n: "Business", i: "money" },
   { v: "calendar", n: "Calendar", i: "cal" },
+  { v: "board", n: "Opportunities", i: "bell" },
   { v: "directory", n: "School directory", i: "school" },
   { v: "resources", n: "Resource library", i: "book" },
   { v: "settings", n: "Settings", i: "gear" }
@@ -81,6 +169,7 @@ var NAV_CLIENT = [
   { v: "client:docs", n: "Documents", i: "doc" },
   { v: "client:messages", n: "Messages", i: "chat" },
   { v: "calendar", n: "Calendar", i: "cal" },
+  { v: "board", n: "Opportunities", i: "bell" },
   { v: "directory", n: "School directory", i: "school" },
   { v: "resources", n: "Resource library", i: "book" }
 ];
@@ -90,7 +179,7 @@ function render() {
   $("#shell").classList.add("on");
 
   if (S.loading) {
-    $("#nav").innerHTML = ""; $("#title").textContent = "Loading"; $("#crumb").textContent = "";
+    $("#nav").innerHTML = ""; $("#crumb").textContent = "";
     $("#topactions").innerHTML = "";
     $("#view").innerHTML = '<div class="card"><div class="empty"><h3>Opening your workspace</h3><p>Fetching records.</p></div></div>';
     return;
@@ -105,7 +194,7 @@ function render() {
     return '<a data-act="go" data-v="' + it.v + '" class="' + (cur === it.v ? "on" : "") + '">' + ico(ICONS[it.i]) + "<span>" + esc(it.n) + "</span>" + badge + "</a>";
   }).join("");
 
-  $("#brandName").textContent = S.cfg.orgName || "Northbound Advising";
+  $("#brandName").textContent = S.cfg.orgName || "Katakyie Advisors";
   $("#brandRole").textContent = isAdvisor() ? "Advisor console" : "Client portal";
   var who = isAdvisor() ? "Advisor" : ((meClient() && meClient().name) || "Client");
   $("#meInitials").textContent = NB.initials(who);
@@ -117,6 +206,8 @@ function render() {
   if (NB.DBDOWN) v.insertAdjacentHTML("beforeend",
     '<div class="notice"><b>Not saving.</b> Shared storage is unavailable in this view, so changes will be lost on reload.</div>');
 
+  renderTicker();
+
   if (S.view === "clients") viewClients(v);
   else if (S.view === "pipeline") viewPipeline(v);
   else if (S.view === "business") viewBusiness(v);
@@ -125,6 +216,7 @@ function render() {
   else if (S.view === "resources") viewResources(v);
   else if (S.view === "settings") viewSettings(v);
   else if (S.view === "templates") viewTemplates(v);
+  else if (S.view === "board") viewBoard(v);
   else if (S.view === "client") viewClient(v);
   wire();
 }
@@ -136,8 +228,13 @@ function kpi(val, label, flag) {
 
 /* ------------------------------------------------ clients ------------------------------------------------ */
 function viewClients(v) {
-  $("#title").textContent = "Clients";
-  $("#topactions").innerHTML = '<button class="btn pri" data-act="newclient">+ New client</button>';
+  var late = S.clients.filter(function (c) { return NB.overdue(c).length > 0; }).length;
+  var act = S.clients.filter(function (c) { return (c.status || "Active") === "Active"; }).length;
+  v.insertAdjacentHTML("beforeend", head("clients", {
+    actions: '<button class="btn pri" data-act="newclient">+ New client</button>',
+    stats: [{ v: act, l: "active" }, { v: S.clients.length, l: "on the books" },
+            { v: late, l: "with overdue steps", flag: late > 0 }]
+  }));
 
   if (!S.clients.length) {
     v.insertAdjacentHTML("beforeend",
@@ -187,8 +284,8 @@ function viewClients(v) {
 
 /* ------------------------------------------------ pipeline ------------------------------------------------ */
 function viewPipeline(v) {
-  $("#title").textContent = "Pipeline";
   var cs = S.clients;
+  v.insertAdjacentHTML("beforeend", head("pipeline"));
   if (!cs.length) {
     v.insertAdjacentHTML("beforeend", '<div class="card"><div class="empty"><h3>Nothing to chart yet</h3><p>Pipeline figures appear once you have clients on the books.</p></div></div>');
     return;
@@ -261,7 +358,7 @@ function calEvents() {
   return ev;
 }
 function viewCalendar(v) {
-  $("#title").textContent = "Calendar";
+  v.insertAdjacentHTML("beforeend", head("calendar"));
   var now = new Date();
   if (!S.cal) S.cal = { y: now.getFullYear(), m: now.getMonth() };
   var y = S.cal.y, m = S.cal.m;
@@ -311,8 +408,11 @@ function viewClient(v) {
   }
   if (S.msgFor !== c.id) NB.attachMessages(c.id);
   if (!isAdvisor() && (S.tab === "billing" || S.tab === "notes")) S.tab = "overview";
-  var T = tabsFor();
-  $("#title").textContent = isAdvisor() ? (c.name || "Client") : (T.filter(function (x) { return x.k === S.tab; })[0] || T[0]).n;
+
+  var T = tabsFor(), un = NB.unread(c);
+  T.forEach(function (t) { if (t.k === "messages" && un) t.badge = un; });
+
+  var prog = NB.progressOf(c), si = NB.currentStageIdx(c), od = NB.overdue(c);
   if (isAdvisor()) {
     $("#crumb").textContent = "Clients / " + (c.name || "");
     $("#topactions").innerHTML =
@@ -320,25 +420,31 @@ function viewClient(v) {
       '<button class="btn" data-act="outcome" data-v="' + esc(c.id) + '">Record outcome</button>' +
       '<button class="btn" data-act="editclient" data-v="' + esc(c.id) + '">Edit record</button>';
   } else {
-    $("#crumb").textContent = (c.targetTerm ? c.targetTerm + " intake" : "") + (c.field ? " · " + c.field : "");
+    $("#crumb").textContent = (c.targetTerm ? c.targetTerm + " intake" : "");
   }
-  var un = NB.unread(c);
-  var html = '<div class="card"><div class="tabs no-print" role="tablist">' + T.map(function (t) {
-    return '<button role="tab" aria-selected="' + (S.tab === t.k) + '" data-act="ctab" data-v="' + t.k + '">' + esc(t.n) +
-      (t.k === "messages" && un ? ' <span class="pill accent" style="margin-left:6px">' + un + "</span>" : "") + "</button>";
-  }).join("") + "</div>";
 
-  if (S.tab === "overview") html += cOverview(c);
-  else if (S.tab === "tasks") html += cTasks(c);
-  else if (S.tab === "schools") html += cSchools(c);
-  else if (S.tab === "file") html += cFile(c);
-  else if (S.tab === "billing") html += cBilling(c);
-  else if (S.tab === "docs") html += cDocs(c);
-  else if (S.tab === "messages") html += cMessages(c);
-  else if (S.tab === "notes") html += cNotes(c);
-  else if (S.tab === "report") html += cReport(c);
-  html += "</div>";
-  v.insertAdjacentHTML("beforeend", html);
+  v.insertAdjacentHTML("beforeend", head(S.tab, {
+    eyebrow: isAdvisor() ? (c.name || "Client") : [c.field, c.targetTerm ? c.targetTerm + " intake" : ""].filter(Boolean).join(" · "),
+    stats: [
+      { v: prog.pct + "%", l: "of the plan complete" },
+      { v: STAGES[si].n + " of 8", l: STAGES[si].name },
+      { v: (c.schools || []).length, l: "schools on the list" },
+      { v: od.length, l: "steps past their date", flag: od.length > 0 }
+    ]
+  }));
+  v.insertAdjacentHTML("beforeend", tabbar(T, S.tab, "ctab"));
+
+  var body = "";
+  if (S.tab === "overview") body = cOverview(c);
+  else if (S.tab === "tasks") body = cTasks(c);
+  else if (S.tab === "schools") body = cSchools(c);
+  else if (S.tab === "file") body = cFile(c);
+  else if (S.tab === "billing") body = cBilling(c);
+  else if (S.tab === "docs") body = cDocs(c);
+  else if (S.tab === "messages") body = cMessages(c);
+  else if (S.tab === "notes") body = cNotes(c);
+  else if (S.tab === "report") body = cReport(c);
+  v.insertAdjacentHTML("beforeend", '<div class="card">' + body + "</div>");
 }
 
 function ringSvg(pct) {
@@ -560,7 +666,7 @@ function cReport(c) {
     '<button class="btn pri" data-act="printrep">Print / save as PDF</button></div>' +
     '<div class="card-b rep">' +
       '<div class="printonly" style="margin-bottom:18px;border-bottom:2px solid var(--brand);padding-bottom:10px">' +
-        '<div style="font-family:var(--serif);font-size:22px;font-weight:600">' + esc(S.cfg.orgName || "Northbound Advising") + "</div>" +
+        '<div style="font-family:var(--serif);font-size:22px;font-weight:600">' + esc(S.cfg.orgName || "Katakyie Advisors") + "</div>" +
         '<div class="muted" style="font-size:12px">Application status report · ' + fmtDate(NB.today()) + "</div></div>" +
       '<h3 class="serif" style="font-size:24px">' + esc(c.name || "") + "</h3>" +
       '<p class="muted" style="margin-bottom:18px">' + esc([c.field, c.targetTerm ? c.targetTerm + " intake" : "", c.country].filter(Boolean).join(" · ")) + "</p>" +
@@ -590,7 +696,7 @@ function cReport(c) {
         }).join("") + "</ul>" : '<p class="muted">Nothing outstanding.</p>') +
       (od.length ? '<p style="margin-top:16px;color:var(--crit);font-weight:600">' + od.length + " step" + (od.length === 1 ? " is" : "s are") + " past its target date.</p>" : "") +
       '<p class="muted" style="font-size:11.5px;margin-top:26px;border-top:1px solid var(--line);padding-top:10px">' +
-      "Prepared by " + esc(S.cfg.orgName || "Northbound Advising") + " on " + fmtDate(NB.today()) +
+      "Prepared by " + esc(S.cfg.orgName || "Katakyie Advisors") + " on " + fmtDate(NB.today()) +
       ". General planning information, not legal or immigration advice.</p>" +
     "</div>";
 }
@@ -598,10 +704,16 @@ function cReport(c) {
 /* ------------------------------------------------ directory ------------------------------------------------ */
 var TAGN = { ivy: "Ivy League", hbcu: "HBCU", tech: "Institute of technology", art: "Art & design", med: "Health sciences" };
 function viewDirectory(v) {
-  $("#title").textContent = "School directory";
-  var states = SCHOOLS.reduce(function (a, s) { if (a.indexOf(s.state) < 0) a.push(s.state); return a; }, []).sort();
+  var SCH = NB.allSchools();
+  var states = SCH.reduce(function (a, s) { if (a.indexOf(s.state) < 0) a.push(s.state); return a; }, []).sort();
   var q = S.dir.q.toLowerCase();
-  var list = SCHOOLS.filter(function (s) {
+  var added = SCH.length - SCHOOLS.length;
+  v.insertAdjacentHTML("beforeend", head("directory", {
+    actions: (isAdvisor() ? '<button class="btn pri" data-act="addschool">+ Add an institution</button>' : ""),
+    stats: [{ v: SCH.length, l: "institutions listed" }, { v: states.length, l: "states and territories" },
+            { v: added, l: "added by this practice" }]
+  }));
+  var list = SCH.filter(function (s) {
     if (S.dir.st && s.state !== S.dir.st) return false;
     if (S.dir.ctrl && s.control !== S.dir.ctrl) return false;
     if (S.dir.tag && s.tags.indexOf(S.dir.tag) < 0) return false;
@@ -614,7 +726,7 @@ function viewDirectory(v) {
 
   v.insertAdjacentHTML("beforeend",
     '<div class="card"><div class="card-h" style="align-items:center"><div class="filters" style="flex:1">' +
-      '<input class="inp grow" id="dq" placeholder="Search ' + SCHOOLS.length + ' institutions by name or city" value="' + esc(S.dir.q) + '">' +
+      '<input class="inp grow" id="dq" placeholder="Search ' + SCH.length + ' institutions by name or city" value="' + esc(S.dir.q) + '">' +
       '<select class="inp" data-act="dfil" data-k="st"><option value="">All states</option>' +
         states.map(function (s) { return "<option " + (S.dir.st === s ? "selected" : "") + ">" + s + "</option>"; }).join("") + "</select>" +
       '<select class="inp" data-act="dfil" data-k="ctrl"><option value="">Public & private</option>' +
@@ -632,6 +744,8 @@ function viewDirectory(v) {
         (s.tags.length ? " · " + s.tags.map(function (t) { return esc(TAGN[t] || t); }).join(", ") : "") + "</div></div>" +
         '<div class="rt"><a class="btn sm" target="_blank" rel="noopener" href="https://www.google.com/search?q=' +
           encodeURIComponent(s.name + " graduate admissions") + '">Admissions ↗</a>' +
+        (s.custom && isAdvisor() ? '<button class="btn ghost sm" data-act="editschool" data-v="' + esc(s.docId) + '">Edit</button>' +
+            '<button class="btn ghost sm" data-act="delschool" data-v="' + esc(s.docId) + '" aria-label="Remove">✕</button>' : "") +
         (target ? (have[s.id] ? '<span class="pill ok"><span class="dot"></span>On list</span>'
                               : '<button class="btn sm pri" data-act="addfromdir" data-v="' + s.id + '">Add to list</button>') : "") +
         "</div></div>";
@@ -642,8 +756,8 @@ function viewDirectory(v) {
 
 /* ------------------------------------------------ resources ------------------------------------------------ */
 function viewResources(v) {
-  $("#title").textContent = "Resource library";
   var sec = RES.filter(function (r) { return r.id === S.res; })[0] || RES[0];
+  v.insertAdjacentHTML("beforeend", head("resources"));
   v.insertAdjacentHTML("beforeend",
     '<div class="res-nav">' + RES.map(function (r) {
       return '<button data-act="res" data-v="' + r.id + '" aria-pressed="' + (r.id === sec.id) + '">' + esc(r.name) + "</button>";
@@ -662,7 +776,7 @@ function viewResources(v) {
 
 /* ------------------------------------------------ settings ------------------------------------------------ */
 function viewSettings(v) {
-  $("#title").textContent = "Settings";
+  v.insertAdjacentHTML("beforeend", head("settings"));
   v.insertAdjacentHTML("beforeend",
     '<div class="grid2">' +
     '<div class="card"><div class="card-h"><div><h3>Practice details</h3>' +
@@ -695,10 +809,11 @@ function viewSettings(v) {
 
 /* ------------------------------------------------ templates ------------------------------------------------ */
 function viewTemplates(v) {
-  $("#title").textContent = "Task templates";
   $("#crumb").textContent = "Settings / Templates";
-  $("#topactions").innerHTML = '<button class="btn" data-act="go" data-v="settings">← Settings</button>' +
-    '<button class="btn pri" data-act="tplnew">+ New template</button>';
+  v.insertAdjacentHTML("beforeend", head("templates", {
+    actions: '<button class="btn" data-act="go" data-v="settings">← Settings</button>' +
+             '<button class="btn pri" data-act="tplnew">+ New template</button>'
+  }));
   var ids = Object.keys(S.templates);
   if (!ids.length) {
     v.insertAdjacentHTML("beforeend", '<div class="card"><div class="empty"><h3>No templates stored</h3>' +
@@ -737,9 +852,8 @@ function viewTemplates(v) {
 
 /* ------------------------------------------------ business ------------------------------------------------ */
 function viewBusiness(v) {
-  $("#title").textContent = "Business";
-  $("#topactions").innerHTML = '<button class="btn" data-act="printrep">Print</button>';
   var cs = S.clients;
+  v.insertAdjacentHTML("beforeend", head("business", { actions: '<button class="btn" data-act="printrep">Print</button>' }));
   if (!cs.length) {
     v.insertAdjacentHTML("beforeend", '<div class="card"><div class="empty"><h3>Nothing to total yet</h3><p>Fees and outcomes appear once you have clients on the books.</p></div></div>');
     return;
@@ -891,6 +1005,45 @@ function cFile(c) {
     '<div class="card-b flush">' + refHtml + "</div>";
 }
 
+
+/* ------------------------------------------------ opportunities ------------------------------------------------ */
+var BOARD_KINDS = ["scholarship", "application", "cycle"];
+function viewBoard(v) {
+  var own = (S.board || []).filter(function (b) { return String(b.id).indexOf("seed-") !== 0; });
+  var seeded = (S.board || []).filter(function (b) { return String(b.id).indexOf("seed-") === 0; });
+  v.insertAdjacentHTML("beforeend", head("board", {
+    actions: isAdvisor() ? '<button class="btn pri" data-act="addboard">+ Add an entry</button>' : "",
+    stats: [{ v: own.length, l: "entries you maintain" }, { v: seeded.length, l: "built in" },
+            { v: own.filter(function (b) { var d = b.closes ? daysUntil(b.closes) : null; return d !== null && d >= 0 && d <= 30; }).length, l: "closing inside 30 days" }]
+  }));
+
+  function rowFor(b, editable) {
+    var d = b.closes ? daysUntil(b.closes) : null;
+    var cls = d === null ? "" : d < 0 ? "" : d <= 7 ? "crit" : d <= 30 ? "warn" : "ok";
+    return '<div class="schoolrow"><div style="min-width:0;flex:1 1 260px">' +
+      '<div class="nm">' + esc(b.title) + "</div>" +
+      '<div class="loc">' + esc(b.detail || "") + "</div>" +
+      (b.url ? '<div style="margin-top:4px"><a href="' + esc(b.url) + '" target="_blank" rel="noopener" style="font-size:12.5px">Official page ↗</a></div>' : "") +
+      "</div><div class=\"rt\">" +
+      '<span class="pill brand">' + esc(b.kind === "scholarship" ? "Funding" : b.kind === "application" ? "Applications" : "Cycle") + "</span>" +
+      (b.opens ? '<span class="pill">opens ' + fmtDate(b.opens) + "</span>" : "") +
+      (b.closes ? '<span class="pill ' + cls + '">' + (d !== null && d < 0 ? "closed " + fmtDate(b.closes) : "closes " + fmtDate(b.closes) + (d !== null ? " · " + d + "d" : "")) + "</span>" : "") +
+      (editable ? '<button class="btn ghost sm" data-act="editboard" data-v="' + esc(b.id) + '">Edit</button>' +
+                  '<button class="btn ghost sm" data-act="delboard" data-v="' + esc(b.id) + '" aria-label="Remove">✕</button>' : "") +
+      "</div></div>";
+  }
+
+  v.insertAdjacentHTML("beforeend",
+    '<div class="card"><div class="card-h"><div><h3>Your entries</h3>' +
+      '<p class="muted" style="font-size:12.5px;margin-top:3px">These lead the ticker. An entry whose closing date has passed drops off by itself.</p></div></div>' +
+      '<div class="card-b flush">' + (own.length ? own.map(function (b) { return rowFor(b, isAdvisor()); }).join("")
+        : '<div class="empty"><h3>Nothing of your own yet</h3><p>Add an award, an application window or a deadline you want every screen to shout about.</p>' +
+          (isAdvisor() ? '<button class="btn pri" data-act="addboard" style="margin-top:14px">+ Add an entry</button>' : "") + "</div>") + "</div></div>" +
+    '<div class="card"><div class="card-h"><div><h3>Built in</h3>' +
+      '<p class="muted" style="font-size:12.5px;margin-top:3px">Long-running programmes that come with the platform. No dates are asserted for them on purpose — the big awards set theirs per country and per cycle, so the official page is the only reliable source. Add a dated entry of your own once you have checked one.</p></div></div>' +
+      '<div class="card-b flush">' + seeded.map(function (b) { return rowFor(b, false); }).join("") + "</div></div>");
+}
+
 /* ------------------------------------------------ modals ------------------------------------------------ */
 function closeModal() { $("#modalHost").innerHTML = ""; }
 function modal(title, bodyHtml, okLabel, onOk) {
@@ -916,7 +1069,7 @@ function sel(id, label, val, opts) {
 }
 function newCode() {
   var n = ""; for (var i = 0; i < 4; i++) n += Math.floor(Math.random() * 10);
-  return "NB-" + n;
+  return "KA-" + n;
 }
 var TERMS = ["Fall 2027", "Spring 2028", "Fall 2028", "Spring 2029", "Fall 2029", "Not set"];
 
@@ -1102,6 +1255,53 @@ function outcomeModal(c) {
     });
 }
 
+
+function boardModal(id) {
+  var b = id ? (S.board || []).filter(function (x) { return x.id === id; })[0] : null;
+  b = b || {};
+  modal(id ? "Edit entry" : "Add to the cycle board",
+    fld("kTitle", "Headline", b.title, "Fall 2027 applications open at Arizona State") +
+    '<div class="field"><label for="kDetail">Detail</label><textarea class="inp" id="kDetail" style="min-height:70px" placeholder="What is actually open, and the one thing that matters about it.">' + esc(b.detail || "") + "</textarea></div>" +
+    sel("kKind", "Kind", b.kind || "scholarship", [{ v: "scholarship", n: "Funding opportunity" }, { v: "application", n: "Applications open" }, { v: "cycle", n: "Cycle note" }]) +
+    '<div class="grid2" style="gap:12px">' + fld("kOpens", "Opens", b.opens || "", "", "date") + fld("kCloses", "Closes", b.closes || "", "", "date") + "</div>" +
+    fld("kUrl", "Official page", b.url, "https://…", "url") +
+    '<p class="muted" style="font-size:12px">An entry with a closing date in the past drops out of the ticker on its own.</p>',
+    id ? "Save entry" : "Add entry",
+    function () {
+      var t = $("#kTitle").value.trim();
+      if (!t) { toast("Give it a headline."); return false; }
+      var nid = id || ("b" + Date.now().toString(36) + Math.floor(Math.random() * 1e3).toString(36));
+      NB.saveBoardItem(nid, { kind: $("#kKind").value, title: t, detail: $("#kDetail").value.trim(),
+        opens: $("#kOpens").value || "", closes: $("#kCloses").value || "", url: $("#kUrl").value.trim() });
+      toast(id ? "Entry saved" : "Added to the board"); return true;
+    });
+}
+
+function schoolDirModal(docId) {
+  var cur = docId ? (S.extra[docId] || {}) : {};
+  var TAGS = [{ v: "", n: "No tag" }, { v: "tech", n: "Institute of technology" }, { v: "art", n: "Art & design" },
+              { v: "med", n: "Health sciences" }, { v: "hbcu", n: "HBCU" }, { v: "ivy", n: "Ivy League" }];
+  modal(docId ? "Edit institution" : "Add an institution",
+    fld("gName", "Name", cur.name, "Ghana Institute of Management") +
+    '<div class="grid2" style="gap:12px">' + fld("gCity", "City", cur.city, "Richardson") +
+      fld("gState", "State (two letters)", cur.state, "TX") + "</div>" +
+    '<div class="grid2" style="gap:12px">' + sel("gCtrl", "Control", cur.control || "Public", ["Public", "Private"]) +
+      sel("gTag", "Type", (cur.tags || [])[0] || "", TAGS) + "</div>" +
+    '<p class="muted" style="font-size:12px">Added institutions sit alongside the built-in list everywhere — search, filters and every client shortlist.</p>',
+    docId ? "Save" : "Add to directory",
+    function () {
+      var nm = $("#gName").value.trim();
+      if (!nm) { toast("Name it first."); return false; }
+      var st = $("#gState").value.trim().toUpperCase().slice(0, 2);
+      if (st.length !== 2) { toast("Use the two-letter state code."); return false; }
+      var tag = $("#gTag").value;
+      var id = docId || ("d" + Date.now().toString(36) + Math.floor(Math.random() * 1e3).toString(36));
+      NB.saveSchool(id, { name: nm, city: $("#gCity").value.trim(), state: st,
+        control: $("#gCtrl").value, tags: tag ? [tag] : [], addedAt: new Date().toISOString() });
+      toast(docId ? "Saved" : "Added to the directory"); return true;
+    });
+}
+
 /* ------------------------------------------------ wiring ------------------------------------------------ */
 function wire() {
   var notes = $("#notesBox");
@@ -1204,7 +1404,7 @@ document.addEventListener("click", function (e) {
     NB.scheduleSave(c1.id, 0); render(); toast("New code: " + c1.code); return;
   }
   if (a === "savecfg") {
-    S.cfg.orgName = $("#setName").value.trim() || "Northbound Advising";
+    S.cfg.orgName = $("#setName").value.trim() || "Katakyie Advisors";
     S.cfg.advisorCode = $("#setCode").value.trim();
     S.cfg.welcome = $("#setWelcome").value.trim();
     NB.saveCfg(); render(); toast("Settings saved"); return;
@@ -1251,8 +1451,8 @@ document.addEventListener("click", function (e) {
   if (a === "addfromdir") {
     var c5 = meClient();
     if (!c5) { toast("Open a client first, then add schools to their list."); return; }
-    var s = null;
-    for (var i = 0; i < SCHOOLS.length; i++) if (SCHOOLS[i].id === v) { s = SCHOOLS[i]; break; }
+    var all = NB.allSchools(), s = null;
+    for (var i = 0; i < all.length; i++) if (all[i].id === v) { s = all[i]; break; }
     if (!s) return;
     c5.schools = c5.schools || [];
     c5.schools.push({ sid: s.id, name: s.name, program: "", deadline: "", status: "Researching", note: "",
@@ -1261,6 +1461,24 @@ document.addEventListener("click", function (e) {
     NB.scheduleSave(c5.id, 0); render(); toast("Added to " + (c5.name || "the") + "'s list"); return;
   }
   if (a === "sendmsg") { doSend(); return; }
+
+  if (a === "addboard") { boardModal(null); return; }
+  if (a === "editboard") { boardModal(v); return; }
+  if (a === "delboard") {
+    modal("Remove this entry?", "<p>It disappears from the ticker straight away.</p>", "Remove", function () {
+      NB.dropBoardItem(v); S.board = (S.board || []).filter(function (b) { return b.id !== v; });
+      render(); return true;
+    });
+    return;
+  }
+  if (a === "addschool") { schoolDirModal(null); return; }
+  if (a === "editschool") { schoolDirModal(v); return; }
+  if (a === "delschool") {
+    modal("Remove this institution?", "<p>It is removed from the directory. Client shortlists that already name it keep it.</p>", "Remove", function () {
+      NB.dropSchool(v); delete S.extra[v]; render(); return true;
+    });
+    return;
+  }
 
   if (a === "openbill") { S.open = v; S.view = "client"; S.tab = "billing"; NB.attachMessages(v); render(); return; }
   if (a === "outcome") { var co = byId(v) || meClient(); if (co) outcomeModal(co); return; }

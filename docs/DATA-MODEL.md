@@ -12,8 +12,8 @@ One document. Practice-wide settings.
 
 ```json
 {
-  "orgName": "Northbound Advising",
-  "advisorCode": "NB-ADVISOR",
+  "orgName": "Katakyie Advisors",
+  "advisorCode": "KATAKYIE",
   "welcome": "Shown at the top of every client dashboard."
 }
 ```
@@ -31,7 +31,7 @@ One document per client. `id` is generated client-side (`c` + base-36 timestamp 
   "field": "MS Computer Science",
   "targetTerm": "Fall 2027",
   "status": "Active",
-  "code": "NB-4821",
+  "code": "KA-4821",
   "template": "default",
   "budget": 22000,
 
@@ -111,6 +111,25 @@ Fees and payments, kept out of the client document so an access rule can restric
 
 Outstanding is `fee` minus the sum of `payments[].amount`; nothing stores it.
 
+### `board/<id>`
+
+The cycle board. Every entry appears in the ticker at the top of every screen, newest closing date first.
+
+```json
+{ "kind": "scholarship", "title": "Fulbright Foreign Student Program",
+  "detail": "Deadlines are set by each country's US embassy.", "opens": "", "closes": "", "url": "https://…" }
+```
+
+`kind` is `scholarship`, `application` or `cycle`. An entry whose `closes` date has passed drops out of the ticker on its own. Nine built-in entries live in `window.NB_BOARD` in `src/data/content.js` and carry **no dates on purpose** — the major awards set theirs per country and per year, so asserting one would be wrong within months.
+
+### `directory/<id>`
+
+Institutions added by the practice, merged with the 846 built-in ones everywhere — search, filters and every shortlist.
+
+```json
+{ "name": "…", "city": "…", "state": "TX", "control": "Public", "tags": ["tech"], "addedAt": "…" }
+```
+
 ### `templates/<id>`
 
 An editable plan. `templates/default` ships with the 49-step standard plan.
@@ -149,7 +168,9 @@ Declared at publish time, enforced by the store rather than by the page:
   { "path": "billing",   "read": "admin",    "write": "admin" },
   { "path": "templates", "read": "interact", "write": "admin" },
   { "path": "config",    "read": "interact", "write": "admin" },
-  { "path": "codes",     "read": "interact", "write": "admin" }
+  { "path": "codes",     "read": "interact", "write": "admin" },
+  { "path": "board",     "read": "interact", "write": "admin" },
+  { "path": "directory", "read": "interact", "write": "admin" }
 ]
 ```
 

@@ -16,6 +16,21 @@ function esc(v) {
 /* ---------- contact ---------- */
 $("#ctaLink").href = "mailto:" + CONTACT + "?subject=" + encodeURIComponent("US master's advising");
 
+/* ---------- ticker ---------- */
+(function () {
+  var board = window.NB_BOARD || [];
+  if (!board.length) return;
+  var el = document.getElementById("ticker");
+  var run = board.map(function (b) {
+    var k = b.kind === "scholarship" ? "Funding" : b.kind === "application" ? "Applications" : "Cycle";
+    var inner = '<span class="k">' + esc(k) + "</span><b>" + esc(b.title) + "</b><span>" + esc(b.detail || "") + "</span>";
+    return '<span class="it">' + (b.url ? '<a href="' + esc(b.url) + '" target="_blank" rel="noopener">' + inner + "</a>" : inner) + "</span>";
+  }).join("");
+  el.innerHTML = '<span class="tag">Cycle board</span><div class="tickwin"><div class="track">' + run + run + "</div></div>";
+  el.querySelector(".track").style.animationDuration = Math.max(50, board.length * 11) + "s";
+  el.hidden = false;
+})();
+
 /* ---------- timeline ruler ---------- */
 var TL = RES.filter(function (r) { return r.id === "timeline"; })[0];
 $("#ruler").innerHTML = TL.items.map(function (it) {
@@ -95,7 +110,7 @@ $("#libnav").addEventListener("click", function (e) {
 drawLib();
 
 /* ---------- footer ---------- */
-$("#foot").textContent = "The US Master's Planner · " + SCHOOLS.length +
-  " institutions across 51 states and territories · last reviewed " +
+$("#foot").textContent = "Katakyie Advisors · " + SCHOOLS.length +
+  " institutions across 51 states and territories · directory last reviewed " +
   new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" });
 })();

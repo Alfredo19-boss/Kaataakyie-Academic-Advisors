@@ -429,6 +429,426 @@ University of Wisconsin-La Crosse|La Crosse|WI|P
 University of Wisconsin-Stout|Menomonie|WI|P
 University of Wisconsin Oshkosh|Oshkosh|WI|P
 University of Wyoming|Laramie|WY|P
+University of North Alabama|Florence|AL|P
+University of Montevallo|Montevallo|AL|P
+Auburn University at Montgomery|Montgomery|AL|P
+Tuskegee University|Tuskegee|AL|R|hbcu
+Alaska Pacific University|Anchorage|AK|R
+Prescott College|Prescott|AZ|R
+Midwestern University|Glendale|AZ|R|med
+University of Arkansas at Pine Bluff|Pine Bluff|AR|P|hbcu
+Arkansas Tech University|Russellville|AR|P
+Southern Arkansas University|Magnolia|AR|P
+John Brown University|Siloam Springs|AR|R
+California State University, San Bernardino|San Bernardino|CA|P
+California State University, Stanislaus|Turlock|CA|P
+California State University, Chico|Chico|CA|P
+California State University, Bakersfield|Bakersfield|CA|P
+California State University Channel Islands|Camarillo|CA|P
+California State University San Marcos|San Marcos|CA|P
+Sonoma State University|Rohnert Park|CA|P
+Cal Poly Humboldt|Arcata|CA|P
+Azusa Pacific University|Azusa|CA|R
+Biola University|La Mirada|CA|R
+Point Loma Nazarene University|San Diego|CA|R
+Golden Gate University|San Francisco|CA|R
+Dominican University of California|San Rafael|CA|R
+Loma Linda University|Loma Linda|CA|R|med
+Keck Graduate Institute|Claremont|CA|R|med
+ArtCenter College of Design|Pasadena|CA|R|art
+California Institute of the Arts|Valencia|CA|R|art
+Otis College of Art and Design|Los Angeles|CA|R|art
+Academy of Art University|San Francisco|CA|R|art
+Fielding Graduate University|Santa Barbara|CA|R
+Alliant International University|San Diego|CA|R
+Western University of Health Sciences|Pomona|CA|R|med
+University of Colorado Colorado Springs|Colorado Springs|CO|P
+Metropolitan State University of Denver|Denver|CO|P
+Regis University|Denver|CO|R
+Adams State University|Alamosa|CO|P
+Western Colorado University|Gunnison|CO|P
+Colorado Christian University|Lakewood|CO|R
+Central Connecticut State University|New Britain|CT|P
+Western Connecticut State University|Danbury|CT|P
+Eastern Connecticut State University|Willimantic|CT|P
+University of Bridgeport|Bridgeport|CT|R
+University of Hartford|West Hartford|CT|R
+Trinity College|Hartford|CT|R
+University of Saint Joseph|West Hartford|CT|R
+Albertus Magnus College|New Haven|CT|R
+Goldey-Beacom College|Wilmington|DE|R
+Trinity Washington University|Washington|DC|R
+University of West Florida|Pensacola|FL|P
+Barry University|Miami Shores|FL|R
+Lynn University|Boca Raton|FL|R
+Palm Beach Atlantic University|West Palm Beach|FL|R
+Saint Leo University|Saint Leo|FL|R
+Jacksonville University|Jacksonville|FL|R
+Florida Southern College|Lakeland|FL|R
+New College of Florida|Sarasota|FL|P
+Ringling College of Art and Design|Sarasota|FL|R|art
+Keiser University|Fort Lauderdale|FL|R
+Georgia College & State University|Milledgeville|GA|P
+Valdosta State University|Valdosta|GA|P
+Columbus State University|Columbus|GA|P
+University of West Georgia|Carrollton|GA|P
+Albany State University|Albany|GA|P|hbcu
+Fort Valley State University|Fort Valley|GA|P|hbcu
+Life University|Marietta|GA|R
+Piedmont University|Demorest|GA|R
+Berry College|Mount Berry|GA|R
+Morehouse School of Medicine|Atlanta|GA|R|hbcu,med
+University of Hawaii at Hilo|Hilo|HI|P
+Northwest Nazarene University|Nampa|ID|R
+Northeastern Illinois University|Chicago|IL|P
+Chicago State University|Chicago|IL|P
+University of St. Francis|Joliet|IL|R
+Lewis University|Romeoville|IL|R
+Benedictine University|Lisle|IL|R
+North Park University|Chicago|IL|R
+Elmhurst University|Elmhurst|IL|R
+Dominican University|River Forest|IL|R
+Aurora University|Aurora|IL|R
+National Louis University|Chicago|IL|R
+Rush University|Chicago|IL|R|med
+School of the Art Institute of Chicago|Chicago|IL|R|art
+Columbia College Chicago|Chicago|IL|R|art
+Concordia University Chicago|River Forest|IL|R
+Governors State University|University Park|IL|P
+Olivet Nazarene University|Bourbonnais|IL|R
+University of Southern Indiana|Evansville|IN|P
+University of Indianapolis|Indianapolis|IN|R
+Marian University|Indianapolis|IN|R
+Anderson University|Anderson|IN|R
+Trine University|Angola|IN|R
+University of Evansville|Evansville|IN|R
+Purdue University Fort Wayne|Fort Wayne|IN|P
+Clarke University|Dubuque|IA|R
+St. Ambrose University|Davenport|IA|R
+Upper Iowa University|Fayette|IA|R
+Grand View University|Des Moines|IA|R
+Des Moines University|West Des Moines|IA|R|med
+Fort Hays State University|Hays|KS|P
+Washburn University|Topeka|KS|P
+Friends University|Wichita|KS|R
+Baker University|Baldwin City|KS|R
+Newman University|Wichita|KS|R
+Morehead State University|Morehead|KY|P
+Kentucky State University|Frankfort|KY|P|hbcu
+Campbellsville University|Campbellsville|KY|R
+Asbury University|Wilmore|KY|R
+Spalding University|Louisville|KY|R
+University of the Cumberlands|Williamsburg|KY|R
+Sullivan University|Louisville|KY|R
+McNeese State University|Lake Charles|LA|P
+Nicholls State University|Thibodaux|LA|P
+Southeastern Louisiana University|Hammond|LA|P
+Grambling State University|Grambling|LA|P|hbcu
+Xavier University of Louisiana|New Orleans|LA|R|hbcu
+LSU Health Sciences Center New Orleans|New Orleans|LA|P|med
+University of New England|Biddeford|ME|R|med
+Thomas College|Waterville|ME|R
+Maine College of Art & Design|Portland|ME|R|art
+Frostburg State University|Frostburg|MD|P
+Bowie State University|Bowie|MD|P|hbcu
+Coppin State University|Baltimore|MD|P|hbcu
+University of Maryland Eastern Shore|Princess Anne|MD|P|hbcu
+Stevenson University|Owings Mills|MD|R
+Notre Dame of Maryland University|Baltimore|MD|R
+McDaniel College|Westminster|MD|R
+Hood College|Frederick|MD|R
+Maryland Institute College of Art|Baltimore|MD|R|art
+St. Mary's College of Maryland|St. Mary's City|MD|P
+Bridgewater State University|Bridgewater|MA|P
+Salem State University|Salem|MA|P
+Fitchburg State University|Fitchburg|MA|P
+Worcester State University|Worcester|MA|P
+Framingham State University|Framingham|MA|P
+Westfield State University|Westfield|MA|P
+Massachusetts College of Art and Design|Boston|MA|P|art
+Lesley University|Cambridge|MA|R
+Merrimack College|North Andover|MA|R
+Assumption University|Worcester|MA|R
+Endicott College|Beverly|MA|R
+American International College|Springfield|MA|R
+Western New England University|Springfield|MA|R
+MCPHS University|Boston|MA|R|med
+Northern Michigan University|Marquette|MI|P
+Saginaw Valley State University|University Center|MI|P
+Ferris State University|Big Rapids|MI|P
+Davenport University|Grand Rapids|MI|R
+Madonna University|Livonia|MI|R
+Andrews University|Berrien Springs|MI|R
+Calvin University|Grand Rapids|MI|R
+Kettering University|Flint|MI|R|tech
+College for Creative Studies|Detroit|MI|R|art
+Bemidji State University|Bemidji|MN|P
+Winona State University|Winona|MN|P
+Southwest Minnesota State University|Marshall|MN|P
+Augsburg University|Minneapolis|MN|R
+Hamline University|St. Paul|MN|R
+Concordia University, St. Paul|St. Paul|MN|R
+Saint Mary's University of Minnesota|Winona|MN|R
+Bethel University|St. Paul|MN|R
+Metropolitan State University|St. Paul|MN|P
+College of Saint Scholastica|Duluth|MN|R
+Delta State University|Cleveland|MS|P
+Alcorn State University|Lorman|MS|P|hbcu
+Mississippi College|Clinton|MS|R
+Mississippi University for Women|Columbus|MS|P
+University of Mississippi Medical Center|Jackson|MS|P|med
+Truman State University|Kirksville|MO|P
+Southeast Missouri State University|Cape Girardeau|MO|P
+Northwest Missouri State University|Maryville|MO|P
+Lindenwood University|St. Charles|MO|R
+Maryville University|St. Louis|MO|R
+Drury University|Springfield|MO|R
+Park University|Parkville|MO|R
+Avila University|Kansas City|MO|R
+Columbia College|Columbia|MO|R
+Kansas City University|Kansas City|MO|R|med
+University of Providence|Great Falls|MT|R
+Montana State University Billings|Billings|MT|P
+Montana State University-Northern|Havre|MT|P
+Wayne State College|Wayne|NE|P
+University of Nebraska at Kearney|Kearney|NE|P
+Bellevue University|Bellevue|NE|R
+Doane University|Crete|NE|R
+Concordia University, Nebraska|Seward|NE|R
+Touro University Nevada|Henderson|NV|R|med
+Keene State College|Keene|NH|P
+Franklin Pierce University|Rindge|NH|R
+Rivier University|Nashua|NH|R
+New England College|Henniker|NH|R
+Antioch University New England|Keene|NH|R
+Rider University|Lawrenceville|NJ|R
+Monmouth University|West Long Branch|NJ|R
+Ramapo College of New Jersey|Mahwah|NJ|P
+Stockton University|Galloway|NJ|P
+New Jersey City University|Jersey City|NJ|P
+Saint Peter's University|Jersey City|NJ|R
+Caldwell University|Caldwell|NJ|R
+Felician University|Lodi|NJ|R
+Georgian Court University|Lakewood|NJ|R
+Drew University|Madison|NJ|R
+Eastern New Mexico University|Portales|NM|P
+Western New Mexico University|Silver City|NM|P
+New Mexico Highlands University|Las Vegas|NM|P
+SUNY Plattsburgh|Plattsburgh|NY|P
+SUNY Cortland|Cortland|NY|P
+SUNY Brockport|Brockport|NY|P
+SUNY Geneseo|Geneseo|NY|P
+SUNY Fredonia|Fredonia|NY|P
+SUNY Oneonta|Oneonta|NY|P
+SUNY Potsdam|Potsdam|NY|P
+SUNY Buffalo State University|Buffalo|NY|P
+SUNY Old Westbury|Old Westbury|NY|P
+John Jay College of Criminal Justice (CUNY)|New York|NY|P
+Lehman College (CUNY)|Bronx|NY|P
+College of Staten Island (CUNY)|Staten Island|NY|P
+CUNY Graduate Center|New York|NY|P
+Marist University|Poughkeepsie|NY|R
+Manhattanville University|Purchase|NY|R
+Iona University|New Rochelle|NY|R
+Mercy University|Dobbs Ferry|NY|R
+Molloy University|Rockville Centre|NY|R
+St. Bonaventure University|St. Bonaventure|NY|R
+Canisius University|Buffalo|NY|R
+Niagara University|Niagara University|NY|R
+D'Youville University|Buffalo|NY|R
+Nazareth University|Rochester|NY|R
+Roberts Wesleyan University|Rochester|NY|R
+Utica University|Utica|NY|R
+Le Moyne College|Syracuse|NY|R
+Ithaca College|Ithaca|NY|R
+Sarah Lawrence College|Bronxville|NY|R
+Bard College|Annandale-on-Hudson|NY|R
+School of Visual Arts|New York|NY|R|art
+Fashion Institute of Technology|New York|NY|P|art
+The Juilliard School|New York|NY|R|art
+Manhattan School of Music|New York|NY|R|art
+Touro University|New York|NY|R
+Icahn School of Medicine at Mount Sinai|New York|NY|R|med
+Albany Medical College|Albany|NY|R|med
+New York Medical College|Valhalla|NY|R|med
+Western Carolina University|Cullowhee|NC|P
+University of North Carolina at Pembroke|Pembroke|NC|P
+Winston-Salem State University|Winston-Salem|NC|P|hbcu
+Fayetteville State University|Fayetteville|NC|P|hbcu
+North Carolina Central University|Durham|NC|P|hbcu
+Gardner-Webb University|Boiling Springs|NC|R
+High Point University|High Point|NC|R
+Queens University of Charlotte|Charlotte|NC|R
+Lenoir-Rhyne University|Hickory|NC|R
+Wingate University|Wingate|NC|R
+Meredith College|Raleigh|NC|R
+Methodist University|Fayetteville|NC|R
+Minot State University|Minot|ND|P
+University of Mary|Bismarck|ND|R
+Ohio Dominican University|Columbus|OH|R
+Ashland University|Ashland|OH|R
+John Carroll University|University Heights|OH|R
+Baldwin Wallace University|Berea|OH|R
+Otterbein University|Westerville|OH|R
+Capital University|Columbus|OH|R
+Franciscan University of Steubenville|Steubenville|OH|R
+Malone University|Canton|OH|R
+Tiffin University|Tiffin|OH|R
+Walsh University|North Canton|OH|R
+Northeast Ohio Medical University|Rootstown|OH|P|med
+Cleveland Institute of Art|Cleveland|OH|R|art
+Central State University|Wilberforce|OH|P|hbcu
+Shawnee State University|Portsmouth|OH|P
+Northeastern State University|Tahlequah|OK|P
+Southeastern Oklahoma State University|Durant|OK|P
+Southwestern Oklahoma State University|Weatherford|OK|P
+Oklahoma City University|Oklahoma City|OK|R
+Langston University|Langston|OK|P|hbcu
+Cameron University|Lawton|OK|P
+Southern Oregon University|Ashland|OR|P
+Eastern Oregon University|La Grande|OR|P
+Western Oregon University|Monmouth|OR|P
+George Fox University|Newberg|OR|R
+Pacific University|Forest Grove|OR|R
+Linfield University|McMinnville|OR|R
+Lewis & Clark College|Portland|OR|R
+Oregon Institute of Technology|Klamath Falls|OR|P|tech
+Slippery Rock University of Pennsylvania|Slippery Rock|PA|P
+Shippensburg University of Pennsylvania|Shippensburg|PA|P
+Millersville University of Pennsylvania|Millersville|PA|P
+Kutztown University of Pennsylvania|Kutztown|PA|P
+East Stroudsburg University of Pennsylvania|East Stroudsburg|PA|P
+Commonwealth University of Pennsylvania|Bloomsburg|PA|P
+PennWest University|California|PA|P
+Point Park University|Pittsburgh|PA|R
+Chatham University|Pittsburgh|PA|R
+Carlow University|Pittsburgh|PA|R
+Seton Hill University|Greensburg|PA|R
+Gannon University|Erie|PA|R
+Mercyhurst University|Erie|PA|R
+King's College|Wilkes-Barre|PA|R
+Wilkes University|Wilkes-Barre|PA|R
+Misericordia University|Dallas|PA|R
+Marywood University|Scranton|PA|R
+University of Scranton|Scranton|PA|R
+DeSales University|Center Valley|PA|R
+Moravian University|Bethlehem|PA|R
+Arcadia University|Glenside|PA|R
+Eastern University|St. Davids|PA|R
+Neumann University|Aston|PA|R
+Holy Family University|Philadelphia|PA|R
+Immaculata University|Immaculata|PA|R
+Gwynedd Mercy University|Gwynedd Valley|PA|R
+Saint Francis University|Loretto|PA|R
+Lebanon Valley College|Annville|PA|R
+Elizabethtown College|Elizabethtown|PA|R
+Messiah University|Mechanicsburg|PA|R
+York College of Pennsylvania|York|PA|R
+Philadelphia College of Osteopathic Medicine|Philadelphia|PA|R|med
+Lincoln University|Lincoln University|PA|P|hbcu
+Cheyney University of Pennsylvania|Cheyney|PA|P|hbcu
+Pennsylvania College of Technology|Williamsport|PA|P|tech
+Rhode Island College|Providence|RI|P
+Salve Regina University|Newport|RI|R
+Providence College|Providence|RI|R
+Roger Williams University|Bristol|RI|R
+The Citadel|Charleston|SC|P
+Francis Marion University|Florence|SC|P
+South Carolina State University|Orangeburg|SC|P|hbcu
+Charleston Southern University|Charleston|SC|R
+Anderson University|Anderson|SC|R
+Columbia International University|Columbia|SC|R
+Bob Jones University|Greenville|SC|R
+Converse University|Spartanburg|SC|R
+Northern State University|Aberdeen|SD|P
+Black Hills State University|Spearfish|SD|P
+Augustana University|Sioux Falls|SD|R
+Dakota State University|Madison|SD|P
+University of Sioux Falls|Sioux Falls|SD|R
+Austin Peay State University|Clarksville|TN|P
+University of Tennessee at Chattanooga|Chattanooga|TN|P
+University of Tennessee at Martin|Martin|TN|P
+Trevecca Nazarene University|Nashville|TN|R
+Union University|Jackson|TN|R
+Christian Brothers University|Memphis|TN|R
+Carson-Newman University|Jefferson City|TN|R
+Lee University|Cleveland|TN|R
+Meharry Medical College|Nashville|TN|R|hbcu,med
+University of Tennessee Health Science Center|Memphis|TN|P|med
+The University of Texas Permian Basin|Odessa|TX|P
+Angelo State University|San Angelo|TX|P
+Midwestern State University|Wichita Falls|TX|P
+Tarleton State University|Stephenville|TX|P
+Texas A&M International University|Laredo|TX|P
+University of Houston-Clear Lake|Houston|TX|P
+University of Houston-Downtown|Houston|TX|P
+University of Houston-Victoria|Victoria|TX|P
+Texas A&M University-Commerce|Commerce|TX|P
+Texas A&M University-Texarkana|Texarkana|TX|P
+Dallas Baptist University|Dallas|TX|R
+Abilene Christian University|Abilene|TX|R
+Hardin-Simmons University|Abilene|TX|R
+Houston Christian University|Houston|TX|R
+LeTourneau University|Longview|TX|R
+Our Lady of the Lake University|San Antonio|TX|R
+Texas Wesleyan University|Fort Worth|TX|R
+Trinity University|San Antonio|TX|R
+Concordia University Texas|Austin|TX|R
+Texas Southern University|Houston|TX|P|hbcu
+UTHealth Houston|Houston|TX|P|med
+UT Southwestern Medical Center|Dallas|TX|P|med
+Baylor College of Medicine|Houston|TX|R|med
+Texas Tech University Health Sciences Center|Lubbock|TX|P|med
+Lubbock Christian University|Lubbock|TX|R
+Wayland Baptist University|Plainview|TX|R
+Southern Utah University|Cedar City|UT|P
+Westminster University|Salt Lake City|UT|R
+Utah Tech University|St. George|UT|P
+Saint Michael's College|Colchester|VT|R
+Champlain College|Burlington|VT|R
+Vermont State University|Randolph|VT|P
+Bennington College|Bennington|VT|R
+Longwood University|Farmville|VA|P
+University of Mary Washington|Fredericksburg|VA|P
+Norfolk State University|Norfolk|VA|P|hbcu
+Shenandoah University|Winchester|VA|R
+Regent University|Virginia Beach|VA|R
+Averett University|Danville|VA|R
+University of Lynchburg|Lynchburg|VA|R
+Eastern Mennonite University|Harrisonburg|VA|R
+Virginia Wesleyan University|Virginia Beach|VA|R
+Virginia Union University|Richmond|VA|R|hbcu
+Edward Via College of Osteopathic Medicine|Blacksburg|VA|R|med
+Pacific Lutheran University|Tacoma|WA|R
+Whitworth University|Spokane|WA|R
+Saint Martin's University|Lacey|WA|R
+City University of Seattle|Seattle|WA|R
+Heritage University|Toppenish|WA|R
+Northwest University|Kirkland|WA|R
+Bastyr University|Kenmore|WA|R|med
+The Evergreen State College|Olympia|WA|P
+West Virginia Wesleyan College|Buckhannon|WV|R
+Wheeling University|Wheeling|WV|R
+Fairmont State University|Fairmont|WV|P
+Shepherd University|Shepherdstown|WV|P
+West Liberty University|West Liberty|WV|P
+Concord University|Athens|WV|P
+Bluefield State University|Bluefield|WV|P|hbcu
+University of Wisconsin-Green Bay|Green Bay|WI|P
+University of Wisconsin-Parkside|Kenosha|WI|P
+University of Wisconsin-Platteville|Platteville|WI|P
+University of Wisconsin-River Falls|River Falls|WI|P
+University of Wisconsin-Stevens Point|Stevens Point|WI|P
+University of Wisconsin-Superior|Superior|WI|P
+Alverno College|Milwaukee|WI|R
+Carroll University|Waukesha|WI|R
+Concordia University Wisconsin|Mequon|WI|R
+Edgewood College|Madison|WI|R
+Lakeland University|Plymouth|WI|R
+Medical College of Wisconsin|Milwaukee|WI|R|med
+Milwaukee School of Engineering|Milwaukee|WI|R|tech
+Viterbo University|La Crosse|WI|R
+Marian University|Fond du Lac|WI|R
 `.trim().split("\n").map(function (line, i) {
   var p = line.split("|");
   return { id: "s" + i, name: p[0], city: p[1], state: p[2], control: p[3] === "P" ? "Public" : "Private", tags: p[4] ? p[4].split(",") : [] };

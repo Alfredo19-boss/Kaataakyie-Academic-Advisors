@@ -1,15 +1,16 @@
-# Northbound Advising
+# Katakyie Advisors
 
 A client-progress platform for advisors who take students through a **US master's application**, end to end — from the first intake call to the airport.
 
 One advisor console over every client, and a portal each client signs into to see their own file and nothing else.
 
 - **49 milestones** across 8 stages, with target dates and overdue flags
-- **426 US institutions** that award master's degrees, all 50 states and DC
+- **846 US institutions** that award master's degrees, all 50 states and DC, extendable from inside the app
 - **9-section resource library** — timeline, tests, credential evaluation, the application file, funding, I-20 financials, the F-1 visa, pre-departure, post-arrival compliance
 - **Cost calculator** — net year-one cost per school against the family's annual budget
 - **Fees and outcomes** — what each client owes, what came in, where past clients landed
 - **Score and referee tracking** — test scores checked against each programme's stated minimums, letters tracked per referee per school
+- **A cycle ticker** across the top of every screen — funding programmes, application windows and the deadlines on your own clients' shortlists
 - **Messaging, document tracking, file attachments, printable status reports**
 
 It builds **two** pages from one set of sources:
@@ -17,28 +18,30 @@ It builds **two** pages from one set of sources:
 | Built file | What it is | Who can open it |
 |---|---|---|
 | `dist/index.html` | The advisor platform — console plus client portals | You, and clients you share it with |
-| `dist/public.html` | **The US Master's Planner** — a public marketing site: the 18-month timeline, all 426 schools, the five traps, the full library | Anyone with the link |
+| `dist/public.html` | **Katakyie Master's Planner** — a public marketing site: the 18-month timeline, all 846 schools, the five traps, the full library, the cycle ticker | Anyone with the link |
 
 The public site declares no runtime capabilities at all, which is what lets it be shared with the world. It is the front door; the platform is the back office.
 
 Vanilla JavaScript. No framework, no build dependencies, no `node_modules`. The whole thing is one HTML file when built.
 
-![Advisor console](docs/console.png)
-
-<p align="center"><img src="docs/planner.png" width="100%" alt="The US Master's Planner — the public front door"></p>
+![The advisor console](docs/console.png)
 
 <p align="center">
-  <img src="docs/cost.png" width="49%" alt="Cost comparison across a client's shortlist">
-  <img src="docs/calendar.png" width="49%" alt="Deadlines and target dates across every client">
+  <img src="docs/portal.png" width="49%" alt="A client portal — Command Centre">
+  <img src="docs/board.png" width="49%" alt="Opportunities — the cycle board that feeds the ticker">
 </p>
+
+![The public planner](docs/planner.png)
+
+
 
 ---
 
 ## Quick start
 
 ```bash
-git clone https://github.com/<you>/northbound-advising.git
-cd northbound-advising
+git clone https://github.com/<you>/katakyie-advisors.git
+cd katakyie-advisors
 npm run dev            # builds, then serves http://localhost:5173
 ```
 
@@ -90,8 +93,8 @@ The access rules the live copy uses are in [`docs/DATA-MODEL.md`](docs/DATA-MODE
 ```
 src/
   shell.html            design tokens, all CSS, the static markup skeleton
-  data/schools.js       426 institutions → window.NB_SCHOOLS
-  data/content.js       stages, 49 task templates, 17 documents, resource library
+  data/schools.js       846 institutions → window.NB_SCHOOLS
+  data/content.js       stages, 49 task templates, 17 documents, resource library, cycle board
   app/core.js           state, derived values, storage, auth, boot → window.NB
   app/views.js          every screen, every event handler
 public/
@@ -114,7 +117,7 @@ Load order is fixed and matters: data globals → `core.js` (defines `window.NB`
 
 **Advisor.** The account that owns the artifact lands straight in the console. Anyone else uses the advisor passcode from Settings.
 
-**Client.** An access code like `NB-4821`. The code is checked against a single lookup document, and the session then subscribes to **one client record** — the client list is never fetched, so no other client's data reaches that browser.
+**Client.** An access code like `KA-4821`. The code is checked against a single lookup document, and the session then subscribes to **one client record** — the client list is never fetched, so no other client's data reaches that browser.
 
 Private advisor notes and everything about money live in separate `notes/` and `billing/` collections restricted to editors. A client cannot read either through the page or underneath it; the store itself refuses.
 

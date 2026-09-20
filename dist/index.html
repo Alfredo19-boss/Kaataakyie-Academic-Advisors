@@ -1,61 +1,46 @@
-<title>Northbound Advising</title>
+<title>Katakyie Advisors</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
 <style>
+/* Katakyie Advisors — a single committed dark identity: warm black grounds, gold used sparingly. */
 :root{
-  --bg:#F1F4F6; --panel:#FFFFFF; --panel2:#E8EEF0; --line:#D3DDE1; --line2:#BDCBD1;
-  --text:#0F1D23; --muted:#5B6E76; --faint:#8296A0;
-  --brand:#0F4C5C; --brand-2:#166376; --brand-soft:#E0EDF1; --on-brand:#FFFFFF;
-  --accent:#B4622A; --accent-soft:#F7EAE0;
-  --ok:#1B7A5B; --ok-soft:#DFF1EA; --warn:#96660F; --warn-soft:#F8EEDA; --crit:#A63A2E; --crit-soft:#F9E7E4;
-  --shadow:0 1px 2px rgba(15,29,35,.06), 0 8px 24px -16px rgba(15,29,35,.28);
-  --shadow-lift:0 2px 6px rgba(15,29,35,.08), 0 20px 40px -24px rgba(15,29,35,.4);
-  --r:10px; --r-sm:7px;
+  color-scheme:dark;
+  --bg:#0A0908; --panel:#121110; --panel2:#1B1917; --panel3:#232019;
+  --line:#272420; --line2:#3A352C;
+  --text:#F3EEE4; --muted:#A79F90; --faint:#7B7466;
+  --brand:#D9B441; --brand-2:#EBC95F; --brand-soft:#241D0E; --brand-line:#4A3C18; --on-brand:#120E04;
+  --accent:#C4864A; --accent-soft:#2A1C10;
+  --ok:#6FC395; --ok-soft:#10241B; --warn:#E08D3F; --warn-soft:#2B1C0C; --crit:#E0705D; --crit-soft:#2D1512;
+  --shadow:0 1px 2px rgba(0,0,0,.6), 0 10px 30px -20px rgba(0,0,0,.95);
+  --shadow-lift:0 2px 8px rgba(0,0,0,.7), 0 26px 50px -28px #000;
+  --r:11px; --r-sm:8px;
   --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
   --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
 }
-@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
-  --bg:#080F13; --panel:#101A20; --panel2:#18252C; --line:#22333B; --line2:#2E434D;
-  --text:#E3EAED; --muted:#93A6AE; --faint:#6F858E;
-  --brand:#5FB4C9; --brand-2:#7CC7D9; --brand-soft:#11303A; --on-brand:#06171D;
-  --accent:#E09257; --accent-soft:#2C1D12;
-  --ok:#5AC89E; --ok-soft:#0F2F28; --warn:#DDB160; --warn-soft:#2F2614; --crit:#E5867A; --crit-soft:#33201D;
-  --shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -16px rgba(0,0,0,.8);
-  --shadow-lift:0 2px 6px rgba(0,0,0,.55), 0 20px 40px -24px rgba(0,0,0,.9);
-}}
-:root[data-theme="dark"]{
-  --bg:#080F13; --panel:#101A20; --panel2:#18252C; --line:#22333B; --line2:#2E434D;
-  --text:#E3EAED; --muted:#93A6AE; --faint:#6F858E;
-  --brand:#5FB4C9; --brand-2:#7CC7D9; --brand-soft:#11303A; --on-brand:#06171D;
-  --accent:#E09257; --accent-soft:#2C1D12;
-  --ok:#5AC89E; --ok-soft:#0F2F28; --warn:#DDB160; --warn-soft:#2F2614; --crit:#E5867A; --crit-soft:#33201D;
-  --shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -16px rgba(0,0,0,.8);
-  --shadow-lift:0 2px 6px rgba(0,0,0,.55), 0 20px 40px -24px rgba(0,0,0,.9);
-}
 
 *{box-sizing:border-box}
 html,body{height:100%}
-body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
 h1,h2,h3,h4{margin:0;font-weight:600;text-wrap:balance}
 p{margin:0}
 a{color:var(--brand);text-decoration:none}
 a:hover{text-decoration:underline}
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:4px}
-@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}}
 
 /* ---------- primitives ---------- */
-.eyebrow{font-size:10.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--faint)}
+.eyebrow{font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--brand)}
 .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
 .num{font-variant-numeric:tabular-nums}
 .muted{color:var(--muted)}
 .serif{font-family:var(--serif)}
 
 .btn{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:var(--r-sm);border:1px solid var(--line2);
-  background:var(--panel);color:var(--text);font-weight:500;font-size:13px;cursor:pointer;transition:background .12s,border-color .12s}
-.btn:hover{background:var(--panel2);border-color:var(--muted)}
-.btn.pri{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+  background:var(--panel2);color:var(--text);font-weight:500;font-size:13px;cursor:pointer;transition:background .12s,border-color .12s}
+.btn:hover{background:var(--panel3);border-color:var(--brand-line)}
+.btn.pri{background:var(--brand);border-color:var(--brand);color:var(--on-brand);font-weight:600}
 .btn.pri:hover{background:var(--brand-2);border-color:var(--brand-2)}
 .btn.ghost{background:transparent;border-color:transparent;color:var(--muted);padding:6px 9px}
 .btn.ghost:hover{background:var(--panel2);color:var(--text)}
@@ -66,7 +51,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 
 .field{display:flex;flex-direction:column;gap:5px}
 .field>label{font-size:12px;font-weight:600;color:var(--muted)}
-.inp{width:100%;padding:9px 11px;border:1px solid var(--line2);border-radius:var(--r-sm);background:var(--panel);color:var(--text)}
+.inp{width:100%;padding:9px 11px;border:1px solid var(--line2);border-radius:var(--r-sm);background:var(--panel2);color:var(--text)}
 .inp::placeholder{color:var(--faint)}
 .inp:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
 textarea.inp{min-height:110px;resize:vertical;line-height:1.55}
@@ -74,7 +59,7 @@ select.inp{appearance:none;background-image:linear-gradient(45deg,transparent 50
   background-position:calc(100% - 15px) calc(50% + 1px),calc(100% - 10px) calc(50% + 1px);background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:32px}
 
 .pill{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:600;
-  background:var(--panel2);color:var(--muted);white-space:nowrap}
+  background:var(--panel3);color:var(--muted);white-space:nowrap}
 .pill.ok{background:var(--ok-soft);color:var(--ok)}
 .pill.warn{background:var(--warn-soft);color:var(--warn)}
 .pill.crit{background:var(--crit-soft);color:var(--crit)}
@@ -89,63 +74,98 @@ select.inp{appearance:none;background-image:linear-gradient(45deg,transparent 50
 .card-b.flush{padding:0}
 
 /* ---------- login ---------- */
-#login{min-height:100%;display:grid;grid-template-columns:1.05fr .95fr}
-#login .brandside{background:var(--brand);color:var(--on-brand);padding:56px 48px;display:flex;flex-direction:column;justify-content:space-between;gap:40px}
-:root[data-theme="dark"] #login .brandside,
-:root:not([data-theme="light"]) #login .brandside{background:linear-gradient(160deg,#11303A,#0A1B22)}
-@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) #login .brandside{background:linear-gradient(160deg,#0F4C5C,#0A3542)}}
-#login .brandside h1{font-family:var(--serif);font-size:clamp(28px,3.6vw,42px);line-height:1.1;font-weight:600;letter-spacing:-.01em}
-#login .brandside p{opacity:.82;max-width:44ch;margin-top:14px;font-size:15px}
-#login .marks{display:flex;flex-wrap:wrap;gap:10px}
-#login .marks span{border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:4px 12px;font-size:12px;opacity:.9}
+#login{min-height:100%;display:grid;grid-template-columns:1.05fr .95fr;background:var(--bg)}
+#login .brandside{background:
+   radial-gradient(1100px 500px at 12% -10%, rgba(217,180,65,.10), transparent 60%),
+   linear-gradient(170deg,#141109,#0A0908 60%);
+  color:var(--text);padding:56px 48px;display:flex;flex-direction:column;justify-content:space-between;gap:40px;border-right:1px solid var(--brand-line)}
+#login .brandside h1{font-family:var(--serif);font-size:clamp(28px,3.6vw,42px);line-height:1.08;font-weight:600;letter-spacing:-.012em}
+#login .brandside p{color:var(--muted);max-width:46ch;margin-top:14px;font-size:15px}
+#login .marks{display:flex;flex-wrap:wrap;gap:9px}
+#login .marks span{border:1px solid var(--brand-line);border-radius:999px;padding:4px 12px;font-size:11.5px;color:var(--muted)}
 #login .formside{display:flex;align-items:center;justify-content:center;padding:40px 24px}
 #login .formwrap{width:100%;max-width:360px}
-.seg{display:flex;background:var(--panel2);border-radius:var(--r-sm);padding:3px;gap:3px;margin-bottom:20px}
+.seg{display:flex;background:var(--panel2);border:1px solid var(--line);border-radius:var(--r-sm);padding:3px;gap:3px;margin-bottom:20px}
 .seg button{flex:1;padding:7px 10px;border:0;border-radius:5px;background:transparent;color:var(--muted);font-weight:600;font-size:12.5px;cursor:pointer}
-.seg button[aria-pressed="true"]{background:var(--panel);color:var(--text);box-shadow:var(--shadow)}
+.seg button[aria-pressed="true"]{background:var(--brand);color:var(--on-brand)}
 .logomark{width:34px;height:34px;flex:none}
 
 /* ---------- shell ---------- */
 #shell{display:none;min-height:100%}
-#shell.on{display:grid;grid-template-columns:244px minmax(0,1fr)}
+#shell.on{display:grid;grid-template-columns:248px minmax(0,1fr)}
 .side{background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;
   position:sticky;top:env(safe-area-inset-top,0px);height:100vh;height:100dvh}
-.side-h{padding:18px 16px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
-.side-h .nm{font-family:var(--serif);font-size:16px;font-weight:600;line-height:1.15;letter-spacing:-.005em}
-.side-h .sub{font-size:10.5px;color:var(--faint);letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.side-h{padding:18px 16px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:11px}
+.side-h .nm{font-family:var(--serif);font-size:16.5px;font-weight:600;line-height:1.15;letter-spacing:-.005em}
+.side-h .sub{font-family:var(--mono);font-size:9.5px;color:var(--brand);letter-spacing:.14em;text-transform:uppercase;margin-top:2px}
 .nav{flex:1;overflow:auto;padding:12px 10px;display:flex;flex-direction:column;gap:2px}
-.nav .grp{margin:14px 8px 6px}
 .nav a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--r-sm);color:var(--muted);font-weight:500;font-size:13.5px;cursor:pointer}
 .nav a:hover{background:var(--panel2);color:var(--text);text-decoration:none}
-.nav a.on{background:var(--brand-soft);color:var(--brand);font-weight:600}
-.nav a svg{flex:none;opacity:.85}
+.nav a.on{background:var(--brand-soft);color:var(--brand);font-weight:600;box-shadow:inset 0 0 0 1px var(--brand-line)}
+.nav a svg{flex:none;opacity:.9}
 .side-f{border-top:1px solid var(--line);padding:12px 14px;display:flex;align-items:center;gap:10px}
-.avatar{width:30px;height:30px;border-radius:50%;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;font-weight:700;font-size:12px;flex:none}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--brand-soft);color:var(--brand);border:1px solid var(--brand-line);
+  display:grid;place-items:center;font-weight:700;font-size:11.5px;flex:none}
 
 .main{min-width:0;max-width:100%;display:flex;flex-direction:column;overflow:hidden}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:25;background:color-mix(in srgb,var(--bg) 90%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 26px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;min-height:50px}
+.topbar .crumb{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.06em;text-transform:uppercase}
+.wrap{padding:24px 26px 72px;display:flex;flex-direction:column;gap:20px;max-width:1280px;width:100%}
 .wrap>*{min-width:0;max-width:100%}
 .card,.kpi{min-width:0}
 .grid2>*,.grid3>*,.kpis>*{min-width:0}
-.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);
-  backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:14px 26px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.topbar h2{font-family:var(--serif);font-size:20px;letter-spacing:-.01em}
-.topbar .crumb{font-size:12px;color:var(--faint);margin-bottom:2px}
-.wrap{padding:22px 26px 64px;display:flex;flex-direction:column;gap:20px;max-width:1240px;width:100%}
+
+/* ---------- ticker ---------- */
+.ticker{position:relative;background:linear-gradient(90deg,#171309,#0E0C07);
+  border-bottom:1px solid var(--brand-line);display:flex;align-items:stretch;min-height:36px;overflow:hidden}
+.ticker .tag{flex:none;background:var(--brand);color:var(--on-brand);font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;padding:0 12px;align-self:stretch;display:flex;align-items:center;z-index:2}
+.tickwin{flex:1;min-width:0;overflow:hidden}
+.ticker .track{display:flex;white-space:nowrap;will-change:transform;animation:tick 64s linear infinite}
+.ticker:hover .track,.ticker:focus-within .track{animation-play-state:paused}
+.ticker .it{display:inline-flex;align-items:center;gap:8px;flex:none;padding:0 22px;font-size:12.5px;color:var(--muted);border-right:1px solid var(--line)}
+.ticker .it b{color:var(--text);font-weight:600}
+.ticker .it .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand)}
+.ticker .it.hot .k{color:var(--warn)}
+.ticker .it.late .k{color:var(--crit)}
+.ticker a{color:inherit}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.ticker .track{animation:none}.tickwin{overflow-x:auto}}
+
+/* ---------- portal header ---------- */
+.portalhead{border:1px solid var(--line);border-radius:var(--r);background:
+  radial-gradient(900px 300px at 0% -40%, rgba(217,180,65,.07), transparent 60%), var(--panel);
+  padding:22px 24px;display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap}
+.portalhead .ph-main{flex:1 1 320px;min-width:0}
+.portalhead h1{font-family:var(--serif);font-size:clamp(23px,2.6vw,30px);line-height:1.12;letter-spacing:-.015em;margin-top:7px}
+.portalhead .ph-lede{color:var(--muted);font-size:13.5px;margin-top:8px;max-width:66ch}
+.portalhead .ph-act{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.portalhead .ph-stats{width:100%;display:flex;gap:26px;flex-wrap:wrap;padding-top:18px;margin-top:4px;border-top:1px solid var(--line)}
+.portalhead .ph-stats div b{display:block;font-family:var(--serif);font-size:23px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums}
+.portalhead .ph-stats div span{display:block;font-size:11.5px;color:var(--faint);margin-top:5px}
+.portalhead .ph-stats div.flag b{color:var(--crit)}
+
+/* ---------- tab bar (sub-navigation) ---------- */
+.tabbar{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.tabbar button{padding:8px 14px;border-radius:999px;border:1px solid var(--line2);background:var(--panel);color:var(--muted);
+  font-weight:500;font-size:12.5px;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:7px}
+.tabbar button:hover{color:var(--text);border-color:var(--brand-line)}
+.tabbar button[aria-selected="true"]{background:var(--brand);border-color:var(--brand);color:var(--on-brand);font-weight:600}
 
 /* ---------- pieces ---------- */
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(152px,1fr));gap:12px}
 .kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
-.kpi .v{font-family:var(--serif);font-size:30px;font-weight:600;line-height:1.05;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.kpi .v{font-family:var(--serif);font-size:29px;font-weight:600;line-height:1.05;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
 .kpi .l{font-size:11.5px;color:var(--muted);margin-top:4px}
 .kpi.flag .v{color:var(--crit)}
 
-.bar{height:6px;border-radius:999px;background:var(--panel2);overflow:hidden}
+.bar{height:6px;border-radius:999px;background:var(--panel3);overflow:hidden}
 .bar>i{display:block;height:100%;border-radius:999px;background:var(--brand);transition:width .3s ease}
-.bar.thin{height:4px}
 
 table.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
-table.tbl th{text-align:left;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);font-weight:600;
-  padding:10px 14px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel)}
+table.tbl th{text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:500;
+  padding:11px 14px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel)}
 table.tbl td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
 table.tbl tr:last-child td{border-bottom:0}
 table.tbl tbody tr.clickable{cursor:pointer}
@@ -153,8 +173,8 @@ table.tbl tbody tr.clickable:hover{background:var(--panel2)}
 .scrollx{overflow-x:auto}
 
 .stepper{display:flex;gap:0;overflow-x:auto;padding-bottom:4px}
-.step{flex:1;min-width:104px;padding:0 4px}
-.step .rail{height:4px;border-radius:999px;background:var(--panel2);margin-bottom:9px;overflow:hidden}
+.step{flex:1;min-width:106px;padding:0 4px}
+.step .rail{height:4px;border-radius:999px;background:var(--panel3);margin-bottom:9px;overflow:hidden}
 .step .rail i{display:block;height:100%;background:var(--brand)}
 .step.done .rail i{background:var(--ok)}
 .step .no{font-family:var(--mono);font-size:10.5px;color:var(--faint)}
@@ -164,9 +184,9 @@ table.tbl tbody tr.clickable:hover{background:var(--panel2)}
 
 .task{display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);align-items:flex-start}
 .task:last-child{border-bottom:0}
-.task .cb{margin-top:1px;width:18px;height:18px;flex:none;border:1.5px solid var(--line2);border-radius:5px;background:var(--panel);
+.task .cb{margin-top:1px;width:18px;height:18px;flex:none;border:1.5px solid var(--line2);border-radius:5px;background:var(--panel2);
   display:grid;place-items:center;cursor:pointer;padding:0;color:transparent}
-.task .cb[aria-checked="true"]{background:var(--ok);border-color:var(--ok);color:#fff}
+.task .cb[aria-checked="true"]{background:var(--ok);border-color:var(--ok);color:#06140E}
 .task .cb svg{width:11px;height:11px}
 .task .tt{font-weight:500;line-height:1.35}
 .task.done .tt{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line2)}
@@ -174,20 +194,20 @@ table.tbl tbody tr.clickable:hover{background:var(--panel2)}
 .task .meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:6px}
 
 .stagehead{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--panel2);border-bottom:1px solid var(--line)}
-.stagehead .n{font-family:var(--mono);font-size:11px;color:var(--faint)}
+.stagehead .n{font-family:var(--mono);font-size:11px;color:var(--brand)}
 .stagehead h4{font-size:13px}
 .stagehead .r{margin-left:auto;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
 
-.ring{--p:0;width:96px;height:96px;flex:none;position:relative}
+.ring{width:96px;height:96px;flex:none;position:relative}
 .ring svg{transform:rotate(-90deg);display:block}
 .ring .ctr{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
 .ring .ctr b{font-family:var(--serif);font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1}
-.ring .ctr span{font-size:10px;color:var(--faint);letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.ring .ctr span{font-family:var(--mono);font-size:9px;color:var(--faint);letter-spacing:.14em;text-transform:uppercase}
 
 .chart{display:flex;flex-direction:column;gap:9px}
 .chartrow{display:grid;grid-template-columns:132px minmax(0,1fr) 34px;gap:10px;align-items:center;font-size:12.5px}
 .chartrow .lb{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.chartrow .tr{height:16px;background:var(--panel2);border-radius:4px;overflow:hidden}
+.chartrow .tr{height:16px;background:var(--panel3);border-radius:4px;overflow:hidden}
 .chartrow .tr i{display:block;height:100%;background:var(--brand);border-radius:4px}
 .chartrow .vl{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;font-size:12.5px}
 
@@ -207,7 +227,7 @@ table.tbl tbody tr.clickable:hover{background:var(--panel2)}
 
 .res-nav{display:flex;gap:6px;flex-wrap:wrap}
 .res-nav button{padding:6px 12px;border-radius:999px;border:1px solid var(--line2);background:var(--panel);color:var(--muted);font-size:12.5px;font-weight:500;cursor:pointer}
-.res-nav button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.res-nav button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--on-brand);font-weight:600}
 .res-item{padding:16px 18px;border-bottom:1px solid var(--line)}
 .res-item:last-child{border-bottom:0}
 .res-item h4{font-size:13.5px;margin-bottom:5px}
@@ -220,82 +240,74 @@ table.tbl tbody tr.clickable:hover{background:var(--panel2)}
 .empty h3{font-family:var(--serif);font-size:18px;margin-bottom:6px;color:var(--text)}
 .empty p{max-width:46ch;margin:0 auto;font-size:13.5px}
 
-.notice{display:flex;gap:10px;align-items:flex-start;padding:11px 14px;border-radius:var(--r-sm);background:var(--warn-soft);color:var(--warn);font-size:12.5px;line-height:1.45}
-.notice.info{background:var(--brand-soft);color:var(--brand)}
+.notice{display:flex;gap:10px;align-items:flex-start;padding:11px 14px;border-radius:var(--r-sm);background:var(--warn-soft);color:var(--warn);font-size:12.5px;line-height:1.45;border:1px solid color-mix(in srgb,var(--warn) 26%,transparent)}
+.notice.info{background:var(--brand-soft);color:var(--brand);border-color:var(--brand-line)}
 .notice b{font-weight:600}
 
-/* modal */
-.scrim{position:fixed;inset:0;background:rgba(6,16,20,.55);backdrop-filter:blur(2px);z-index:60;display:grid;place-items:center;padding:20px}
-.modal{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-lift);width:100%;max-width:520px;max-height:86vh;overflow:auto}
-.modal h3{font-family:var(--serif);font-size:19px}
-.modal .mb{padding:20px;display:flex;flex-direction:column;gap:14px}
-.modal .mf{padding:14px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:var(--panel)}
-
-#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:90;
-  background:var(--text);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:12.5px;font-weight:500;box-shadow:var(--shadow-lift);opacity:0;pointer-events:none;transition:opacity .2s}
-#toast.on{opacity:1}
-
-.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);overflow-x:auto}
-.tabs button{padding:9px 14px;border:0;background:transparent;color:var(--muted);font-weight:500;font-size:13px;cursor:pointer;
-  border-bottom:2px solid transparent;white-space:nowrap}
-.tabs button[aria-selected="true"]{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
-
 /* due dates */
-.dateinp{padding:3px 7px;font-size:11.5px;border:1px solid var(--line2);border-radius:5px;background:var(--panel);color:var(--text);font-family:var(--mono)}
+.dateinp{padding:3px 7px;font-size:11.5px;border:1px solid var(--line2);border-radius:5px;background:var(--panel2);color:var(--text);font-family:var(--mono)}
 .dateinp:focus{outline:none;border-color:var(--brand)}
 
-/* cost table */
 .costwrap{padding:18px;border-top:1px solid var(--line)}
 .money{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
 
 /* messages */
 .thread{display:flex;flex-direction:column;gap:10px;padding:18px;max-height:440px;overflow:auto}
-.bub{max-width:78%;padding:9px 13px;border-radius:12px;background:var(--panel2);font-size:13.5px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
-.bub.mine{align-self:flex-end;background:var(--brand);color:var(--on-brand)}
+.bub{max-width:78%;padding:9px 13px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);font-size:13.5px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.bub.mine{align-self:flex-end;background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
 .bub .wh{font-size:10.5px;opacity:.72;margin-top:5px}
 .composer{display:flex;gap:10px;padding:14px 18px;border-top:1px solid var(--line);align-items:flex-end}
 .composer textarea{min-height:44px;max-height:140px}
 
 /* files */
-.filechip{display:flex;align-items:center;gap:11px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--panel)}
-.filechip img{width:38px;height:38px;object-fit:cover;border-radius:5px;flex:none;background:var(--panel2)}
-.filechip .fi{width:38px;height:38px;border-radius:5px;flex:none;background:var(--panel2);display:grid;place-items:center;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.04em}
+.filechip{display:flex;align-items:center;gap:11px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--panel2)}
+.filechip img{width:38px;height:38px;object-fit:cover;border-radius:5px;flex:none;background:var(--panel3)}
+.filechip .fi{width:38px;height:38px;border-radius:5px;flex:none;background:var(--panel3);display:grid;place-items:center;color:var(--brand);font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.04em}
 .filegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;padding:18px}
 
 /* calendar */
 .calbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .calhead{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-bottom:6px}
-.calhead span{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);font-weight:600;text-align:center}
+.calhead span{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--faint);text-align:center}
 .cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
 .cal .d{min-height:92px;border:1px solid var(--line);border-radius:7px;padding:6px;background:var(--panel);overflow:hidden}
-.cal .d.out{opacity:.38}
+.cal .d.out{opacity:.34}
 .cal .d.now{border-color:var(--brand);box-shadow:inset 0 0 0 1px var(--brand)}
-.cal .dn{font-size:11px;color:var(--faint);font-variant-numeric:tabular-nums;font-weight:600}
+.cal .dn{font-family:var(--mono);font-size:11px;color:var(--faint);font-variant-numeric:tabular-nums}
 .cal .ev{font-size:10.5px;padding:2px 5px;border-radius:4px;background:var(--brand-soft);color:var(--brand);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
 .cal .ev.due{background:var(--accent-soft);color:var(--accent)}
 .cal .ev.late{background:var(--crit-soft);color:var(--crit)}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);align-items:center}
 .legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px;vertical-align:-1px}
 
-/* templates */
 .tplrow{display:flex;gap:10px;align-items:flex-start;padding:11px 16px;border-bottom:1px solid var(--line)}
 .tplrow:last-child{border-bottom:0}
 
-/* report */
 .rep h3{font-family:var(--serif)}
 .rep table.tbl td,.rep table.tbl th{padding:8px 10px}
 .printonly{display:none}
 
+/* modal */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(3px);z-index:60;display:grid;place-items:center;padding:20px}
+.modal{background:var(--panel);border:1px solid var(--line2);border-radius:12px;box-shadow:var(--shadow-lift);width:100%;max-width:520px;max-height:86vh;overflow:auto}
+.modal h3{font-family:var(--serif);font-size:19px}
+.modal .mb{padding:20px;display:flex;flex-direction:column;gap:14px}
+.modal .mf{padding:14px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:var(--panel)}
+
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:90;
+  background:var(--brand);color:var(--on-brand);padding:9px 16px;border-radius:999px;font-size:12.5px;font-weight:600;box-shadow:var(--shadow-lift);opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.on{opacity:1}
+
 @media print{
-  :root{--bg:#fff;--panel:#fff;--panel2:#f2f4f5;--line:#ccd4d7;--line2:#bcc6ca;--text:#101a1e;--muted:#46565c;--faint:#6d7c82;
-    --brand:#0F4C5C;--brand-soft:#e6eff2;--on-brand:#fff;--accent:#8d4d1f;--accent-soft:#f6ece4;
+  :root{--bg:#fff;--panel:#fff;--panel2:#f3f3f1;--panel3:#eceae6;--line:#ccc8c0;--line2:#b9b4aa;--text:#12100C;--muted:#4a453c;--faint:#6e685d;
+    --brand:#8a6d12;--brand-soft:#f6efd9;--brand-line:#d8cba0;--on-brand:#fff;--accent:#8d4d1f;--accent-soft:#f6ece4;
     --ok:#186349;--ok-soft:#e5f1ec;--warn:#7d560c;--warn-soft:#f6efdd;--crit:#8c2f25;--crit-soft:#f7e7e5;--shadow:none;--shadow-lift:none}
-  .side,.topbar,.tabs,.no-print,#toast,#modalHost{display:none!important}
+  .side,.topbar,.tabbar,.ticker,.no-print,#toast,#modalHost{display:none!important}
   .printonly{display:block}
   #shell.on{grid-template-columns:minmax(0,1fr)}
   .main{overflow:visible}
   .wrap{padding:0;max-width:none}
-  .card{border:0;box-shadow:none}
+  .card,.portalhead{border:0;box-shadow:none;background:#fff;padding:0}
   .card-h{padding:0 0 10px}
   .card-b{padding:0}
   .res-item,.schoolrow,.task{break-inside:avoid}
@@ -305,18 +317,19 @@ table.tbl tbody tr.clickable:hover{background:var(--panel2)}
 /* mobile */
 @media (max-width:860px){
   #login{grid-template-columns:1fr}
-  #login .brandside{padding:32px 20px;gap:22px}
+  #login .brandside{padding:32px 20px;gap:22px;border-right:0;border-bottom:1px solid var(--brand-line)}
   #login .formside{padding:28px 20px 56px}
   #shell.on{grid-template-columns:minmax(0,1fr)}
   .side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}
   .side-h{padding:14px 16px 10px}
   .nav{flex-direction:row;overflow-x:auto;padding:8px 12px;gap:6px}
-  .nav .grp{display:none}
   .nav a{white-space:nowrap;padding:7px 12px;background:var(--panel2)}
   .nav a.on{background:var(--brand);color:var(--on-brand)}
   .side-f{display:none}
-  .topbar{padding:12px 16px}
+  .topbar{padding:10px 16px}
   .wrap{padding:16px 16px 72px;gap:16px}
+  .portalhead{padding:18px 16px}
+  .portalhead .ph-stats{gap:18px}
   .chartrow{grid-template-columns:104px minmax(0,1fr) 30px}
   .ring{width:78px;height:78px}
   .schoolrow{flex-wrap:wrap}
@@ -330,11 +343,11 @@ table.tbl tbody tr.clickable:hover{background:var(--panel2)}
   <aside class="side">
     <div class="side-h">
       <svg class="logomark" viewBox="0 0 40 40" aria-hidden="true">
-        <rect width="40" height="40" rx="9" fill="var(--brand)"></rect>
-        <path d="M11 28V12l18 16V12" fill="none" stroke="var(--on-brand)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></path>
+        <rect x="0.9" y="0.9" width="38.2" height="38.2" rx="9" fill="#15120B" stroke="var(--brand)" stroke-width="1.5"></rect>
+        <path d="M14 10v20M14 20.2 24.5 10M14 19.8 24.5 30" fill="none" stroke="var(--brand)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
       </svg>
       <div>
-        <div class="nm" id="brandName">Northbound</div>
+        <div class="nm" id="brandName">Katakyie</div>
         <div class="sub" id="brandRole">Advisor console</div>
       </div>
     </div>
@@ -349,11 +362,9 @@ table.tbl tbody tr.clickable:hover{background:var(--panel2)}
     </div>
   </aside>
   <div class="main">
+    <div class="ticker no-print" id="ticker" hidden></div>
     <header class="topbar">
-      <div>
-        <div class="crumb" id="crumb"></div>
-        <h2 id="title">Clients</h2>
-      </div>
+      <div class="crumb" id="crumb"></div>
       <div id="topactions" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"></div>
     </header>
     <div class="wrap" id="view"></div>
@@ -795,6 +806,426 @@ University of Wisconsin-La Crosse|La Crosse|WI|P
 University of Wisconsin-Stout|Menomonie|WI|P
 University of Wisconsin Oshkosh|Oshkosh|WI|P
 University of Wyoming|Laramie|WY|P
+University of North Alabama|Florence|AL|P
+University of Montevallo|Montevallo|AL|P
+Auburn University at Montgomery|Montgomery|AL|P
+Tuskegee University|Tuskegee|AL|R|hbcu
+Alaska Pacific University|Anchorage|AK|R
+Prescott College|Prescott|AZ|R
+Midwestern University|Glendale|AZ|R|med
+University of Arkansas at Pine Bluff|Pine Bluff|AR|P|hbcu
+Arkansas Tech University|Russellville|AR|P
+Southern Arkansas University|Magnolia|AR|P
+John Brown University|Siloam Springs|AR|R
+California State University, San Bernardino|San Bernardino|CA|P
+California State University, Stanislaus|Turlock|CA|P
+California State University, Chico|Chico|CA|P
+California State University, Bakersfield|Bakersfield|CA|P
+California State University Channel Islands|Camarillo|CA|P
+California State University San Marcos|San Marcos|CA|P
+Sonoma State University|Rohnert Park|CA|P
+Cal Poly Humboldt|Arcata|CA|P
+Azusa Pacific University|Azusa|CA|R
+Biola University|La Mirada|CA|R
+Point Loma Nazarene University|San Diego|CA|R
+Golden Gate University|San Francisco|CA|R
+Dominican University of California|San Rafael|CA|R
+Loma Linda University|Loma Linda|CA|R|med
+Keck Graduate Institute|Claremont|CA|R|med
+ArtCenter College of Design|Pasadena|CA|R|art
+California Institute of the Arts|Valencia|CA|R|art
+Otis College of Art and Design|Los Angeles|CA|R|art
+Academy of Art University|San Francisco|CA|R|art
+Fielding Graduate University|Santa Barbara|CA|R
+Alliant International University|San Diego|CA|R
+Western University of Health Sciences|Pomona|CA|R|med
+University of Colorado Colorado Springs|Colorado Springs|CO|P
+Metropolitan State University of Denver|Denver|CO|P
+Regis University|Denver|CO|R
+Adams State University|Alamosa|CO|P
+Western Colorado University|Gunnison|CO|P
+Colorado Christian University|Lakewood|CO|R
+Central Connecticut State University|New Britain|CT|P
+Western Connecticut State University|Danbury|CT|P
+Eastern Connecticut State University|Willimantic|CT|P
+University of Bridgeport|Bridgeport|CT|R
+University of Hartford|West Hartford|CT|R
+Trinity College|Hartford|CT|R
+University of Saint Joseph|West Hartford|CT|R
+Albertus Magnus College|New Haven|CT|R
+Goldey-Beacom College|Wilmington|DE|R
+Trinity Washington University|Washington|DC|R
+University of West Florida|Pensacola|FL|P
+Barry University|Miami Shores|FL|R
+Lynn University|Boca Raton|FL|R
+Palm Beach Atlantic University|West Palm Beach|FL|R
+Saint Leo University|Saint Leo|FL|R
+Jacksonville University|Jacksonville|FL|R
+Florida Southern College|Lakeland|FL|R
+New College of Florida|Sarasota|FL|P
+Ringling College of Art and Design|Sarasota|FL|R|art
+Keiser University|Fort Lauderdale|FL|R
+Georgia College & State University|Milledgeville|GA|P
+Valdosta State University|Valdosta|GA|P
+Columbus State University|Columbus|GA|P
+University of West Georgia|Carrollton|GA|P
+Albany State University|Albany|GA|P|hbcu
+Fort Valley State University|Fort Valley|GA|P|hbcu
+Life University|Marietta|GA|R
+Piedmont University|Demorest|GA|R
+Berry College|Mount Berry|GA|R
+Morehouse School of Medicine|Atlanta|GA|R|hbcu,med
+University of Hawaii at Hilo|Hilo|HI|P
+Northwest Nazarene University|Nampa|ID|R
+Northeastern Illinois University|Chicago|IL|P
+Chicago State University|Chicago|IL|P
+University of St. Francis|Joliet|IL|R
+Lewis University|Romeoville|IL|R
+Benedictine University|Lisle|IL|R
+North Park University|Chicago|IL|R
+Elmhurst University|Elmhurst|IL|R
+Dominican University|River Forest|IL|R
+Aurora University|Aurora|IL|R
+National Louis University|Chicago|IL|R
+Rush University|Chicago|IL|R|med
+School of the Art Institute of Chicago|Chicago|IL|R|art
+Columbia College Chicago|Chicago|IL|R|art
+Concordia University Chicago|River Forest|IL|R
+Governors State University|University Park|IL|P
+Olivet Nazarene University|Bourbonnais|IL|R
+University of Southern Indiana|Evansville|IN|P
+University of Indianapolis|Indianapolis|IN|R
+Marian University|Indianapolis|IN|R
+Anderson University|Anderson|IN|R
+Trine University|Angola|IN|R
+University of Evansville|Evansville|IN|R
+Purdue University Fort Wayne|Fort Wayne|IN|P
+Clarke University|Dubuque|IA|R
+St. Ambrose University|Davenport|IA|R
+Upper Iowa University|Fayette|IA|R
+Grand View University|Des Moines|IA|R
+Des Moines University|West Des Moines|IA|R|med
+Fort Hays State University|Hays|KS|P
+Washburn University|Topeka|KS|P
+Friends University|Wichita|KS|R
+Baker University|Baldwin City|KS|R
+Newman University|Wichita|KS|R
+Morehead State University|Morehead|KY|P
+Kentucky State University|Frankfort|KY|P|hbcu
+Campbellsville University|Campbellsville|KY|R
+Asbury University|Wilmore|KY|R
+Spalding University|Louisville|KY|R
+University of the Cumberlands|Williamsburg|KY|R
+Sullivan University|Louisville|KY|R
+McNeese State University|Lake Charles|LA|P
+Nicholls State University|Thibodaux|LA|P
+Southeastern Louisiana University|Hammond|LA|P
+Grambling State University|Grambling|LA|P|hbcu
+Xavier University of Louisiana|New Orleans|LA|R|hbcu
+LSU Health Sciences Center New Orleans|New Orleans|LA|P|med
+University of New England|Biddeford|ME|R|med
+Thomas College|Waterville|ME|R
+Maine College of Art & Design|Portland|ME|R|art
+Frostburg State University|Frostburg|MD|P
+Bowie State University|Bowie|MD|P|hbcu
+Coppin State University|Baltimore|MD|P|hbcu
+University of Maryland Eastern Shore|Princess Anne|MD|P|hbcu
+Stevenson University|Owings Mills|MD|R
+Notre Dame of Maryland University|Baltimore|MD|R
+McDaniel College|Westminster|MD|R
+Hood College|Frederick|MD|R
+Maryland Institute College of Art|Baltimore|MD|R|art
+St. Mary's College of Maryland|St. Mary's City|MD|P
+Bridgewater State University|Bridgewater|MA|P
+Salem State University|Salem|MA|P
+Fitchburg State University|Fitchburg|MA|P
+Worcester State University|Worcester|MA|P
+Framingham State University|Framingham|MA|P
+Westfield State University|Westfield|MA|P
+Massachusetts College of Art and Design|Boston|MA|P|art
+Lesley University|Cambridge|MA|R
+Merrimack College|North Andover|MA|R
+Assumption University|Worcester|MA|R
+Endicott College|Beverly|MA|R
+American International College|Springfield|MA|R
+Western New England University|Springfield|MA|R
+MCPHS University|Boston|MA|R|med
+Northern Michigan University|Marquette|MI|P
+Saginaw Valley State University|University Center|MI|P
+Ferris State University|Big Rapids|MI|P
+Davenport University|Grand Rapids|MI|R
+Madonna University|Livonia|MI|R
+Andrews University|Berrien Springs|MI|R
+Calvin University|Grand Rapids|MI|R
+Kettering University|Flint|MI|R|tech
+College for Creative Studies|Detroit|MI|R|art
+Bemidji State University|Bemidji|MN|P
+Winona State University|Winona|MN|P
+Southwest Minnesota State University|Marshall|MN|P
+Augsburg University|Minneapolis|MN|R
+Hamline University|St. Paul|MN|R
+Concordia University, St. Paul|St. Paul|MN|R
+Saint Mary's University of Minnesota|Winona|MN|R
+Bethel University|St. Paul|MN|R
+Metropolitan State University|St. Paul|MN|P
+College of Saint Scholastica|Duluth|MN|R
+Delta State University|Cleveland|MS|P
+Alcorn State University|Lorman|MS|P|hbcu
+Mississippi College|Clinton|MS|R
+Mississippi University for Women|Columbus|MS|P
+University of Mississippi Medical Center|Jackson|MS|P|med
+Truman State University|Kirksville|MO|P
+Southeast Missouri State University|Cape Girardeau|MO|P
+Northwest Missouri State University|Maryville|MO|P
+Lindenwood University|St. Charles|MO|R
+Maryville University|St. Louis|MO|R
+Drury University|Springfield|MO|R
+Park University|Parkville|MO|R
+Avila University|Kansas City|MO|R
+Columbia College|Columbia|MO|R
+Kansas City University|Kansas City|MO|R|med
+University of Providence|Great Falls|MT|R
+Montana State University Billings|Billings|MT|P
+Montana State University-Northern|Havre|MT|P
+Wayne State College|Wayne|NE|P
+University of Nebraska at Kearney|Kearney|NE|P
+Bellevue University|Bellevue|NE|R
+Doane University|Crete|NE|R
+Concordia University, Nebraska|Seward|NE|R
+Touro University Nevada|Henderson|NV|R|med
+Keene State College|Keene|NH|P
+Franklin Pierce University|Rindge|NH|R
+Rivier University|Nashua|NH|R
+New England College|Henniker|NH|R
+Antioch University New England|Keene|NH|R
+Rider University|Lawrenceville|NJ|R
+Monmouth University|West Long Branch|NJ|R
+Ramapo College of New Jersey|Mahwah|NJ|P
+Stockton University|Galloway|NJ|P
+New Jersey City University|Jersey City|NJ|P
+Saint Peter's University|Jersey City|NJ|R
+Caldwell University|Caldwell|NJ|R
+Felician University|Lodi|NJ|R
+Georgian Court University|Lakewood|NJ|R
+Drew University|Madison|NJ|R
+Eastern New Mexico University|Portales|NM|P
+Western New Mexico University|Silver City|NM|P
+New Mexico Highlands University|Las Vegas|NM|P
+SUNY Plattsburgh|Plattsburgh|NY|P
+SUNY Cortland|Cortland|NY|P
+SUNY Brockport|Brockport|NY|P
+SUNY Geneseo|Geneseo|NY|P
+SUNY Fredonia|Fredonia|NY|P
+SUNY Oneonta|Oneonta|NY|P
+SUNY Potsdam|Potsdam|NY|P
+SUNY Buffalo State University|Buffalo|NY|P
+SUNY Old Westbury|Old Westbury|NY|P
+John Jay College of Criminal Justice (CUNY)|New York|NY|P
+Lehman College (CUNY)|Bronx|NY|P
+College of Staten Island (CUNY)|Staten Island|NY|P
+CUNY Graduate Center|New York|NY|P
+Marist University|Poughkeepsie|NY|R
+Manhattanville University|Purchase|NY|R
+Iona University|New Rochelle|NY|R
+Mercy University|Dobbs Ferry|NY|R
+Molloy University|Rockville Centre|NY|R
+St. Bonaventure University|St. Bonaventure|NY|R
+Canisius University|Buffalo|NY|R
+Niagara University|Niagara University|NY|R
+D'Youville University|Buffalo|NY|R
+Nazareth University|Rochester|NY|R
+Roberts Wesleyan University|Rochester|NY|R
+Utica University|Utica|NY|R
+Le Moyne College|Syracuse|NY|R
+Ithaca College|Ithaca|NY|R
+Sarah Lawrence College|Bronxville|NY|R
+Bard College|Annandale-on-Hudson|NY|R
+School of Visual Arts|New York|NY|R|art
+Fashion Institute of Technology|New York|NY|P|art
+The Juilliard School|New York|NY|R|art
+Manhattan School of Music|New York|NY|R|art
+Touro University|New York|NY|R
+Icahn School of Medicine at Mount Sinai|New York|NY|R|med
+Albany Medical College|Albany|NY|R|med
+New York Medical College|Valhalla|NY|R|med
+Western Carolina University|Cullowhee|NC|P
+University of North Carolina at Pembroke|Pembroke|NC|P
+Winston-Salem State University|Winston-Salem|NC|P|hbcu
+Fayetteville State University|Fayetteville|NC|P|hbcu
+North Carolina Central University|Durham|NC|P|hbcu
+Gardner-Webb University|Boiling Springs|NC|R
+High Point University|High Point|NC|R
+Queens University of Charlotte|Charlotte|NC|R
+Lenoir-Rhyne University|Hickory|NC|R
+Wingate University|Wingate|NC|R
+Meredith College|Raleigh|NC|R
+Methodist University|Fayetteville|NC|R
+Minot State University|Minot|ND|P
+University of Mary|Bismarck|ND|R
+Ohio Dominican University|Columbus|OH|R
+Ashland University|Ashland|OH|R
+John Carroll University|University Heights|OH|R
+Baldwin Wallace University|Berea|OH|R
+Otterbein University|Westerville|OH|R
+Capital University|Columbus|OH|R
+Franciscan University of Steubenville|Steubenville|OH|R
+Malone University|Canton|OH|R
+Tiffin University|Tiffin|OH|R
+Walsh University|North Canton|OH|R
+Northeast Ohio Medical University|Rootstown|OH|P|med
+Cleveland Institute of Art|Cleveland|OH|R|art
+Central State University|Wilberforce|OH|P|hbcu
+Shawnee State University|Portsmouth|OH|P
+Northeastern State University|Tahlequah|OK|P
+Southeastern Oklahoma State University|Durant|OK|P
+Southwestern Oklahoma State University|Weatherford|OK|P
+Oklahoma City University|Oklahoma City|OK|R
+Langston University|Langston|OK|P|hbcu
+Cameron University|Lawton|OK|P
+Southern Oregon University|Ashland|OR|P
+Eastern Oregon University|La Grande|OR|P
+Western Oregon University|Monmouth|OR|P
+George Fox University|Newberg|OR|R
+Pacific University|Forest Grove|OR|R
+Linfield University|McMinnville|OR|R
+Lewis & Clark College|Portland|OR|R
+Oregon Institute of Technology|Klamath Falls|OR|P|tech
+Slippery Rock University of Pennsylvania|Slippery Rock|PA|P
+Shippensburg University of Pennsylvania|Shippensburg|PA|P
+Millersville University of Pennsylvania|Millersville|PA|P
+Kutztown University of Pennsylvania|Kutztown|PA|P
+East Stroudsburg University of Pennsylvania|East Stroudsburg|PA|P
+Commonwealth University of Pennsylvania|Bloomsburg|PA|P
+PennWest University|California|PA|P
+Point Park University|Pittsburgh|PA|R
+Chatham University|Pittsburgh|PA|R
+Carlow University|Pittsburgh|PA|R
+Seton Hill University|Greensburg|PA|R
+Gannon University|Erie|PA|R
+Mercyhurst University|Erie|PA|R
+King's College|Wilkes-Barre|PA|R
+Wilkes University|Wilkes-Barre|PA|R
+Misericordia University|Dallas|PA|R
+Marywood University|Scranton|PA|R
+University of Scranton|Scranton|PA|R
+DeSales University|Center Valley|PA|R
+Moravian University|Bethlehem|PA|R
+Arcadia University|Glenside|PA|R
+Eastern University|St. Davids|PA|R
+Neumann University|Aston|PA|R
+Holy Family University|Philadelphia|PA|R
+Immaculata University|Immaculata|PA|R
+Gwynedd Mercy University|Gwynedd Valley|PA|R
+Saint Francis University|Loretto|PA|R
+Lebanon Valley College|Annville|PA|R
+Elizabethtown College|Elizabethtown|PA|R
+Messiah University|Mechanicsburg|PA|R
+York College of Pennsylvania|York|PA|R
+Philadelphia College of Osteopathic Medicine|Philadelphia|PA|R|med
+Lincoln University|Lincoln University|PA|P|hbcu
+Cheyney University of Pennsylvania|Cheyney|PA|P|hbcu
+Pennsylvania College of Technology|Williamsport|PA|P|tech
+Rhode Island College|Providence|RI|P
+Salve Regina University|Newport|RI|R
+Providence College|Providence|RI|R
+Roger Williams University|Bristol|RI|R
+The Citadel|Charleston|SC|P
+Francis Marion University|Florence|SC|P
+South Carolina State University|Orangeburg|SC|P|hbcu
+Charleston Southern University|Charleston|SC|R
+Anderson University|Anderson|SC|R
+Columbia International University|Columbia|SC|R
+Bob Jones University|Greenville|SC|R
+Converse University|Spartanburg|SC|R
+Northern State University|Aberdeen|SD|P
+Black Hills State University|Spearfish|SD|P
+Augustana University|Sioux Falls|SD|R
+Dakota State University|Madison|SD|P
+University of Sioux Falls|Sioux Falls|SD|R
+Austin Peay State University|Clarksville|TN|P
+University of Tennessee at Chattanooga|Chattanooga|TN|P
+University of Tennessee at Martin|Martin|TN|P
+Trevecca Nazarene University|Nashville|TN|R
+Union University|Jackson|TN|R
+Christian Brothers University|Memphis|TN|R
+Carson-Newman University|Jefferson City|TN|R
+Lee University|Cleveland|TN|R
+Meharry Medical College|Nashville|TN|R|hbcu,med
+University of Tennessee Health Science Center|Memphis|TN|P|med
+The University of Texas Permian Basin|Odessa|TX|P
+Angelo State University|San Angelo|TX|P
+Midwestern State University|Wichita Falls|TX|P
+Tarleton State University|Stephenville|TX|P
+Texas A&M International University|Laredo|TX|P
+University of Houston-Clear Lake|Houston|TX|P
+University of Houston-Downtown|Houston|TX|P
+University of Houston-Victoria|Victoria|TX|P
+Texas A&M University-Commerce|Commerce|TX|P
+Texas A&M University-Texarkana|Texarkana|TX|P
+Dallas Baptist University|Dallas|TX|R
+Abilene Christian University|Abilene|TX|R
+Hardin-Simmons University|Abilene|TX|R
+Houston Christian University|Houston|TX|R
+LeTourneau University|Longview|TX|R
+Our Lady of the Lake University|San Antonio|TX|R
+Texas Wesleyan University|Fort Worth|TX|R
+Trinity University|San Antonio|TX|R
+Concordia University Texas|Austin|TX|R
+Texas Southern University|Houston|TX|P|hbcu
+UTHealth Houston|Houston|TX|P|med
+UT Southwestern Medical Center|Dallas|TX|P|med
+Baylor College of Medicine|Houston|TX|R|med
+Texas Tech University Health Sciences Center|Lubbock|TX|P|med
+Lubbock Christian University|Lubbock|TX|R
+Wayland Baptist University|Plainview|TX|R
+Southern Utah University|Cedar City|UT|P
+Westminster University|Salt Lake City|UT|R
+Utah Tech University|St. George|UT|P
+Saint Michael's College|Colchester|VT|R
+Champlain College|Burlington|VT|R
+Vermont State University|Randolph|VT|P
+Bennington College|Bennington|VT|R
+Longwood University|Farmville|VA|P
+University of Mary Washington|Fredericksburg|VA|P
+Norfolk State University|Norfolk|VA|P|hbcu
+Shenandoah University|Winchester|VA|R
+Regent University|Virginia Beach|VA|R
+Averett University|Danville|VA|R
+University of Lynchburg|Lynchburg|VA|R
+Eastern Mennonite University|Harrisonburg|VA|R
+Virginia Wesleyan University|Virginia Beach|VA|R
+Virginia Union University|Richmond|VA|R|hbcu
+Edward Via College of Osteopathic Medicine|Blacksburg|VA|R|med
+Pacific Lutheran University|Tacoma|WA|R
+Whitworth University|Spokane|WA|R
+Saint Martin's University|Lacey|WA|R
+City University of Seattle|Seattle|WA|R
+Heritage University|Toppenish|WA|R
+Northwest University|Kirkland|WA|R
+Bastyr University|Kenmore|WA|R|med
+The Evergreen State College|Olympia|WA|P
+West Virginia Wesleyan College|Buckhannon|WV|R
+Wheeling University|Wheeling|WV|R
+Fairmont State University|Fairmont|WV|P
+Shepherd University|Shepherdstown|WV|P
+West Liberty University|West Liberty|WV|P
+Concord University|Athens|WV|P
+Bluefield State University|Bluefield|WV|P|hbcu
+University of Wisconsin-Green Bay|Green Bay|WI|P
+University of Wisconsin-Parkside|Kenosha|WI|P
+University of Wisconsin-Platteville|Platteville|WI|P
+University of Wisconsin-River Falls|River Falls|WI|P
+University of Wisconsin-Stevens Point|Stevens Point|WI|P
+University of Wisconsin-Superior|Superior|WI|P
+Alverno College|Milwaukee|WI|R
+Carroll University|Waukesha|WI|R
+Concordia University Wisconsin|Mequon|WI|R
+Edgewood College|Madison|WI|R
+Lakeland University|Plymouth|WI|R
+Medical College of Wisconsin|Milwaukee|WI|R|med
+Milwaukee School of Engineering|Milwaukee|WI|R|tech
+Viterbo University|La Crosse|WI|R
+Marian University|Fond du Lac|WI|R
 `.trim().split("\n").map(function (line, i) {
   var p = line.split("|");
   return { id: "s" + i, name: p[0], city: p[1], state: p[2], control: p[3] === "P" ? "Public" : "Private", tags: p[4] ? p[4].split(",") : [] };
@@ -1049,9 +1480,34 @@ window.NB_RESOURCES = [
   }
 ];
 
+/* Cycle board — what feeds the ticker before anyone adds anything of their own.
+   Deliberately carries no invented dates: the major programmes set theirs per country and per year,
+   so each entry names the programme, says what is true about its cycle, and links to the official page.
+   Add dated entries of your own from the Opportunities screen; they lead the ticker. */
+window.NB_BOARD = [
+  { id: "seed-cycle", kind: "cycle", title: "Fall 2027 applications are open",
+    detail: "Most US graduate programmes take Fall 2027 applications from September. Priority and funding deadlines cluster December to January — aim at those, not the final date.", url: "" },
+  { id: "seed-assist", kind: "cycle", title: "Assistantship rounds run early",
+    detail: "Teaching and research assistantships are usually a separate departmental application, decided before the admission letter goes out. Ask the graduate coordinator which ones need a form.", url: "" },
+  { id: "seed-fulbright", kind: "scholarship", title: "Fulbright Foreign Student Program",
+    detail: "The 2027–28 cycle is running. Deadlines are set by each country's US embassy or binational commission, so the date that matters is the one for the applicant's own country.", url: "https://foreign.fulbrightonline.org" },
+  { id: "seed-kh", kind: "scholarship", title: "Knight-Hennessy Scholars, Stanford",
+    detail: "Full funding for any Stanford graduate programme. One round a year, applied for alongside the degree application — check the dates page before planning around it.", url: "https://knight-hennessy.stanford.edu/admission" },
+  { id: "seed-aauw", kind: "scholarship", title: "AAUW International Fellowships",
+    detail: "For women who are not US citizens or permanent residents, studying full time in the US. Annual cycle.", url: "https://www.aauw.org/resources/programs/fellowships-grants/" },
+  { id: "seed-mcf", kind: "scholarship", title: "Mastercard Foundation Scholars Program",
+    detail: "Runs through partner universities rather than centrally — the partner list is where to start, and each partner runs its own selection.", url: "https://mastercardfdn.org/en/what-we-do/our-programs/mastercard-foundation-scholars-program/" },
+  { id: "seed-rotary", kind: "scholarship", title: "Rotary Peace Fellowships",
+    detail: "Master's level study at partner universities, including in the US. Applications go through a local Rotary district first, which adds months to the front of the process.", url: "https://www.rotary.org/en/our-programs/peace-fellowships" },
+  { id: "seed-jj", kind: "scholarship", title: "Joint Japan/World Bank Graduate Scholarship",
+    detail: "Development-related master's programmes for nationals of World Bank member countries, including several US universities.", url: "https://www.worldbank.org/en/programs/scholarships" },
+  { id: "seed-akf", kind: "scholarship", title: "Aga Khan Foundation International Scholarship",
+    detail: "Half grant, half loan, for postgraduate study. Applications open annually and are made to the local AKF office.", url: "https://the.akdn/en/what-we-do/developing-human-capacity/education/international-scholarship-programme" }
+];
+
 </script>
 <script>
-/* Northbound — core: helpers, state, storage, auth, boot. Views live in the next script. */
+/* Katakyie Advisors — core: helpers, state, storage, auth, boot. Views live in the next script. */
 window.NB = (function () {
 "use strict";
 
@@ -1137,6 +1593,7 @@ var ICONS = {
   home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.6V20h14V9.6"/>',
   cal: '<rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
   chat: '<path d="M21 11.5a8 8 0 0 1-11.6 7.1L3 20.5l1.9-6A8 8 0 1 1 21 11.5Z"/>',
+  bell: '<path d="M18 8.6a6 6 0 1 0-12 0c0 6-2.4 7.4-2.4 7.4h16.8S18 14.6 18 8.6Z"/><path d="M13.7 20a2 2 0 0 1-3.4 0"/>',
   money: '<path d="M12 2.5v19"/><path d="M16.8 6.2H9.9a2.9 2.9 0 0 0 0 5.8h4.2a2.9 2.9 0 0 1 0 5.8H6.6"/>'
 };
 
@@ -1144,8 +1601,8 @@ var ICONS = {
 var DB = null, USER = null, ASSETS = null, MAY_EDIT = false, DBDOWN = false;
 var S = {
   role: null, meId: null,
-  clients: [], notes: {}, billing: {}, templates: {}, msgs: [], msgFor: null,
-  cfg: { orgName: "Northbound Advising", advisorCode: "", welcome: "" },
+  clients: [], notes: {}, billing: {}, templates: {}, board: [], extra: {}, msgs: [], msgFor: null,
+  cfg: { orgName: "Katakyie Advisors", advisorCode: "", welcome: "" },
   view: "clients", open: null, tab: "overview",
   res: RES[0].id,
   dir: { q: "", st: "", ctrl: "", tag: "", limit: 60 },
@@ -1295,6 +1752,31 @@ function saveNote(cid, body) {
   S.notes[cid] = body;
   if (DB) queue("notes/" + cid, function () { return DB.doc("notes/" + cid).set({ body: body, at: new Date().toISOString() }); });
 }
+function allSchools() {
+  var extra = Object.keys(S.extra || {}).map(function (k) {
+    var o = S.extra[k];
+    return { id: "x" + k, docId: k, name: o.name || "", city: o.city || "", state: o.state || "",
+             control: o.control || "Private", tags: o.tags || [], custom: true };
+  }).filter(function (o) { return o.name; });
+  extra.sort(function (a, b) { return a.name.localeCompare(b.name); });
+  return SCHOOLS.concat(extra);
+}
+function saveSchool(id, obj) {
+  if (!DB) return;
+  queue("directory/" + id, function () { return DB.doc("directory/" + id).set(obj); });
+}
+function dropSchool(id) {
+  if (!DB) return;
+  queue("directory/" + id, function () { return DB.doc("directory/" + id).delete(); });
+}
+function saveBoardItem(id, obj) {
+  if (!DB) return;
+  queue("board/" + id, function () { return DB.doc("board/" + id).set(obj); });
+}
+function dropBoardItem(id) {
+  if (!DB) return;
+  queue("board/" + id, function () { return DB.doc("board/" + id).delete(); });
+}
 function saveBilling(cid, obj) {
   S.billing[cid] = obj;
   if (DB) queue("billing/" + cid, function () { return DB.doc("billing/" + cid).set(obj); });
@@ -1347,17 +1829,29 @@ function boot() {
     var perm = USER
       ? Promise.all([USER.isOwner(), USER.canEdit()]).then(function (a) { MAY_EDIT = !!(a[0] || a[1]); }, function () {})
       : Promise.resolve();
-    if (!DB) { DBDOWN = true; return perm.then(finishBoot); }
+    if (!DB) { DBDOWN = true; S.board = (window.NB_BOARD || []).slice(); return perm.then(finishBoot); }
     var settle, loaded = new Promise(function (res) { settle = res; setTimeout(res, 8000); });
     var got = 0;
     function tick() { if (++got >= 1) settle(); }
     addUn(DB.doc("config/app").onSnapshot(function (snap) {
       if (snap.exists) {
         var d = snap.data();
-        S.cfg = { orgName: d.orgName || "Northbound Advising", advisorCode: d.advisorCode || "", welcome: d.welcome || "" };
+        S.cfg = { orgName: d.orgName || "Katakyie Advisors", advisorCode: d.advisorCode || "", welcome: d.welcome || "" };
       }
       tick(); if (BOOTED) NB.render();
     }, tick));
+    addUn(DB.collection("board").onSnapshot(function (snap) {
+      var b = [];
+      snap.docs.forEach(function (d) { var o = d.data() || {}; o.id = d.id; b.push(o); });
+      b.sort(function (x, y) { return String(x.closes || "9999").localeCompare(String(y.closes || "9999")); });
+      S.board = b.concat(window.NB_BOARD || []);
+      if (BOOTED) NB.render();
+    }, function () { S.board = (window.NB_BOARD || []).slice(); }));
+    addUn(DB.collection("directory").onSnapshot(function (snap) {
+      var e = {};
+      snap.docs.forEach(function (d) { e[d.id] = d.data() || {}; });
+      S.extra = e; if (BOOTED) NB.render();
+    }, function () {}));
     addUn(DB.collection("templates").onSnapshot(function (snap) {
       var t = {};
       snap.docs.forEach(function (d) { var o = d.data() || {}; t[d.id] = { id: d.id, name: o.name || d.id, tasks: o.tasks || [] }; });
@@ -1464,7 +1958,7 @@ function signOut() {
     addUn(DB.doc("config/app").onSnapshot(function (snap) {
       if (snap.exists) {
         var d = snap.data();
-        S.cfg = { orgName: d.orgName || "Northbound Advising", advisorCode: d.advisorCode || "", welcome: d.welcome || "" };
+        S.cfg = { orgName: d.orgName || "Katakyie Advisors", advisorCode: d.advisorCode || "", welcome: d.welcome || "" };
       }
       NB.render();
     }, function () {}));
@@ -1482,6 +1976,8 @@ var NB = {
   currentStageIdx: currentStageIdx, nextDeadline: nextDeadline, overdue: overdue, dueSoon: dueSoon,
   costOf: costOf, schPill: schPill, statusPill: statusPill, unread: unread,
   billOf: billOf, scoreFlags: scoreFlags, anyScoreFlags: anyScoreFlags, refGaps: refGaps,
+  allSchools: allSchools, saveSchool: saveSchool, dropSchool: dropSchool,
+  saveBoardItem: saveBoardItem, dropBoardItem: dropBoardItem,
   queue: queue, scheduleSave: scheduleSave, flush: flush, saveCfg: saveCfg, saveNote: saveNote,
   saveTemplate: saveTemplate, saveBilling: saveBilling, setCode: setCode, dropCode: dropCode, sendMsg: sendMsg, markRead: markRead,
   attachMessages: attachMessages, signInAdvisor: signInAdvisor, signInClient: signInClient, signOut: signOut,
@@ -1496,7 +1992,7 @@ return NB;
 
 </script>
 <script>
-/* Northbound — views and interaction. */
+/* Katakyie Advisors — views and interaction. */
 (function (NB) {
 "use strict";
 var $ = NB.$, esc = NB.esc, S = NB.S, ico = NB.ico, ICONS = NB.ICONS, CHECK = NB.CHECK;
@@ -1504,18 +2000,105 @@ var STAGES = NB.STAGES, DOCS = NB.DOCS, DOCST = NB.DOCST, RES = NB.RES, SCHOOLS 
 var fmtDate = NB.fmtDate, daysUntil = NB.daysUntil, money = NB.money, num = NB.num, toast = NB.toast;
 var isAdvisor = NB.isAdvisor, meClient = NB.meClient, byId = NB.byId;
 
+
+/* ---------------------------------------- portal chrome ---------------------------------------- */
+var PORTALS = {
+  clients:    { e: "Book of business", n: "Clients",            d: "Every applicant on the books, where each one stands, and who is slipping." },
+  pipeline:   { e: "Overview",         n: "Pipeline",           d: "The whole practice at a glance — stage distribution, and what needs attention first." },
+  business:   { e: "The practice",     n: "Business",           d: "Fees contracted, money collected, where clients come from, and where past clients landed." },
+  calendar:   { e: "Dates",            n: "Calendar",           d: "Application deadlines and target dates across everyone, month by month." },
+  board:      { e: "Cycle board",      n: "Opportunities",      d: "What is open right now. Everything here feeds the ticker at the top of every screen." },
+  directory:  { e: "Reference",        n: "School Directory",   d: "Every US institution that awards a master's degree, with room to add your own." },
+  resources:  { e: "Reference",        n: "Resource Library",   d: "Nine sections, from the eighteen-month timeline to post-arrival compliance." },
+  settings:   { e: "Administration",   n: "Settings",           d: "Practice details, access codes, and who can see what." },
+  templates:  { e: "Administration",   n: "Task Templates",     d: "The plans clients are worked through. Edit the steps, or keep a different plan per client type." },
+  overview:   { e: "Client portal",    n: "Command Centre",     d: "Where this application stands today, and the next thing that has to happen." },
+  tasks:      { e: "Client portal",    n: "The Plan",           d: "Every step across eight stages, with target dates and who owns each one." },
+  schools:    { e: "Client portal",    n: "Shortlist & Cost",   d: "Where they are applying, what a year costs, and what the funding gap is." },
+  file:       { e: "Client portal",    n: "Application File",   d: "Test scores against each programme's floor, and every referee tracked school by school." },
+  docs:       { e: "Client portal",    n: "Document Vault",     d: "The paper trail, from sealed transcripts to the I-20." },
+  messages:   { e: "Client portal",    n: "Direct Line",        d: "Everything said about this application, kept with the file instead of in a chat app." },
+  billing:    { e: "Client portal",    n: "Account",            d: "Fee agreed, payments received, balance outstanding. Editors only." },
+  notes:      { e: "Client portal",    n: "Private Notes",      d: "Yours alone — restricted at the database, not merely hidden from the page." },
+  report:     { e: "Client portal",    n: "Status Report",      d: "A one-page summary to print, save as PDF, or hand to a sponsor." }
+};
+function head(key, o) {
+  o = o || {};
+  var p = PORTALS[key] || { e: "", n: key, d: "" };
+  return '<div class="portalhead"><div class="ph-main">' +
+      '<div class="eyebrow">' + esc(o.eyebrow || p.e) + "</div>" +
+      "<h1>" + esc(o.title || p.n) + "</h1>" +
+      '<p class="ph-lede">' + esc(o.lede || p.d) + "</p></div>" +
+    (o.actions ? '<div class="ph-act no-print">' + o.actions + "</div>" : "") +
+    (o.stats && o.stats.length ? '<div class="ph-stats">' + o.stats.map(function (x) {
+      return '<div' + (x.flag ? ' class="flag"' : "") + "><b>" + esc(x.v) + "</b><span>" + esc(x.l) + "</span></div>";
+    }).join("") + "</div>" : "") +
+    "</div>";
+}
+function tabbar(tabs, current, act) {
+  return '<div class="tabbar no-print" role="tablist">' + tabs.map(function (t) {
+    return '<button role="tab" aria-selected="' + (current === t.k) + '" data-act="' + act + '" data-v="' + t.k + '">' +
+      esc(t.n) + (t.badge ? ' <span class="pill accent">' + t.badge + "</span>" : "") + "</button>";
+  }).join("") + "</div>";
+}
+
+/* ---------------------------------------- ticker ---------------------------------------- */
+function tickerItems() {
+  var out = [];
+  (S.board || []).forEach(function (b) {
+    var when = "";
+    if (b.closes) {
+      var d = daysUntil(b.closes);
+      if (d !== null && d < 0) return;                    // expired entries drop off by themselves
+      when = d === null ? "" : d === 0 ? "closes today" : "closes in " + d + "d";
+    } else if (b.opens) {
+      var o = daysUntil(b.opens);
+      when = o !== null && o > 0 ? "opens in " + o + "d" : "open now";
+    }
+    out.push({ k: b.kind === "scholarship" ? "Funding" : b.kind === "cycle" ? "Cycle" : "Open",
+               t: b.title, d: when || b.detail, url: b.url, cls: "" });
+  });
+  if (isAdvisor()) {
+    var soon = [];
+    S.clients.forEach(function (c) {
+      (c.schools || []).forEach(function (r) {
+        if (!r.deadline) return;
+        var d = daysUntil(r.deadline);
+        if (d === null || d < 0 || d > 45) return;
+        soon.push({ k: d <= 7 ? "Closing" : "Deadline", t: r.name, d: esc(c.name) + " · " + d + "d", url: "", cls: d <= 7 ? "hot" : "" });
+      });
+    });
+    soon.sort(function (a, b) { return a.d.localeCompare(b.d); });
+    out = soon.concat(out);
+  }
+  return out;
+}
+function renderTicker() {
+  var el = $("#ticker");
+  if (!el) return;
+  var items = tickerItems();
+  if (!items.length) { el.hidden = true; return; }
+  el.hidden = false;
+  var run = items.map(function (i) {
+    var inner = '<span class="k">' + esc(i.k) + "</span><b>" + esc(i.t) + "</b><span>" + (i.d || "") + "</span>";
+    return '<span class="it ' + i.cls + '">' + (i.url ? '<a href="' + esc(i.url) + '" target="_blank" rel="noopener">' + inner + "</a>" : inner) + "</span>";
+  }).join("");
+  el.innerHTML = '<span class="tag">Cycle board</span><div class="tickwin"><div class="track">' + run + run + "</div></div>";
+  el.querySelector(".track").style.animationDuration = Math.max(40, items.length * 9) + "s";
+}
+
 /* ------------------------------------------------ login ------------------------------------------------ */
 function renderLogin() {
   var host = $("#login"); host.hidden = false;
   $("#shell").classList.remove("on");
-  var org = esc(S.cfg.orgName || "Northbound Advising");
+  var org = esc(S.cfg.orgName || "Katakyie Advisors");
   host.innerHTML =
     '<div class="brandside">' +
       '<div style="display:flex;align-items:center;gap:11px">' +
         '<svg class="logomark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="rgba(255,255,255,.14)"></rect>' +
         '<path d="M11 28V12l18 16V12" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>' +
         '<div style="font-weight:600;font-size:15px">' + org + "</div></div>" +
-      "<div><h1>Every step from first enquiry to the airport, in one place.</h1>" +
+      "<div><h1>From the first enquiry to the airport, tracked to the day.</h1>" +
       "<p>Sign in with the access code your advisor gave you. You see your own file and nothing else — " +
       "your progress, your shortlist, your documents and your messages.</p></div>" +
       '<div class="marks">' + STAGES.map(function (s) { return "<span>" + esc(s.name) + "</span>"; }).join("") + "</div>" +
@@ -1526,7 +2109,7 @@ function renderLogin() {
         '<button data-act="logintab" data-v="client" aria-pressed="' + (S.loginTab === "client") + '">Client portal</button>' +
         '<button data-act="logintab" data-v="advisor" aria-pressed="' + (S.loginTab === "advisor") + '">Advisor</button></div>' +
       (S.loginTab === "client"
-        ? '<div class="field"><label for="codeIn">Access code</label><input class="inp mono" id="codeIn" placeholder="NB-0000" autocomplete="off" spellcheck="false"></div>'
+        ? '<div class="field"><label for="codeIn">Access code</label><input class="inp mono" id="codeIn" placeholder="KA-0000" autocomplete="off" spellcheck="false"></div>'
         : '<div class="field"><label for="codeIn">Advisor passcode</label><input class="inp mono" id="codeIn" type="password" placeholder="••••••••" autocomplete="off"></div>') +
       '<div id="loginErr" style="color:var(--crit);font-size:12.5px;margin-top:8px" hidden></div>' +
       '<button class="btn pri" data-act="dologin" style="width:100%;justify-content:center;margin-top:16px">Continue</button>' +
@@ -1568,6 +2151,7 @@ var NAV_ADVISOR = [
   { v: "pipeline", n: "Pipeline", i: "pipeline" },
   { v: "business", n: "Business", i: "money" },
   { v: "calendar", n: "Calendar", i: "cal" },
+  { v: "board", n: "Opportunities", i: "bell" },
   { v: "directory", n: "School directory", i: "school" },
   { v: "resources", n: "Resource library", i: "book" },
   { v: "settings", n: "Settings", i: "gear" }
@@ -1579,6 +2163,7 @@ var NAV_CLIENT = [
   { v: "client:docs", n: "Documents", i: "doc" },
   { v: "client:messages", n: "Messages", i: "chat" },
   { v: "calendar", n: "Calendar", i: "cal" },
+  { v: "board", n: "Opportunities", i: "bell" },
   { v: "directory", n: "School directory", i: "school" },
   { v: "resources", n: "Resource library", i: "book" }
 ];
@@ -1588,7 +2173,7 @@ function render() {
   $("#shell").classList.add("on");
 
   if (S.loading) {
-    $("#nav").innerHTML = ""; $("#title").textContent = "Loading"; $("#crumb").textContent = "";
+    $("#nav").innerHTML = ""; $("#crumb").textContent = "";
     $("#topactions").innerHTML = "";
     $("#view").innerHTML = '<div class="card"><div class="empty"><h3>Opening your workspace</h3><p>Fetching records.</p></div></div>';
     return;
@@ -1603,7 +2188,7 @@ function render() {
     return '<a data-act="go" data-v="' + it.v + '" class="' + (cur === it.v ? "on" : "") + '">' + ico(ICONS[it.i]) + "<span>" + esc(it.n) + "</span>" + badge + "</a>";
   }).join("");
 
-  $("#brandName").textContent = S.cfg.orgName || "Northbound Advising";
+  $("#brandName").textContent = S.cfg.orgName || "Katakyie Advisors";
   $("#brandRole").textContent = isAdvisor() ? "Advisor console" : "Client portal";
   var who = isAdvisor() ? "Advisor" : ((meClient() && meClient().name) || "Client");
   $("#meInitials").textContent = NB.initials(who);
@@ -1615,6 +2200,8 @@ function render() {
   if (NB.DBDOWN) v.insertAdjacentHTML("beforeend",
     '<div class="notice"><b>Not saving.</b> Shared storage is unavailable in this view, so changes will be lost on reload.</div>');
 
+  renderTicker();
+
   if (S.view === "clients") viewClients(v);
   else if (S.view === "pipeline") viewPipeline(v);
   else if (S.view === "business") viewBusiness(v);
@@ -1623,6 +2210,7 @@ function render() {
   else if (S.view === "resources") viewResources(v);
   else if (S.view === "settings") viewSettings(v);
   else if (S.view === "templates") viewTemplates(v);
+  else if (S.view === "board") viewBoard(v);
   else if (S.view === "client") viewClient(v);
   wire();
 }
@@ -1634,8 +2222,13 @@ function kpi(val, label, flag) {
 
 /* ------------------------------------------------ clients ------------------------------------------------ */
 function viewClients(v) {
-  $("#title").textContent = "Clients";
-  $("#topactions").innerHTML = '<button class="btn pri" data-act="newclient">+ New client</button>';
+  var late = S.clients.filter(function (c) { return NB.overdue(c).length > 0; }).length;
+  var act = S.clients.filter(function (c) { return (c.status || "Active") === "Active"; }).length;
+  v.insertAdjacentHTML("beforeend", head("clients", {
+    actions: '<button class="btn pri" data-act="newclient">+ New client</button>',
+    stats: [{ v: act, l: "active" }, { v: S.clients.length, l: "on the books" },
+            { v: late, l: "with overdue steps", flag: late > 0 }]
+  }));
 
   if (!S.clients.length) {
     v.insertAdjacentHTML("beforeend",
@@ -1685,8 +2278,8 @@ function viewClients(v) {
 
 /* ------------------------------------------------ pipeline ------------------------------------------------ */
 function viewPipeline(v) {
-  $("#title").textContent = "Pipeline";
   var cs = S.clients;
+  v.insertAdjacentHTML("beforeend", head("pipeline"));
   if (!cs.length) {
     v.insertAdjacentHTML("beforeend", '<div class="card"><div class="empty"><h3>Nothing to chart yet</h3><p>Pipeline figures appear once you have clients on the books.</p></div></div>');
     return;
@@ -1759,7 +2352,7 @@ function calEvents() {
   return ev;
 }
 function viewCalendar(v) {
-  $("#title").textContent = "Calendar";
+  v.insertAdjacentHTML("beforeend", head("calendar"));
   var now = new Date();
   if (!S.cal) S.cal = { y: now.getFullYear(), m: now.getMonth() };
   var y = S.cal.y, m = S.cal.m;
@@ -1809,8 +2402,11 @@ function viewClient(v) {
   }
   if (S.msgFor !== c.id) NB.attachMessages(c.id);
   if (!isAdvisor() && (S.tab === "billing" || S.tab === "notes")) S.tab = "overview";
-  var T = tabsFor();
-  $("#title").textContent = isAdvisor() ? (c.name || "Client") : (T.filter(function (x) { return x.k === S.tab; })[0] || T[0]).n;
+
+  var T = tabsFor(), un = NB.unread(c);
+  T.forEach(function (t) { if (t.k === "messages" && un) t.badge = un; });
+
+  var prog = NB.progressOf(c), si = NB.currentStageIdx(c), od = NB.overdue(c);
   if (isAdvisor()) {
     $("#crumb").textContent = "Clients / " + (c.name || "");
     $("#topactions").innerHTML =
@@ -1818,25 +2414,31 @@ function viewClient(v) {
       '<button class="btn" data-act="outcome" data-v="' + esc(c.id) + '">Record outcome</button>' +
       '<button class="btn" data-act="editclient" data-v="' + esc(c.id) + '">Edit record</button>';
   } else {
-    $("#crumb").textContent = (c.targetTerm ? c.targetTerm + " intake" : "") + (c.field ? " · " + c.field : "");
+    $("#crumb").textContent = (c.targetTerm ? c.targetTerm + " intake" : "");
   }
-  var un = NB.unread(c);
-  var html = '<div class="card"><div class="tabs no-print" role="tablist">' + T.map(function (t) {
-    return '<button role="tab" aria-selected="' + (S.tab === t.k) + '" data-act="ctab" data-v="' + t.k + '">' + esc(t.n) +
-      (t.k === "messages" && un ? ' <span class="pill accent" style="margin-left:6px">' + un + "</span>" : "") + "</button>";
-  }).join("") + "</div>";
 
-  if (S.tab === "overview") html += cOverview(c);
-  else if (S.tab === "tasks") html += cTasks(c);
-  else if (S.tab === "schools") html += cSchools(c);
-  else if (S.tab === "file") html += cFile(c);
-  else if (S.tab === "billing") html += cBilling(c);
-  else if (S.tab === "docs") html += cDocs(c);
-  else if (S.tab === "messages") html += cMessages(c);
-  else if (S.tab === "notes") html += cNotes(c);
-  else if (S.tab === "report") html += cReport(c);
-  html += "</div>";
-  v.insertAdjacentHTML("beforeend", html);
+  v.insertAdjacentHTML("beforeend", head(S.tab, {
+    eyebrow: isAdvisor() ? (c.name || "Client") : [c.field, c.targetTerm ? c.targetTerm + " intake" : ""].filter(Boolean).join(" · "),
+    stats: [
+      { v: prog.pct + "%", l: "of the plan complete" },
+      { v: STAGES[si].n + " of 8", l: STAGES[si].name },
+      { v: (c.schools || []).length, l: "schools on the list" },
+      { v: od.length, l: "steps past their date", flag: od.length > 0 }
+    ]
+  }));
+  v.insertAdjacentHTML("beforeend", tabbar(T, S.tab, "ctab"));
+
+  var body = "";
+  if (S.tab === "overview") body = cOverview(c);
+  else if (S.tab === "tasks") body = cTasks(c);
+  else if (S.tab === "schools") body = cSchools(c);
+  else if (S.tab === "file") body = cFile(c);
+  else if (S.tab === "billing") body = cBilling(c);
+  else if (S.tab === "docs") body = cDocs(c);
+  else if (S.tab === "messages") body = cMessages(c);
+  else if (S.tab === "notes") body = cNotes(c);
+  else if (S.tab === "report") body = cReport(c);
+  v.insertAdjacentHTML("beforeend", '<div class="card">' + body + "</div>");
 }
 
 function ringSvg(pct) {
@@ -2058,7 +2660,7 @@ function cReport(c) {
     '<button class="btn pri" data-act="printrep">Print / save as PDF</button></div>' +
     '<div class="card-b rep">' +
       '<div class="printonly" style="margin-bottom:18px;border-bottom:2px solid var(--brand);padding-bottom:10px">' +
-        '<div style="font-family:var(--serif);font-size:22px;font-weight:600">' + esc(S.cfg.orgName || "Northbound Advising") + "</div>" +
+        '<div style="font-family:var(--serif);font-size:22px;font-weight:600">' + esc(S.cfg.orgName || "Katakyie Advisors") + "</div>" +
         '<div class="muted" style="font-size:12px">Application status report · ' + fmtDate(NB.today()) + "</div></div>" +
       '<h3 class="serif" style="font-size:24px">' + esc(c.name || "") + "</h3>" +
       '<p class="muted" style="margin-bottom:18px">' + esc([c.field, c.targetTerm ? c.targetTerm + " intake" : "", c.country].filter(Boolean).join(" · ")) + "</p>" +
@@ -2088,7 +2690,7 @@ function cReport(c) {
         }).join("") + "</ul>" : '<p class="muted">Nothing outstanding.</p>') +
       (od.length ? '<p style="margin-top:16px;color:var(--crit);font-weight:600">' + od.length + " step" + (od.length === 1 ? " is" : "s are") + " past its target date.</p>" : "") +
       '<p class="muted" style="font-size:11.5px;margin-top:26px;border-top:1px solid var(--line);padding-top:10px">' +
-      "Prepared by " + esc(S.cfg.orgName || "Northbound Advising") + " on " + fmtDate(NB.today()) +
+      "Prepared by " + esc(S.cfg.orgName || "Katakyie Advisors") + " on " + fmtDate(NB.today()) +
       ". General planning information, not legal or immigration advice.</p>" +
     "</div>";
 }
@@ -2096,10 +2698,16 @@ function cReport(c) {
 /* ------------------------------------------------ directory ------------------------------------------------ */
 var TAGN = { ivy: "Ivy League", hbcu: "HBCU", tech: "Institute of technology", art: "Art & design", med: "Health sciences" };
 function viewDirectory(v) {
-  $("#title").textContent = "School directory";
-  var states = SCHOOLS.reduce(function (a, s) { if (a.indexOf(s.state) < 0) a.push(s.state); return a; }, []).sort();
+  var SCH = NB.allSchools();
+  var states = SCH.reduce(function (a, s) { if (a.indexOf(s.state) < 0) a.push(s.state); return a; }, []).sort();
   var q = S.dir.q.toLowerCase();
-  var list = SCHOOLS.filter(function (s) {
+  var added = SCH.length - SCHOOLS.length;
+  v.insertAdjacentHTML("beforeend", head("directory", {
+    actions: (isAdvisor() ? '<button class="btn pri" data-act="addschool">+ Add an institution</button>' : ""),
+    stats: [{ v: SCH.length, l: "institutions listed" }, { v: states.length, l: "states and territories" },
+            { v: added, l: "added by this practice" }]
+  }));
+  var list = SCH.filter(function (s) {
     if (S.dir.st && s.state !== S.dir.st) return false;
     if (S.dir.ctrl && s.control !== S.dir.ctrl) return false;
     if (S.dir.tag && s.tags.indexOf(S.dir.tag) < 0) return false;
@@ -2112,7 +2720,7 @@ function viewDirectory(v) {
 
   v.insertAdjacentHTML("beforeend",
     '<div class="card"><div class="card-h" style="align-items:center"><div class="filters" style="flex:1">' +
-      '<input class="inp grow" id="dq" placeholder="Search ' + SCHOOLS.length + ' institutions by name or city" value="' + esc(S.dir.q) + '">' +
+      '<input class="inp grow" id="dq" placeholder="Search ' + SCH.length + ' institutions by name or city" value="' + esc(S.dir.q) + '">' +
       '<select class="inp" data-act="dfil" data-k="st"><option value="">All states</option>' +
         states.map(function (s) { return "<option " + (S.dir.st === s ? "selected" : "") + ">" + s + "</option>"; }).join("") + "</select>" +
       '<select class="inp" data-act="dfil" data-k="ctrl"><option value="">Public & private</option>' +
@@ -2130,6 +2738,8 @@ function viewDirectory(v) {
         (s.tags.length ? " · " + s.tags.map(function (t) { return esc(TAGN[t] || t); }).join(", ") : "") + "</div></div>" +
         '<div class="rt"><a class="btn sm" target="_blank" rel="noopener" href="https://www.google.com/search?q=' +
           encodeURIComponent(s.name + " graduate admissions") + '">Admissions ↗</a>' +
+        (s.custom && isAdvisor() ? '<button class="btn ghost sm" data-act="editschool" data-v="' + esc(s.docId) + '">Edit</button>' +
+            '<button class="btn ghost sm" data-act="delschool" data-v="' + esc(s.docId) + '" aria-label="Remove">✕</button>' : "") +
         (target ? (have[s.id] ? '<span class="pill ok"><span class="dot"></span>On list</span>'
                               : '<button class="btn sm pri" data-act="addfromdir" data-v="' + s.id + '">Add to list</button>') : "") +
         "</div></div>";
@@ -2140,8 +2750,8 @@ function viewDirectory(v) {
 
 /* ------------------------------------------------ resources ------------------------------------------------ */
 function viewResources(v) {
-  $("#title").textContent = "Resource library";
   var sec = RES.filter(function (r) { return r.id === S.res; })[0] || RES[0];
+  v.insertAdjacentHTML("beforeend", head("resources"));
   v.insertAdjacentHTML("beforeend",
     '<div class="res-nav">' + RES.map(function (r) {
       return '<button data-act="res" data-v="' + r.id + '" aria-pressed="' + (r.id === sec.id) + '">' + esc(r.name) + "</button>";
@@ -2160,7 +2770,7 @@ function viewResources(v) {
 
 /* ------------------------------------------------ settings ------------------------------------------------ */
 function viewSettings(v) {
-  $("#title").textContent = "Settings";
+  v.insertAdjacentHTML("beforeend", head("settings"));
   v.insertAdjacentHTML("beforeend",
     '<div class="grid2">' +
     '<div class="card"><div class="card-h"><div><h3>Practice details</h3>' +
@@ -2193,10 +2803,11 @@ function viewSettings(v) {
 
 /* ------------------------------------------------ templates ------------------------------------------------ */
 function viewTemplates(v) {
-  $("#title").textContent = "Task templates";
   $("#crumb").textContent = "Settings / Templates";
-  $("#topactions").innerHTML = '<button class="btn" data-act="go" data-v="settings">← Settings</button>' +
-    '<button class="btn pri" data-act="tplnew">+ New template</button>';
+  v.insertAdjacentHTML("beforeend", head("templates", {
+    actions: '<button class="btn" data-act="go" data-v="settings">← Settings</button>' +
+             '<button class="btn pri" data-act="tplnew">+ New template</button>'
+  }));
   var ids = Object.keys(S.templates);
   if (!ids.length) {
     v.insertAdjacentHTML("beforeend", '<div class="card"><div class="empty"><h3>No templates stored</h3>' +
@@ -2235,9 +2846,8 @@ function viewTemplates(v) {
 
 /* ------------------------------------------------ business ------------------------------------------------ */
 function viewBusiness(v) {
-  $("#title").textContent = "Business";
-  $("#topactions").innerHTML = '<button class="btn" data-act="printrep">Print</button>';
   var cs = S.clients;
+  v.insertAdjacentHTML("beforeend", head("business", { actions: '<button class="btn" data-act="printrep">Print</button>' }));
   if (!cs.length) {
     v.insertAdjacentHTML("beforeend", '<div class="card"><div class="empty"><h3>Nothing to total yet</h3><p>Fees and outcomes appear once you have clients on the books.</p></div></div>');
     return;
@@ -2389,6 +2999,45 @@ function cFile(c) {
     '<div class="card-b flush">' + refHtml + "</div>";
 }
 
+
+/* ------------------------------------------------ opportunities ------------------------------------------------ */
+var BOARD_KINDS = ["scholarship", "application", "cycle"];
+function viewBoard(v) {
+  var own = (S.board || []).filter(function (b) { return String(b.id).indexOf("seed-") !== 0; });
+  var seeded = (S.board || []).filter(function (b) { return String(b.id).indexOf("seed-") === 0; });
+  v.insertAdjacentHTML("beforeend", head("board", {
+    actions: isAdvisor() ? '<button class="btn pri" data-act="addboard">+ Add an entry</button>' : "",
+    stats: [{ v: own.length, l: "entries you maintain" }, { v: seeded.length, l: "built in" },
+            { v: own.filter(function (b) { var d = b.closes ? daysUntil(b.closes) : null; return d !== null && d >= 0 && d <= 30; }).length, l: "closing inside 30 days" }]
+  }));
+
+  function rowFor(b, editable) {
+    var d = b.closes ? daysUntil(b.closes) : null;
+    var cls = d === null ? "" : d < 0 ? "" : d <= 7 ? "crit" : d <= 30 ? "warn" : "ok";
+    return '<div class="schoolrow"><div style="min-width:0;flex:1 1 260px">' +
+      '<div class="nm">' + esc(b.title) + "</div>" +
+      '<div class="loc">' + esc(b.detail || "") + "</div>" +
+      (b.url ? '<div style="margin-top:4px"><a href="' + esc(b.url) + '" target="_blank" rel="noopener" style="font-size:12.5px">Official page ↗</a></div>' : "") +
+      "</div><div class=\"rt\">" +
+      '<span class="pill brand">' + esc(b.kind === "scholarship" ? "Funding" : b.kind === "application" ? "Applications" : "Cycle") + "</span>" +
+      (b.opens ? '<span class="pill">opens ' + fmtDate(b.opens) + "</span>" : "") +
+      (b.closes ? '<span class="pill ' + cls + '">' + (d !== null && d < 0 ? "closed " + fmtDate(b.closes) : "closes " + fmtDate(b.closes) + (d !== null ? " · " + d + "d" : "")) + "</span>" : "") +
+      (editable ? '<button class="btn ghost sm" data-act="editboard" data-v="' + esc(b.id) + '">Edit</button>' +
+                  '<button class="btn ghost sm" data-act="delboard" data-v="' + esc(b.id) + '" aria-label="Remove">✕</button>' : "") +
+      "</div></div>";
+  }
+
+  v.insertAdjacentHTML("beforeend",
+    '<div class="card"><div class="card-h"><div><h3>Your entries</h3>' +
+      '<p class="muted" style="font-size:12.5px;margin-top:3px">These lead the ticker. An entry whose closing date has passed drops off by itself.</p></div></div>' +
+      '<div class="card-b flush">' + (own.length ? own.map(function (b) { return rowFor(b, isAdvisor()); }).join("")
+        : '<div class="empty"><h3>Nothing of your own yet</h3><p>Add an award, an application window or a deadline you want every screen to shout about.</p>' +
+          (isAdvisor() ? '<button class="btn pri" data-act="addboard" style="margin-top:14px">+ Add an entry</button>' : "") + "</div>") + "</div></div>" +
+    '<div class="card"><div class="card-h"><div><h3>Built in</h3>' +
+      '<p class="muted" style="font-size:12.5px;margin-top:3px">Long-running programmes that come with the platform. No dates are asserted for them on purpose — the big awards set theirs per country and per cycle, so the official page is the only reliable source. Add a dated entry of your own once you have checked one.</p></div></div>' +
+      '<div class="card-b flush">' + seeded.map(function (b) { return rowFor(b, false); }).join("") + "</div></div>");
+}
+
 /* ------------------------------------------------ modals ------------------------------------------------ */
 function closeModal() { $("#modalHost").innerHTML = ""; }
 function modal(title, bodyHtml, okLabel, onOk) {
@@ -2414,7 +3063,7 @@ function sel(id, label, val, opts) {
 }
 function newCode() {
   var n = ""; for (var i = 0; i < 4; i++) n += Math.floor(Math.random() * 10);
-  return "NB-" + n;
+  return "KA-" + n;
 }
 var TERMS = ["Fall 2027", "Spring 2028", "Fall 2028", "Spring 2029", "Fall 2029", "Not set"];
 
@@ -2600,6 +3249,53 @@ function outcomeModal(c) {
     });
 }
 
+
+function boardModal(id) {
+  var b = id ? (S.board || []).filter(function (x) { return x.id === id; })[0] : null;
+  b = b || {};
+  modal(id ? "Edit entry" : "Add to the cycle board",
+    fld("kTitle", "Headline", b.title, "Fall 2027 applications open at Arizona State") +
+    '<div class="field"><label for="kDetail">Detail</label><textarea class="inp" id="kDetail" style="min-height:70px" placeholder="What is actually open, and the one thing that matters about it.">' + esc(b.detail || "") + "</textarea></div>" +
+    sel("kKind", "Kind", b.kind || "scholarship", [{ v: "scholarship", n: "Funding opportunity" }, { v: "application", n: "Applications open" }, { v: "cycle", n: "Cycle note" }]) +
+    '<div class="grid2" style="gap:12px">' + fld("kOpens", "Opens", b.opens || "", "", "date") + fld("kCloses", "Closes", b.closes || "", "", "date") + "</div>" +
+    fld("kUrl", "Official page", b.url, "https://…", "url") +
+    '<p class="muted" style="font-size:12px">An entry with a closing date in the past drops out of the ticker on its own.</p>',
+    id ? "Save entry" : "Add entry",
+    function () {
+      var t = $("#kTitle").value.trim();
+      if (!t) { toast("Give it a headline."); return false; }
+      var nid = id || ("b" + Date.now().toString(36) + Math.floor(Math.random() * 1e3).toString(36));
+      NB.saveBoardItem(nid, { kind: $("#kKind").value, title: t, detail: $("#kDetail").value.trim(),
+        opens: $("#kOpens").value || "", closes: $("#kCloses").value || "", url: $("#kUrl").value.trim() });
+      toast(id ? "Entry saved" : "Added to the board"); return true;
+    });
+}
+
+function schoolDirModal(docId) {
+  var cur = docId ? (S.extra[docId] || {}) : {};
+  var TAGS = [{ v: "", n: "No tag" }, { v: "tech", n: "Institute of technology" }, { v: "art", n: "Art & design" },
+              { v: "med", n: "Health sciences" }, { v: "hbcu", n: "HBCU" }, { v: "ivy", n: "Ivy League" }];
+  modal(docId ? "Edit institution" : "Add an institution",
+    fld("gName", "Name", cur.name, "Ghana Institute of Management") +
+    '<div class="grid2" style="gap:12px">' + fld("gCity", "City", cur.city, "Richardson") +
+      fld("gState", "State (two letters)", cur.state, "TX") + "</div>" +
+    '<div class="grid2" style="gap:12px">' + sel("gCtrl", "Control", cur.control || "Public", ["Public", "Private"]) +
+      sel("gTag", "Type", (cur.tags || [])[0] || "", TAGS) + "</div>" +
+    '<p class="muted" style="font-size:12px">Added institutions sit alongside the built-in list everywhere — search, filters and every client shortlist.</p>',
+    docId ? "Save" : "Add to directory",
+    function () {
+      var nm = $("#gName").value.trim();
+      if (!nm) { toast("Name it first."); return false; }
+      var st = $("#gState").value.trim().toUpperCase().slice(0, 2);
+      if (st.length !== 2) { toast("Use the two-letter state code."); return false; }
+      var tag = $("#gTag").value;
+      var id = docId || ("d" + Date.now().toString(36) + Math.floor(Math.random() * 1e3).toString(36));
+      NB.saveSchool(id, { name: nm, city: $("#gCity").value.trim(), state: st,
+        control: $("#gCtrl").value, tags: tag ? [tag] : [], addedAt: new Date().toISOString() });
+      toast(docId ? "Saved" : "Added to the directory"); return true;
+    });
+}
+
 /* ------------------------------------------------ wiring ------------------------------------------------ */
 function wire() {
   var notes = $("#notesBox");
@@ -2702,7 +3398,7 @@ document.addEventListener("click", function (e) {
     NB.scheduleSave(c1.id, 0); render(); toast("New code: " + c1.code); return;
   }
   if (a === "savecfg") {
-    S.cfg.orgName = $("#setName").value.trim() || "Northbound Advising";
+    S.cfg.orgName = $("#setName").value.trim() || "Katakyie Advisors";
     S.cfg.advisorCode = $("#setCode").value.trim();
     S.cfg.welcome = $("#setWelcome").value.trim();
     NB.saveCfg(); render(); toast("Settings saved"); return;
@@ -2749,8 +3445,8 @@ document.addEventListener("click", function (e) {
   if (a === "addfromdir") {
     var c5 = meClient();
     if (!c5) { toast("Open a client first, then add schools to their list."); return; }
-    var s = null;
-    for (var i = 0; i < SCHOOLS.length; i++) if (SCHOOLS[i].id === v) { s = SCHOOLS[i]; break; }
+    var all = NB.allSchools(), s = null;
+    for (var i = 0; i < all.length; i++) if (all[i].id === v) { s = all[i]; break; }
     if (!s) return;
     c5.schools = c5.schools || [];
     c5.schools.push({ sid: s.id, name: s.name, program: "", deadline: "", status: "Researching", note: "",
@@ -2759,6 +3455,24 @@ document.addEventListener("click", function (e) {
     NB.scheduleSave(c5.id, 0); render(); toast("Added to " + (c5.name || "the") + "'s list"); return;
   }
   if (a === "sendmsg") { doSend(); return; }
+
+  if (a === "addboard") { boardModal(null); return; }
+  if (a === "editboard") { boardModal(v); return; }
+  if (a === "delboard") {
+    modal("Remove this entry?", "<p>It disappears from the ticker straight away.</p>", "Remove", function () {
+      NB.dropBoardItem(v); S.board = (S.board || []).filter(function (b) { return b.id !== v; });
+      render(); return true;
+    });
+    return;
+  }
+  if (a === "addschool") { schoolDirModal(null); return; }
+  if (a === "editschool") { schoolDirModal(v); return; }
+  if (a === "delschool") {
+    modal("Remove this institution?", "<p>It is removed from the directory. Client shortlists that already name it keep it.</p>", "Remove", function () {
+      NB.dropSchool(v); delete S.extra[v]; render(); return true;
+    });
+    return;
+  }
 
   if (a === "openbill") { S.open = v; S.view = "client"; S.tab = "billing"; NB.attachMessages(v); render(); return; }
   if (a === "outcome") { var co = byId(v) || meClient(); if (co) outcomeModal(co); return; }

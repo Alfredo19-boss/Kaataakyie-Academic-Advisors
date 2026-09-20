@@ -1,32 +1,21 @@
-<title>The US Master's Planner</title>
+<title>Katakyie Master's Planner</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
 <style>
+
 :root{
-  --bg:#F1F4F6; --panel:#FFFFFF; --panel2:#E6EDEF; --line:#D3DDE1; --line2:#BDCBD1;
-  --text:#0F1D23; --muted:#5B6E76; --faint:#8296A0;
-  --brand:#0F4C5C; --brand-2:#166376; --brand-soft:#E0EDF1; --on-brand:#FFFFFF;
-  --ink:#071A21; --ink-2:#0C2933;
-  --accent:#B4622A; --accent-soft:#F7EAE0;
-  --ok:#1B7A5B; --crit:#A63A2E;
+  color-scheme:dark;
+  --bg:#0A0908; --panel:#121110; --panel2:#1B1917; --panel3:#232019;
+  --line:#272420; --line2:#3A352C;
+  --text:#F3EEE4; --muted:#A79F90; --faint:#7B7466;
+  --brand:#D9B441; --brand-2:#EBC95F; --brand-soft:#241D0E; --brand-line:#4A3C18; --on-brand:#120E04;
+  --ink:#070605; --ink-2:#100E0A;
+  --accent:#C4864A; --accent-soft:#2A1C10;
+  --ok:#6FC395; --crit:#E0705D; --warn:#E08D3F;
   --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
   --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
   --r:12px;
-}
-@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
-  --bg:#080F13; --panel:#101A20; --panel2:#18252C; --line:#22333B; --line2:#2E434D;
-  --text:#E3EAED; --muted:#93A6AE; --faint:#6F858E;
-  --brand:#5FB4C9; --brand-2:#7CC7D9; --brand-soft:#11303A; --on-brand:#06171D;
-  --ink:#050D11; --ink-2:#0B1C23; --accent:#E09257; --accent-soft:#2C1D12;
-  --ok:#5AC89E; --crit:#E5867A;
-}}
-:root[data-theme="dark"]{
-  --bg:#080F13; --panel:#101A20; --panel2:#18252C; --line:#22333B; --line2:#2E434D;
-  --text:#E3EAED; --muted:#93A6AE; --faint:#6F858E;
-  --brand:#5FB4C9; --brand-2:#7CC7D9; --brand-soft:#11303A; --on-brand:#06171D;
-  --ink:#050D11; --ink-2:#0B1C23; --accent:#E09257; --accent-soft:#2C1D12;
-  --ok:#5AC89E; --crit:#E5867A;
 }
 
 *{box-sizing:border-box}
@@ -40,7 +29,7 @@ button,input,select{font:inherit;color:inherit}
 html{scroll-behavior:smooth}
 
 .wrap{width:100%;max-width:1080px;margin:0 auto;padding-inline:20px}
-.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brand);font-weight:500}
 .lead{font-size:17px;color:var(--muted);max-width:62ch}
 section{padding-block:72px}
 section+section{border-top:1px solid var(--line)}
@@ -49,8 +38,8 @@ section+section{border-top:1px solid var(--line)}
 .shead p{margin-top:12px}
 
 /* nav */
-.topnav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:color-mix(in srgb,var(--bg) 90%,transparent);
-  backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.topnav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:color-mix(in srgb,var(--bg) 92%,transparent);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--brand-line)}
 .topnav .wrap{display:flex;align-items:center;gap:22px;height:58px}
 .topnav .brand{display:flex;align-items:center;gap:9px;font-weight:600;font-size:14.5px;margin-right:auto;white-space:nowrap}
 .topnav a{color:var(--muted);text-decoration:none;font-size:13.5px;font-weight:500;white-space:nowrap}
@@ -60,22 +49,22 @@ section+section{border-top:1px solid var(--line)}
 .navlinks{display:flex;gap:20px;align-items:center;overflow-x:auto}
 
 /* hero */
-.hero{background:var(--ink);color:#EAF1F3;padding-block:84px 72px;border-bottom:1px solid var(--line)}
+.hero{background:radial-gradient(1200px 520px at 8% -12%, rgba(217,180,65,.12), transparent 62%),linear-gradient(168deg,#151108,#070605 62%);color:var(--text);padding-block:84px 72px;border-bottom:1px solid var(--line)}
 .hero h1{font-family:var(--serif);font-size:clamp(34px,6vw,60px);line-height:1.04;font-weight:600;max-width:17ch}
-.hero .sub{margin-top:22px;font-size:18px;color:#A9C0C7;max-width:56ch}
+.hero .sub{margin-top:22px;font-size:18px;color:var(--muted);max-width:56ch}
 .hero .acts{margin-top:32px;display:flex;gap:12px;flex-wrap:wrap}
 .hero .b1,.hero .b2{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14.5px}
-.hero .b1{background:var(--accent);color:#1A0C04}
-.hero .b2{border:1px solid rgba(233,241,243,.28);color:#EAF1F3}
-.hero .b2:hover{background:rgba(233,241,243,.08)}
-.statrow{display:flex;gap:40px;flex-wrap:wrap;margin-top:52px;padding-top:26px;border-top:1px solid rgba(233,241,243,.16)}
-.statrow div b{display:block;font-family:var(--serif);font-size:30px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums}
-.statrow div span{font-size:12.5px;color:#93AEB6;display:block;margin-top:6px}
+.hero .b1{background:var(--brand);color:var(--on-brand)}
+.hero .b2{border:1px solid var(--brand-line);color:var(--text)}
+.hero .b2:hover{background:var(--brand-soft)}
+.statrow{display:flex;gap:40px;flex-wrap:wrap;margin-top:52px;padding-top:26px;border-top:1px solid var(--brand-line)}
+.statrow div b{display:block;font-family:var(--serif);font-size:30px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums;color:var(--brand)}
+.statrow div span{font-size:12.5px;color:var(--faint);display:block;margin-top:6px}
 
 /* ruler timeline */
 .ruler{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:0;margin-top:8px}
 .tick{padding:0 10px 0 0;border-top:2px solid var(--line2);position:relative;padding-top:20px}
-.tick:before{content:"";position:absolute;top:-2px;left:0;width:2px;height:13px;background:var(--brand)}
+.tick:before{content:"";position:absolute;top:-2px;left:0;width:3px;height:14px;background:var(--brand)}
 .tick .m{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--brand);letter-spacing:.02em}
 .tick h4{font-size:13.5px;margin-top:7px}
 .tick p{font-size:12.5px;color:var(--muted);margin-top:5px;line-height:1.5}
@@ -89,7 +78,7 @@ section+section{border-top:1px solid var(--line)}
 /* stage cards */
 .stages{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
 .stage{background:var(--panel);padding:20px}
-.stage .n{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600}
+.stage .n{font-family:var(--mono);font-size:12px;color:var(--brand);font-weight:600}
 .stage h4{font-size:14.5px;margin-top:6px}
 .stage p{font-size:13px;color:var(--muted);margin-top:6px}
 
@@ -122,7 +111,7 @@ select.inp{appearance:none;background-image:linear-gradient(45deg,transparent 50
 /* library */
 .libnav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:24px}
 .libnav button{padding:7px 14px;border-radius:999px;border:1px solid var(--line2);background:var(--panel);color:var(--muted);font-size:13px;font-weight:500;cursor:pointer}
-.libnav button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.libnav button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--on-brand);font-weight:600}
 .libitem{padding:18px 0;border-bottom:1px solid var(--line)}
 .libitem:last-of-type{border-bottom:0}
 .libitem h4{font-size:15px}
@@ -132,10 +121,24 @@ select.inp{appearance:none;background-image:linear-gradient(45deg,transparent 50
 .links a:hover{background:var(--brand-soft);border-color:var(--brand)}
 
 /* cta */
-.cta-band{background:var(--ink-2);color:#EAF1F3;border-radius:var(--r);padding:40px 34px;display:flex;gap:30px;align-items:center;flex-wrap:wrap}
+.cta-band{background:linear-gradient(150deg,#17130A,#0C0A07);border:1px solid var(--brand-line);color:var(--text);border-radius:var(--r);padding:40px 34px;display:flex;gap:30px;align-items:center;flex-wrap:wrap}
 .cta-band h3{font-family:var(--serif);font-size:26px;flex:1 1 320px}
-.cta-band p{color:#A9C0C7;margin-top:10px;font-size:14.5px;max-width:52ch}
-.cta-band a{background:var(--accent);color:#1A0C04;padding:12px 22px;border-radius:8px;text-decoration:none;font-weight:600;white-space:nowrap}
+.cta-band p{color:var(--muted);margin-top:10px;font-size:14.5px;max-width:52ch}
+.cta-band a{background:var(--brand);color:var(--on-brand);padding:12px 22px;border-radius:8px;text-decoration:none;font-weight:600;white-space:nowrap}
+
+/* ticker */
+.ticker{position:relative;background:linear-gradient(90deg,#171309,#0B0A07);border-bottom:1px solid var(--brand-line);display:flex;align-items:stretch;min-height:38px;overflow:hidden}
+.ticker .tag{flex:none;background:var(--brand);color:var(--on-brand);font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:0 13px;align-self:stretch;display:flex;align-items:center;z-index:2}
+.tickwin{flex:1;min-width:0;overflow:hidden}
+.ticker .track{display:flex;white-space:nowrap;will-change:transform;animation:tick 70s linear infinite}
+.ticker:hover .track,.ticker:focus-within .track{animation-play-state:paused}
+.ticker .it{display:inline-flex;align-items:center;gap:8px;flex:none;padding:0 22px;font-size:12.5px;color:var(--muted);border-right:1px solid var(--line)}
+.ticker .it b{color:var(--text);font-weight:600}
+.ticker .it .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand)}
+.ticker a{color:inherit;text-decoration:none}
+.ticker a:hover b{color:var(--brand)}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.ticker .track{animation:none}.tickwin{overflow-x:auto}}
 
 footer{padding-block:40px;border-top:1px solid var(--line);color:var(--faint);font-size:12.5px}
 footer p{max-width:78ch;margin-bottom:8px}
@@ -144,11 +147,11 @@ footer p{max-width:78ch;margin-bottom:8px}
 <nav class="topnav">
   <div class="wrap">
     <div class="brand">
-      <svg width="24" height="24" viewBox="0 0 40 40" aria-hidden="true">
-        <rect width="40" height="40" rx="9" fill="var(--brand)"></rect>
-        <path d="M11 28V12l18 16V12" fill="none" stroke="var(--on-brand)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"></path>
+      <svg width="26" height="26" viewBox="0 0 40 40" aria-hidden="true">
+        <rect x="0.9" y="0.9" width="38.2" height="38.2" rx="9" fill="#15120B" stroke="var(--brand)" stroke-width="1.6"></rect>
+        <path d="M14 10v20M14 20.2 24.5 10M14 19.8 24.5 30" fill="none" stroke="var(--brand)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
       </svg>
-      <span>The US Master's Planner</span>
+      <span>Katakyie Advisors</span>
     </div>
     <div class="navlinks">
       <a href="#timeline">Timeline</a>
@@ -156,14 +159,16 @@ footer p{max-width:78ch;margin-bottom:8px}
       <a href="#schools">Schools</a>
       <a href="#traps">Traps</a>
       <a href="#library">Library</a>
-      <a href="#work" class="cta">Work with an advisor</a>
+      <a href="#work" class="cta">Work with us</a>
     </div>
   </div>
 </nav>
 
+<div class="ticker" id="ticker" hidden></div>
+
 <header class="hero">
   <div class="wrap">
-    <div class="eyebrow">A free planner for international applicants</div>
+    <div class="eyebrow">Katakyie Advisors · a free planner</div>
     <h1>A US master's is won eighteen months before it starts.</h1>
     <p class="sub">Almost every application that fails does so on timing, not on merit — a credential evaluation ordered too late, a funding deadline mistaken for the final one, an embassy slot booked after they had all gone. Here is the whole run, in order.</p>
     <div class="acts">
@@ -206,7 +211,7 @@ footer p{max-width:78ch;margin-bottom:8px}
     <div class="shead">
       <div class="eyebrow">Where to apply</div>
       <h2>Every US institution that awards a master's</h2>
-      <p class="lead">All fifty states and the District of Columbia. Tuition, deadlines and entry requirements are deliberately <em>not</em> listed — they change every cycle and differ by department, so each row links to the school's own graduate admissions page instead of to a figure that will be wrong by next year.</p>
+      <p class="lead">All fifty states and the District of Columbia, reviewed and extended each cycle. Tuition, deadlines and entry requirements are deliberately <em>not</em> listed — they change every cycle and differ by department, so each row links to the school's own graduate admissions page instead of to a figure that will be wrong by next year.</p>
     </div>
     <div class="card">
       <div class="filters">
@@ -256,7 +261,7 @@ footer p{max-width:78ch;margin-bottom:8px}
     <div class="cta-band">
       <div>
         <h3>Doing this alone is possible. Doing it on time is the hard part.</h3>
-        <p>I take a small number of clients through the whole run — shortlist, statements, applications, funding, the I-20 and the visa — with every deadline tracked so none of the five traps above gets a chance.</p>
+        <p>Katakyie Advisors takes a small number of clients through the whole run — shortlist, statements, applications, funding, the I-20 and the visa — on a tracked plan, with every deadline dated, so none of the five traps above gets a chance.</p>
       </div>
       <a id="ctaLink" href="mailto:hello@example.com?subject=US%20master%27s%20advising">Get in touch</a>
     </div>
