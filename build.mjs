@@ -44,14 +44,15 @@ mkdirSync(join(root, "dist"), { recursive: true });
 writeFileSync(join(root, "dist/index.html"), body + "\n");
 
 /* ---------------------------------- the public planner ---------------------------------- */
-const settings = `<script>window.NB_SITE=${JSON.stringify({
+const siteSettings = (demoUrl) => `<script>window.NB_SITE=${JSON.stringify({
   org: cfg.org || "",
   contactEmail: cfg.contactEmail || "",
   portalUrl: cfg.portalUrl || "",
+  demoUrl,
 })};</script>`;
 
 const publicBody = [
-  settings,
+  siteSettings(""),
   read("public/shell.html"),
   bundle(["src/data/schools.js", "src/data/content.js"]),
   bundle(["public/app.js"]),
@@ -73,6 +74,13 @@ const title = `${cfg.org || "Katakyie Advisors"} — The US Master's Planner`;
 const desc =
   cfg.tagline ||
   "A free planner for international applicants to US master's programmes: the eighteen-month timeline, every US institution that awards a master's, and the traps that sink finished applications.";
+
+const sitePublicBody = [
+  siteSettings("demo/"),
+  read("public/shell.html"),
+  bundle(["src/data/schools.js", "src/data/content.js"]),
+  bundle(["public/app.js"]),
+].join("\n");
 
 const site = `<!doctype html>
 <html lang="en">
@@ -102,7 +110,7 @@ ${siteUrl ? `<meta name="twitter:image" content="${esc(siteUrl)}/social.png">` :
 </style>
 </head>
 <body>
-${publicBody}
+${sitePublicBody}
 </body>
 </html>
 `;
@@ -122,6 +130,42 @@ if (siteUrl) {
 }
 if (cfg.customDomain) writeFileSync(join(root, "site/CNAME"), cfg.customDomain + "\n");
 if (existsSync(join(root, "docs/planner.png"))) copyFileSync(join(root, "docs/planner.png"), join(root, "site/social.png"));
+
+/* ---------------------------------- the demo dashboard ---------------------------------- */
+/* The same platform, in front of a localStorage runtime, so it genuinely works on a static host. */
+const demoBody = [
+  read("src/shell.html"),
+  bundle(["src/data/schools.js", "src/data/content.js"]),
+  bundle(["demo/runtime.js"]),
+  bundle(["src/app/core.js"]),
+  bundle(["src/app/views.js"]),
+].join("\n");
+
+const demoPage = `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>${esc(cfg.org || "Katakyie Advisors")} — dashboard demo</title>
+<meta name="description" content="A working demo of the ${esc(cfg.org || "Katakyie Advisors")} advisor console and client portals. Sample data, saved in your own browser.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0A0908">
+<link rel="icon" href="${favicon}">
+<style>
+  :root { color-scheme: dark; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  html, body { height: 100%; }
+  body { margin: 0; background: #0A0908; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+${demoBody}
+</body>
+</html>
+`;
+mkdirSync(join(root, "site/demo"), { recursive: true });
+writeFileSync(join(root, "site/demo/index.html"), demoPage);
 
 /* ---------------------------------- local preview ---------------------------------- */
 const preview = `<!doctype html>
@@ -148,6 +192,7 @@ writeFileSync(join(root, "dev/preview.html"), preview);
 console.log(`dist/index.html    ${kb(body)}   Claude artifact — the advisor platform`);
 console.log(`dist/public.html   ${kb(publicBody)}   Claude artifact — the public planner`);
 console.log(`site/index.html    ${kb(site)}   static website — what GitHub Pages serves`);
+console.log(`site/demo/         ${kb(demoPage)}   the dashboard as a self-contained demo`);
 console.log(`dev/preview.html   ${kb(preview)}   local preview (npm run dev)`);
 if (!siteUrl || siteUrl.includes("YOURNAME")) console.log("\n  note: set siteUrl in site.config.json so social previews and the canonical link work.");
 if ((cfg.contactEmail || "").includes("example.com")) console.log("  note: set contactEmail in site.config.json — the 'Get in touch' button points at it.");

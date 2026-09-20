@@ -20,6 +20,7 @@ It builds **two** pages from one set of sources:
 | `dist/index.html` | The advisor platform — console plus client portals | A Claude artifact. **Needs the artifact runtime for its database**, so it is not a static page |
 | `dist/public.html` | The planner, as a Claude artifact | A Claude artifact |
 | `site/` | The planner, as a real website — full HTML document, social preview tags, favicon, robots and sitemap | **GitHub Pages, Netlify, Vercel, any static host** |
+| `site/demo/` | The dashboard as a **working demo** — real database, backed by the visitor's own browser | The same static host |
 
 The planner declares no runtime capabilities at all. That is what lets it be shared with the world, and it is also why it works as a plain static site. It is the front door; the platform is the back office.
 
@@ -103,6 +104,8 @@ The repository ships with a workflow that builds `site/` and deploys it. Two thi
 - `portalUrl` — optional. Put the platform's URL here and a *Client sign in* link appears in the top bar. Leave it empty and the link stays hidden. Note that only people you have shared the platform with can open it.
 - `customDomain` — add this key with a domain and the build writes a `CNAME` file for you.
 
+The site publishes with a **demo of the dashboard** at `/demo/`, linked from the top bar. It is the same platform code in front of `demo/runtime.js`, a localStorage-backed stand-in for the artifact runtime — so everything genuinely works and everything a visitor changes persists, in their browser alone. Three fictional clients are seeded, a banner says plainly what it is, and there is a reset button. It is for showing people what you run; it is not a shared system and it is marked `noindex`.
+
 **2. Turn Pages on.** In the repository: **Settings → Pages → Build and deployment → Source: GitHub Actions**. Push to `main` and the workflow runs — it checks every source file parses, builds, and publishes `site/`. A minute or so later the site is live at `siteUrl`.
 
 The build is checked into the workflow, not the repository: `site/` is in `.gitignore`, so nothing built is ever committed. If you would rather not use Actions, delete `.github/workflows/pages.yml`, remove `site/` from `.gitignore`, commit the folder, and point Pages at a branch instead.
@@ -126,6 +129,7 @@ public/
 site.config.json        org name, site URL, contact address, optional portal link
 build.mjs               builds dist/, site/ and dev/preview.html
 .github/workflows/      the GitHub Pages deployment
+demo/runtime.js         localStorage runtime — makes the demo dashboard actually work
 dev/harness.js          fake window.claude for local work
 dev/serve.mjs           dependency-free static server
 dev/screenshot.mjs      headless render check

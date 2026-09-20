@@ -100,7 +100,7 @@ var S = {
   cq: "", cstatus: "",
   cal: null,
   tplOpen: null,
-  loginTab: "client", loading: true
+  loginTab: "client", loading: true, demo: !!window.NB_DEMO
 };
 function byId(id) { for (var i = 0; i < S.clients.length; i++) if (S.clients[i].id === id) return S.clients[i]; return null; }
 function isAdvisor() { return S.role === "advisor"; }

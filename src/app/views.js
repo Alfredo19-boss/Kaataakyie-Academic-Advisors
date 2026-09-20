@@ -203,6 +203,13 @@ function render() {
 
   var v = $("#view"); v.innerHTML = ""; $("#topactions").innerHTML = ""; $("#crumb").textContent = "";
 
+  if (S.demo) v.insertAdjacentHTML("beforeend",
+    '<div class="notice info no-print" style="align-items:center"><div style="flex:1">' +
+    "<b>Demo.</b> Everything works and everything you change is saved \u2014 but only in this browser, on this device. " +
+    "Nothing you do here reaches anyone else, and the three clients are invented. " +
+    "Click <b>Exit</b> at the bottom left and sign in on the client tab with <b>KA-4821</b> to see what a client sees." +
+    '</div><button class="btn sm" data-act="demoreset">Reset the demo</button></div>');
+
   if (NB.DBDOWN) v.insertAdjacentHTML("beforeend",
     '<div class="notice"><b>Not saving.</b> Shared storage is unavailable in this view, so changes will be lost on reload.</div>');
 
@@ -1381,6 +1388,11 @@ document.addEventListener("click", function (e) {
   if (a === "calnext") { S.cal.m++; if (S.cal.m > 11) { S.cal.m = 0; S.cal.y++; } render(); return; }
   if (a === "caltoday") { var n = new Date(); S.cal = { y: n.getFullYear(), m: n.getMonth() }; render(); return; }
   if (a === "printrep") { window.print(); return; }
+  if (a === "demoreset") {
+    modal("Reset the demo?", "<p>Everything you have changed here goes back to the three sample clients. It only affects this browser.</p>",
+      "Reset", function () { if (window.NB_DEMO_RESET) window.NB_DEMO_RESET(); return true; });
+    return;
+  }
 
   if (a === "newclient") { clientModal(null); return; }
   if (a === "editclient") { clientModal(byId(v)); return; }

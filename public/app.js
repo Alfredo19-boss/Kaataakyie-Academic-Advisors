@@ -16,6 +16,10 @@ function esc(v) {
 
 /* ---------- contact ---------- */
 $("#ctaLink").href = "mailto:" + CONTACT + "?subject=" + encodeURIComponent("US master's advising");
+if (SITE.demoUrl) {
+  var dl = document.getElementById("demoLink");
+  if (dl) { dl.href = SITE.demoUrl; dl.hidden = false; }
+}
 if (SITE.portalUrl) {
   var pl = document.getElementById("portalLink");
   if (pl) { pl.href = SITE.portalUrl; pl.hidden = false; }
